@@ -404,6 +404,7 @@ export const RuleForm = ({
                   key={index}
                   data-test-subj={`${item.id}-SelectOption`}
                   color="primary"
+                  size="m"
                   label={
                     item.checkEnabledResult.isEnabled ? (
                       ruleTypeListItemHtml
