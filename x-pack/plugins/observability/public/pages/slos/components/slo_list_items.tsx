@@ -37,13 +37,14 @@ export function SloListItems({ sloList, loading, error }: Props) {
 
   return (
     <EuiFlexGroup direction="column" gutterSize="s">
-      {sloList.map((slo) => (
+      {sloList.map((slo, index) => (
         <EuiFlexItem key={slo.id}>
           <SloListItem
-            slo={slo}
+            activeAlerts={activeAlertsBySlo[slo.id]}
+            index={index}
             historicalSummary={sloHistoricalSummaryResponse?.[slo.id]}
             historicalSummaryLoading={historicalSummaryLoading}
-            activeAlerts={activeAlertsBySlo[slo.id]}
+            slo={slo}
           />
         </EuiFlexItem>
       ))}

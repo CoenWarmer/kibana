@@ -18,11 +18,12 @@ import { SloIndicatorTypeBadge } from './slo_indicator_type_badge';
 import { SloTimeWindowBadge } from './slo_time_window_badge';
 
 export interface Props {
+  index: number;
   slo: SLOWithSummaryResponse;
   activeAlerts?: ActiveAlerts;
 }
 
-export function SloBadges({ slo, activeAlerts }: Props) {
+export function SloBadges({ index, slo, activeAlerts }: Props) {
   const {
     application: { navigateToUrl },
     http: { basePath },
@@ -38,7 +39,7 @@ export function SloBadges({ slo, activeAlerts }: Props) {
 
   return (
     <EuiFlexGroup direction="row" responsive={false} gutterSize="s" alignItems="center">
-      <SloStatusBadge slo={slo} />
+      <SloStatusBadge index={index} slo={slo} />
       <EuiFlexItem grow={false}>
         <SloIndicatorTypeBadge slo={slo} />
       </EuiFlexItem>

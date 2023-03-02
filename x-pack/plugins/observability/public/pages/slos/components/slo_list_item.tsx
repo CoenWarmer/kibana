@@ -34,17 +34,19 @@ import {
 import { paths } from '../../../config';
 
 export interface SloListItemProps {
-  slo: SLOWithSummaryResponse;
+  activeAlerts?: ActiveAlerts;
   historicalSummary?: HistoricalSummaryResponse[];
   historicalSummaryLoading: boolean;
-  activeAlerts?: ActiveAlerts;
+  index: number;
+  slo: SLOWithSummaryResponse;
 }
 
 export function SloListItem({
-  slo,
+  activeAlerts,
   historicalSummary = [],
   historicalSummaryLoading,
-  activeAlerts,
+  index,
+  slo,
 }: SloListItemProps) {
   const {
     application: { navigateToUrl },
@@ -104,7 +106,7 @@ export function SloListItem({
                 <EuiFlexItem>
                   <EuiText size="s">{slo.name}</EuiText>
                 </EuiFlexItem>
-                <SloBadges slo={slo} activeAlerts={activeAlerts} />
+                <SloBadges index={index} slo={slo} activeAlerts={activeAlerts} />
               </EuiFlexGroup>
             </EuiFlexItem>
 

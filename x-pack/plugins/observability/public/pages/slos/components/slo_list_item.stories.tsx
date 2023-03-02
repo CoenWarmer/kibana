@@ -26,9 +26,11 @@ const Template: ComponentStory<typeof Component> = (props: SloListItemProps) => 
   <Component {...props} />
 );
 
-const defaultProps = {
-  slo: buildSlo(),
+const defaultProps: SloListItemProps = {
+  index: 0,
   historicalSummary: historicalSummaryData[HEALTHY_ROLLING_SLO],
+  historicalSummaryLoading: false,
+  slo: buildSlo(),
 };
 
 export const SloListItem = Template.bind({});

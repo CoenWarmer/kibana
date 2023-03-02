@@ -6,17 +6,38 @@
  */
 
 import React from 'react';
-import { EuiBadge, EuiFlexItem } from '@elastic/eui';
+import { EuiBadge, EuiFlexItem, EuiIcon, EuiToolTip } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { SLOWithSummaryResponse } from '@kbn/slo-schema';
 
 export interface SloStatusProps {
+  index: number;
   slo: SLOWithSummaryResponse;
 }
 
-export function SloStatusBadge({ slo }: SloStatusProps) {
+export function SloStatusBadge({ index, slo }: SloStatusProps) {
   return (
     <>
+      <EuiFlexItem grow={false}>
+        {index === 0 && (
+          <EuiToolTip position="top" content={<p>SLO is enabled and running.</p>}>
+            <EuiIcon type="play" />
+          </EuiToolTip>
+        )}
+
+        {index === 1 && (
+          <EuiToolTip position="top" content={<p>SLO is disabled.</p>}>
+            <EuiIcon type="pause" />
+          </EuiToolTip>
+        )}
+
+        {index === 2 && (
+          <EuiToolTip position="top" content={<p>SLO has an error.</p>}>
+            <EuiIcon type="cross" color="red" />
+          </EuiToolTip>
+        )}
+      </EuiFlexItem>
+
       <EuiFlexItem grow={false}>
         <div>
           {slo.summary.status === 'NO_DATA' && (
@@ -26,7 +47,6 @@ export function SloStatusBadge({ slo }: SloStatusProps) {
               })}
             </EuiBadge>
           )}
-
           {slo.summary.status === 'HEALTHY' && (
             <EuiBadge color="success">
               {i18n.translate('xpack.observability.slos.slo.state.healthy', {
@@ -34,7 +54,6 @@ export function SloStatusBadge({ slo }: SloStatusProps) {
               })}
             </EuiBadge>
           )}
-
           {slo.summary.status === 'DEGRADING' && (
             <EuiBadge color="warning">
               {i18n.translate('xpack.observability.slos.slo.state.degrading', {
@@ -42,7 +61,6 @@ export function SloStatusBadge({ slo }: SloStatusProps) {
               })}
             </EuiBadge>
           )}
-
           {slo.summary.status === 'VIOLATED' && (
             <EuiBadge color="danger">
               {i18n.translate('xpack.observability.slos.slo.state.violated', {

@@ -22,7 +22,8 @@ const Template: ComponentStory<typeof Component> = (props: SloStatusProps) => (
   <Component {...props} />
 );
 
-const defaultProps = {
+const defaultProps: SloStatusProps = {
+  index: 0,
   slo: buildSlo(),
 };
 
