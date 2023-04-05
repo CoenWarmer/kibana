@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import React from 'react';
-import { EuiButton, EuiFlexGroup, EuiSteps } from '@elastic/eui';
+import React, { useState } from 'react';
+import { EuiButton, EuiCheckbox, EuiFlexGroup, EuiSpacer, EuiSteps, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { SLOWithSummaryResponse } from '@kbn/slo-schema';
@@ -26,6 +26,8 @@ import { paths } from '../../../config/paths';
 import { SLO_EDIT_FORM_DEFAULT_VALUES } from '../constants';
 import { SloEditFormIndicatorSection } from './slo_edit_form_indicator_section';
 import { useShowSections } from '../hooks/use_show_sections';
+import { SLO_BURN_RATE_RULE_ID } from '../../../../common/constants';
+import { sloFeatureId } from '../../../../common';
 
 export interface Props {
   slo: SLOWithSummaryResponse | undefined;
@@ -38,7 +40,13 @@ export function SloEditForm({ slo }: Props) {
     application: { navigateToUrl },
     http: { basePath },
     notifications: { toasts },
+    triggersActionsUi: { getAddRuleFlyout: AddRuleFlyout },
   } = useKibana().services;
+
+  const [createRuleForSlo, setCreateRuleForSlo] = useState(false);
+  const [newlyCreatedSloId, setNewlyCreatedSloId] = useState('');
+  const [isAddRuleFlyoutOpen, setIsAddRuleFlyoutOpen] = useState(false);
+
   const isEditMode = slo !== undefined;
 
   const methods = useForm({
@@ -99,7 +107,7 @@ export function SloEditForm({ slo }: Props) {
       try {
         const processedValues = transformValuesToCreateSLOInput(values);
 
-        await createSlo({ slo: processedValues });
+        const createdSlo = await createSlo({ slo: processedValues });
 
         toasts.addSuccess(
           i18n.translate('xpack.observability.slo.sloEdit.creation.success', {
@@ -107,7 +115,13 @@ export function SloEditForm({ slo }: Props) {
             values: { name: getValues().name },
           })
         );
-        navigateToUrl(basePath.prepend(paths.observability.slos));
+
+        if (createRuleForSlo) {
+          setNewlyCreatedSloId(createdSlo.id);
+          setIsAddRuleFlyoutOpen(true);
+        } else {
+          navigateToUrl(basePath.prepend(paths.observability.slos));
+        }
       } catch (error) {
         toasts.addError(new Error(error), {
           title: i18n.translate('xpack.observability.slo.sloEdit.creation.error', {
@@ -116,6 +130,15 @@ export function SloEditForm({ slo }: Props) {
         });
       }
     }
+  };
+
+  const handleCreateRule = () => {
+    setCreateRuleForSlo(!createRuleForSlo);
+  };
+
+  const handleSaveRule = () => {
+    setIsAddRuleFlyoutOpen(false);
+    navigateToUrl(basePath.prepend(paths.observability.slos));
   };
 
   return (
@@ -148,12 +171,41 @@ export function SloEditForm({ slo }: Props) {
           ]}
         />
 
+        <EuiFlexGroup direction="column" gutterSize="s">
+          <EuiText>
+            <strong>
+              {i18n.translate('xpack.observability.slo.sloEdit.rule.title', {
+                defaultMessage: 'Be warned when SLO degrades',
+              })}
+            </strong>
+          </EuiText>
+
+          <EuiCheckbox
+            data-test-subj="o11ySloEditFormCreateRuleCheckbox"
+            disabled={isCreateSloLoading || isUpdateSloLoading}
+            id="createRule"
+            checked={createRuleForSlo}
+            onChange={handleCreateRule}
+            label={i18n.translate('xpack.observability.slo.sloEdit.createRuleCheckbox', {
+              defaultMessage: 'Set up rule for this SLO',
+            })}
+          />
+        </EuiFlexGroup>
+
+        <EuiSpacer size="l" />
+
         <EuiFlexGroup direction="row" gutterSize="s">
           <EuiButton
             color="primary"
             data-test-subj="sloFormSubmitButton"
+            disabled={
+              !isIndicatorSectionValid ||
+              !isObjectiveSectionValid ||
+              !isDescriptionSectionValid ||
+              isEditMode
+            }
             fill
-            isLoading={isCreateSloLoading || isUpdateSloLoading}
+            isLoading={isCreateSloLoading || isUpdateSloLoading || isAddRuleFlyoutOpen}
             onClick={handleSubmit}
           >
             {isEditMode
@@ -178,6 +230,19 @@ export function SloEditForm({ slo }: Props) {
           </EuiButton>
         </EuiFlexGroup>
       </EuiFlexGroup>
+
+      {isAddRuleFlyoutOpen ? (
+        <AddRuleFlyout
+          consumer={sloFeatureId}
+          ruleTypeId={SLO_BURN_RATE_RULE_ID}
+          canChangeTrigger={false}
+          onClose={handleSaveRule}
+          initialValues={{
+            name: `${getValues().name} burn rate`,
+            params: { sloId: newlyCreatedSloId },
+          }}
+        />
+      ) : null}
     </FormProvider>
   );
 }
