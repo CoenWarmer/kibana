@@ -11,9 +11,10 @@ import { useKibana } from '../utils/kibana_react';
 
 interface UseCreateDataViewProps {
   indexPatternString: string | undefined;
+  timeFieldName?: string;
 }
 
-export function useCreateDataView({ indexPatternString }: UseCreateDataViewProps) {
+export function useCreateDataView({ indexPatternString, timeFieldName }: UseCreateDataViewProps) {
   const { dataViews } = useKibana().services;
 
   const [stateDataView, setStateDataView] = useState<DataView | undefined>();
@@ -24,6 +25,7 @@ export function useCreateDataView({ indexPatternString }: UseCreateDataViewProps
       dataViews.create({
         title: indexPatternString,
         allowNoIndex: true,
+        ...(timeFieldName ? { timeFieldName } : undefined),
       });
 
     if (indexPatternString) {
@@ -36,7 +38,7 @@ export function useCreateDataView({ indexPatternString }: UseCreateDataViewProps
           setIsLoading(false);
         });
     }
-  }, [indexPatternString, dataViews]);
+  }, [dataViews, indexPatternString, timeFieldName]);
 
   return { dataView: stateDataView, loading: isLoading };
 }

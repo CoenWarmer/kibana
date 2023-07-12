@@ -6,17 +6,25 @@
  */
 
 import {
+  EuiButton,
   EuiFlexGroup,
   EuiFlexItem,
   EuiNotificationBadge,
+  EuiPanel,
   EuiSpacer,
   EuiTabbedContent,
   EuiTabbedContentTab,
+  EuiText,
+  EuiTitle,
 } from '@elastic/eui';
+import { LogCategorization } from '@kbn/aiops-plugin/public';
+import { SavedSearch } from '@kbn/saved-search-plugin/common';
 import { SLOWithSummaryResponse } from '@kbn/slo-schema';
 import React, { Fragment } from 'react';
 import { i18n } from '@kbn/i18n';
 
+import { useKibana } from '../../../utils/kibana_react';
+import { useCreateDataView } from '../../../hooks/use_create_data_view';
 import { useFetchActiveAlerts } from '../../../hooks/slo/use_fetch_active_alerts';
 import { formatHistoricalData } from '../../../utils/slo/chart_data_formatter';
 import { useFetchHistoricalSummary } from '../../../hooks/slo/use_fetch_historical_summary';
@@ -34,6 +42,21 @@ const OVERVIEW_TAB = 'overview';
 const ALERTS_TAB = 'alerts';
 
 export function SloDetails({ slo, isAutoRefreshing }: Props) {
+  const {
+    application,
+    data,
+    executionContext,
+    charts,
+    fieldFormats,
+    http,
+    lens,
+    notifications,
+    share,
+    storage,
+    theme,
+    uiSettings,
+    unifiedSearch,
+  } = useKibana().services;
   const { data: activeAlerts } = useFetchActiveAlerts({
     sloIds: [slo.id],
   });
@@ -45,6 +68,11 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
     'error_budget_remaining'
   );
   const historicalSliData = formatHistoricalData(sloHistoricalSummaryResponse[slo.id], 'sli_value');
+  // 'remote_cluster:traces-apm*,remote_cluster:metrics-apm*,remote_cluster:logs-apm*'
+  const { dataView } = useCreateDataView({
+    indexPatternString: 'remote_cluster:logs-apm*',
+    timeFieldName: '@timestamp',
+  });
 
   const tabs: EuiTabbedContentTab[] = [
     {
@@ -77,6 +105,61 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
                   isLoading={historicalSummaryLoading}
                   slo={slo}
                 />
+              </EuiFlexItem>
+              <EuiFlexItem>
+                <EuiPanel
+                  paddingSize="m"
+                  color="transparent"
+                  hasBorder
+                  data-test-subj="errorBudgetChartPanel"
+                >
+                  <EuiTitle size="xs">
+                    <h2>
+                      {i18n.translate('xpack.observability.slo.sloDetails.logAnalysis.title', {
+                        defaultMessage: 'Log analysis',
+                      })}
+                    </h2>
+                  </EuiTitle>
+                  <EuiText color="subdued" size="s">
+                    {i18n.translate('xpack.observability.slo.sloDetails.logAnalysis.subtitle', {
+                      defaultMessage: 'See recurring patterns in your logs (last 6 hours)',
+                    })}
+                  </EuiText>
+                  {dataView ? (
+                    <LogCategorization
+                      appDependencies={{
+                        application,
+                        data,
+                        executionContext,
+                        charts,
+                        fieldFormats,
+                        http,
+                        lens,
+                        notifications,
+                        share,
+                        storage,
+                        theme,
+                        uiSettings,
+                        unifiedSearch,
+                      }}
+                      dataView={dataView}
+                      hideDocuments
+                      hideSearch
+                      hideTitle
+                      initialCategoryField="error.log.message"
+                      savedSearch={'' as unknown as SavedSearch}
+                    />
+                  ) : null}
+
+                  <EuiSpacer size="l" />
+                  <EuiButton
+                    color="primary"
+                    data-test-subj="o11ySloDetailsDiagnoseFurtherInApmButton"
+                    fill
+                  >
+                    Diagnose in APM
+                  </EuiButton>
+                </EuiPanel>
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiFlexGroup>

@@ -45,6 +45,7 @@ import {
   ActionTypeRegistryContract,
   RuleTypeRegistryContract,
 } from '@kbn/triggers-actions-ui-plugin/public';
+import { FieldFormatsRegistry } from '@kbn/field-formats-plugin/common';
 import { SecurityPluginStart } from '@kbn/security-plugin/public';
 import { GuidedOnboardingPluginStart } from '@kbn/guided-onboarding-plugin/public';
 import { SpacesPluginStart } from '@kbn/spaces-plugin/public';
@@ -110,13 +111,16 @@ export interface ObservabilityPublicPluginsStart {
   actionTypeRegistry: ActionTypeRegistryContract;
   cases: CasesUiStart;
   charts: ChartsPluginStart;
+  cloud?: CloudStart;
   data: DataPublicPluginStart;
   dataViews: DataViewsPublicPluginStart;
   dataViewEditor: DataViewEditorStart;
   discover: DiscoverStart;
   embeddable: EmbeddableStart;
   exploratoryView: ExploratoryViewPublicStart;
+  fieldFormats: FieldFormatsRegistry;
   guidedOnboarding: GuidedOnboardingPluginStart;
+  home?: HomePublicPluginStart;
   lens: LensPublicStart;
   licensing: LicensingPluginStart;
   observabilityShared: ObservabilitySharedPluginStart;
@@ -127,8 +131,6 @@ export interface ObservabilityPublicPluginsStart {
   triggersActionsUi: TriggersAndActionsUIPublicPluginStart;
   usageCollection: UsageCollectionSetup;
   unifiedSearch: UnifiedSearchPublicPluginStart;
-  home?: HomePublicPluginStart;
-  cloud?: CloudStart;
 }
 
 export type ObservabilityPublicStart = ReturnType<Plugin['start']>;

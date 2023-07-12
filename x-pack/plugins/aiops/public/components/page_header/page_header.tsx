@@ -32,7 +32,11 @@ const dataViewTitleHeader = css({
   minWidth: '300px',
 });
 
-export const PageHeader: FC = () => {
+interface Props {
+  hideTitle?: boolean;
+}
+
+export const PageHeader: FC<Props> = ({ hideTitle }: Props) => {
   const [, setGlobalState] = useUrlState('_g');
   const { dataView } = useDataSource();
 
@@ -67,7 +71,7 @@ export const PageHeader: FC = () => {
     [dataView.timeFieldName]
   );
 
-  return (
+  return !hideTitle ? (
     <EuiPageHeader
       pageTitle={<div css={dataViewTitleHeader}>{dataView.getName()}</div>}
       rightSideItems={[
@@ -94,5 +98,5 @@ export const PageHeader: FC = () => {
         </EuiFlexGroup>,
       ]}
     />
-  );
+  ) : null;
 };

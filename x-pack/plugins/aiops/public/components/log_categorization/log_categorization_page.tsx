@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import React, { FC, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 import type * as estypes from '@elastic/elasticsearch/lib/api/typesWithBodyKey';
 import {
@@ -48,7 +48,19 @@ import { SamplingMenu } from './sampling_menu';
 
 const BAR_TARGET = 20;
 
-export const LogCategorizationPage: FC = () => {
+interface Props {
+  hideDocuments?: boolean;
+  hideSearch?: boolean;
+  hideTitle?: boolean;
+  initialCategoryField?: string;
+}
+
+export const LogCategorizationPage = ({
+  hideDocuments,
+  hideSearch,
+  hideTitle,
+  initialCategoryField = 'error.log.message',
+}: Props) => {
   const {
     notifications: { toasts },
   } = useAiopsAppContext();
@@ -60,7 +72,7 @@ export const LogCategorizationPage: FC = () => {
     getDefaultAiOpsListState()
   );
   const [globalState, setGlobalState] = useUrlState('_g');
-  const [selectedField, setSelectedField] = useState<string | undefined>();
+  const [selectedField, setSelectedField] = useState<string | undefined>(initialCategoryField);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedSavedSearch, setSelectedDataView] = useState(savedSearch);
   const [loading, setLoading] = useState(false);
@@ -86,6 +98,13 @@ export const LogCategorizationPage: FC = () => {
     },
     [cancelRequest]
   );
+
+  useEffect(() => {
+    if (selectedField) {
+      console.log('poep');
+      loadCategories();
+    }
+  }, []);
 
   const setSearchParams = useCallback(
     (searchParams: {
@@ -231,62 +250,74 @@ export const LogCategorizationPage: FC = () => {
 
   return (
     <EuiPageBody data-test-subj="aiopsLogPatternAnalysisPage" paddingSize="none" panelled={false}>
-      <PageHeader />
-      <EuiSpacer />
+      <PageHeader hideTitle={hideTitle} />
+      {!hideTitle ? <EuiSpacer /> : null}
+
       <EuiFlexGroup gutterSize="none">
         <EuiFlexItem>
-          <SearchPanel
-            dataView={dataView}
-            searchString={searchString ?? ''}
-            searchQuery={searchQuery}
-            searchQueryLanguage={searchQueryLanguage}
-            setSearchParams={setSearchParams}
-          />
-        </EuiFlexItem>
-      </EuiFlexGroup>
-      <EuiSpacer size="m" />
-      <EuiFlexGroup gutterSize="none">
-        <EuiFlexItem grow={false} css={{ minWidth: '410px' }}>
-          <EuiFormRow
-            label={i18n.translate('xpack.aiops.logCategorization.categoryFieldSelect', {
-              defaultMessage: 'Category field',
-            })}
-          >
-            <EuiComboBox
-              isDisabled={loading === true}
-              options={fields}
-              onChange={onFieldChange}
-              selectedOptions={selectedField === undefined ? undefined : [{ label: selectedField }]}
-              singleSelection={{ asPlainText: true }}
-              data-test-subj="aiopsLogPatternAnalysisCategoryField"
+          {hideSearch ? null : (
+            <SearchPanel
+              dataView={dataView}
+              searchString={searchString ?? ''}
+              searchQuery={searchQuery}
+              searchQueryLanguage={searchQueryLanguage}
+              setSearchParams={setSearchParams}
             />
-          </EuiFormRow>
-        </EuiFlexItem>
-        <EuiFlexItem grow={false} css={{ marginTop: 'auto' }}>
-          {loading === false ? (
-            <EuiButton
-              disabled={selectedField === undefined}
-              onClick={() => {
-                loadCategories();
-              }}
-              data-test-subj="aiopsLogPatternAnalysisRunButton"
-            >
-              <FormattedMessage
-                id="xpack.aiops.logCategorization.runButton"
-                defaultMessage="Run pattern analysis"
-              />
-            </EuiButton>
-          ) : (
-            <EuiButton onClick={() => cancelRequest()}>Cancel</EuiButton>
           )}
-        </EuiFlexItem>
-        <EuiFlexItem />
-        <EuiFlexItem grow={false} css={{ marginTop: 'auto' }}>
-          <SamplingMenu randomSampler={randomSampler} reload={() => loadCategories()} />
         </EuiFlexItem>
       </EuiFlexGroup>
 
-      {eventRate.length ? (
+      <EuiSpacer size="m" />
+
+      {initialCategoryField ? null : (
+        <EuiFlexGroup gutterSize="none">
+          <EuiFlexItem grow={false} css={{ minWidth: '410px' }}>
+            <EuiFormRow
+              label={i18n.translate('xpack.aiops.logCategorization.categoryFieldSelect', {
+                defaultMessage: 'Category field',
+              })}
+            >
+              <EuiComboBox
+                isDisabled={loading === true}
+                options={fields}
+                onChange={onFieldChange}
+                selectedOptions={
+                  selectedField === undefined ? undefined : [{ label: selectedField }]
+                }
+                singleSelection={{ asPlainText: true }}
+                data-test-subj="aiopsLogPatternAnalysisCategoryField"
+              />
+            </EuiFormRow>
+          </EuiFlexItem>
+
+          <EuiFlexItem grow={false} css={{ marginTop: 'auto' }}>
+            {loading === false ? (
+              <EuiButton
+                disabled={selectedField === undefined}
+                onClick={() => {
+                  loadCategories();
+                }}
+                data-test-subj="aiopsLogPatternAnalysisRunButton"
+              >
+                <FormattedMessage
+                  id="xpack.aiops.logCategorization.runButton"
+                  defaultMessage="Run pattern analysis"
+                />
+              </EuiButton>
+            ) : (
+              <EuiButton isLoading onClick={() => cancelRequest()}>
+                Cancel
+              </EuiButton>
+            )}
+          </EuiFlexItem>
+          <EuiFlexItem />
+          <EuiFlexItem grow={false} css={{ marginTop: 'auto' }}>
+            <SamplingMenu randomSampler={randomSampler} reload={() => loadCategories()} />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      )}
+
+      {eventRate.length && !hideDocuments ? (
         <>
           <EuiSpacer />
           <DocumentCountChart

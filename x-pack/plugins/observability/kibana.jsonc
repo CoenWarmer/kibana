@@ -8,6 +8,7 @@
     "browser": true,
     "configPath": ["xpack", "observability"],
     "requiredPlugins": [
+      "aiops",
       "alerting",
       "cases",
       "charts",
@@ -17,6 +18,7 @@
       "embeddable",
       "exploratoryView",
       "features",
+      "fieldFormats",
       "files",
       "guidedOnboarding",
       "inspector",
@@ -29,8 +31,16 @@
       "unifiedSearch",
       "visualizations"
     ],
-    "optionalPlugins": ["discover", "home", "licensing", "usageCollection", "cloud", "spaces"],
-    "requiredBundles": ["data", "kibanaReact", "kibanaUtils", "unifiedSearch", "cloudChat", "stackAlerts", "spaces"],
+    "optionalPlugins": ["cloud", "discover", "home", "licensing", "spaces", "usageCollection"],
+    "requiredBundles": [
+      "cloudChat",
+      "data",
+      "kibanaReact",
+      "kibanaUtils",
+      "spaces",
+      "stackAlerts",
+      "unifiedSearch"
+    ],
     "extraPublicDirs": ["common"]
   }
 }

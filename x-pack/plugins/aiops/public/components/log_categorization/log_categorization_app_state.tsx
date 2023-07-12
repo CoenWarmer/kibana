@@ -27,15 +27,23 @@ import { timeSeriesDataViewWarning } from '../../application/utils/time_series_d
 const localStorage = new Storage(window.localStorage);
 
 export interface LogCategorizationAppStateProps {
+  appDependencies: AiopsAppDependencies;
   dataView: DataView;
   savedSearch: SavedSearch | null;
-  appDependencies: AiopsAppDependencies;
+  hideDocuments?: boolean;
+  hideSearch?: boolean;
+  hideTitle?: boolean;
+  initialCategoryField?: string;
 }
 
 export const LogCategorizationAppState: FC<LogCategorizationAppStateProps> = ({
+  appDependencies,
   dataView,
   savedSearch,
-  appDependencies,
+  hideDocuments,
+  hideSearch,
+  hideTitle,
+  initialCategoryField,
 }) => {
   if (!dataView) return null;
 
@@ -58,7 +66,12 @@ export const LogCategorizationAppState: FC<LogCategorizationAppStateProps> = ({
         <DataSourceContext.Provider value={{ dataView, savedSearch }}>
           <StorageContextProvider storage={localStorage} storageKeys={AIOPS_STORAGE_KEYS}>
             <DatePickerContextProvider {...datePickerDeps}>
-              <LogCategorizationPage />
+              <LogCategorizationPage
+                hideDocuments={hideDocuments}
+                hideSearch={hideSearch}
+                hideTitle={hideTitle}
+                initialCategoryField={initialCategoryField}
+              />
             </DatePickerContextProvider>
           </StorageContextProvider>
         </DataSourceContext.Provider>
