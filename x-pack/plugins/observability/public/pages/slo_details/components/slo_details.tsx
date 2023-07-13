@@ -5,6 +5,8 @@
  * 2.0.
  */
 
+import React, { Fragment, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   EuiButton,
   EuiFlexGroup,
@@ -20,7 +22,6 @@ import {
 import { LogCategorization } from '@kbn/aiops-plugin/public';
 import { SavedSearch } from '@kbn/saved-search-plugin/common';
 import { SLOWithSummaryResponse } from '@kbn/slo-schema';
-import React, { Fragment } from 'react';
 import { i18n } from '@kbn/i18n';
 
 import { useKibana } from '../../../utils/kibana_react';
@@ -29,7 +30,7 @@ import { useFetchActiveAlerts } from '../../../hooks/slo/use_fetch_active_alerts
 import { formatHistoricalData } from '../../../utils/slo/chart_data_formatter';
 import { useFetchHistoricalSummary } from '../../../hooks/slo/use_fetch_historical_summary';
 import { ErrorBudgetChartPanel } from './error_budget_chart_panel';
-import { Overview as Overview } from './overview';
+import { Overview } from './overview/overview';
 import { SliChartPanel } from './sli_chart_panel';
 import { SloDetailsAlerts } from './slo_detail_alerts';
 import { BurnRates } from './burn_rates';
@@ -38,8 +39,12 @@ export interface Props {
   slo: SLOWithSummaryResponse;
   isAutoRefreshing: boolean;
 }
-const OVERVIEW_TAB = 'overview';
-const ALERTS_TAB = 'alerts';
+
+const TAB_ID_URL_PARAM = 'tabId';
+const OVERVIEW_TAB_ID = 'overview';
+const ALERTS_TAB_ID = 'alerts';
+
+type TabId = typeof OVERVIEW_TAB_ID | typeof ALERTS_TAB_ID;
 
 export function SloDetails({ slo, isAutoRefreshing }: Props) {
   const {
@@ -57,17 +62,20 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
     uiSettings,
     unifiedSearch,
   } = useKibana().services;
+  const { search } = useLocation();
   const { data: activeAlerts } = useFetchActiveAlerts({
     sloIds: [slo.id],
   });
-  const { isLoading: historicalSummaryLoading, sloHistoricalSummaryResponse = {} } =
+
+  const { isLoading: historicalSummaryLoading, data: historicalSummaryBySlo = {} } =
     useFetchHistoricalSummary({ sloIds: [slo.id], shouldRefetch: isAutoRefreshing });
 
   const errorBudgetBurnDownData = formatHistoricalData(
-    sloHistoricalSummaryResponse[slo.id],
+    historicalSummaryBySlo[slo.id],
     'error_budget_remaining'
   );
-  const historicalSliData = formatHistoricalData(sloHistoricalSummaryResponse[slo.id], 'sli_value');
+  const historicalSliData = formatHistoricalData(historicalSummaryBySlo[slo.id], 'sli_value');
+
   // 'remote_cluster:traces-apm*,remote_cluster:metrics-apm*,remote_cluster:logs-apm*'
   const { dataView } = useCreateDataView({
     indexPatternString: 'remote_cluster:logs-apm*',
@@ -76,7 +84,7 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
 
   const tabs: EuiTabbedContentTab[] = [
     {
-      id: OVERVIEW_TAB,
+      id: OVERVIEW_TAB_ID,
       name: i18n.translate('xpack.observability.slo.sloDetails.tab.overviewLabel', {
         defaultMessage: 'Overview',
       }),
@@ -167,7 +175,7 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
       ),
     },
     {
-      id: ALERTS_TAB,
+      id: ALERTS_TAB_ID,
       name: i18n.translate('xpack.observability.slo.sloDetails.tab.alertsLabel', {
         defaultMessage: 'Alerts',
       }),
@@ -181,11 +189,24 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
     },
   ];
 
+  const [selectedTabId, setSelectedTabId] = useState(() => {
+    const searchParams = new URLSearchParams(search);
+    const urlTabId = searchParams.get(TAB_ID_URL_PARAM);
+    return urlTabId && [OVERVIEW_TAB_ID, ALERTS_TAB_ID].includes(urlTabId)
+      ? (urlTabId as TabId)
+      : OVERVIEW_TAB_ID;
+  });
+
+  const handleSelectedTab = (newTabId: TabId) => {
+    setSelectedTabId(newTabId);
+  };
+
   return (
     <EuiTabbedContent
       data-test-subj="sloDetailsTabbedContent"
       tabs={tabs}
-      initialSelectedTab={tabs[0]}
+      selectedTab={tabs.find((tab) => tab.id === selectedTabId) ?? tabs[0]}
+      onTabClick={(tab) => handleSelectedTab(tab.id as TabId)}
     />
   );
 }
