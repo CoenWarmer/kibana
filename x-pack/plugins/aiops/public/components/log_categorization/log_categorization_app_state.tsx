@@ -6,6 +6,7 @@
  */
 import React, { FC } from 'react';
 import { pick } from 'lodash';
+import { Moment } from 'moment';
 
 import type { SavedSearch } from '@kbn/saved-search-plugin/public';
 import type { DataView } from '@kbn/data-views-plugin/public';
@@ -34,6 +35,7 @@ export interface LogCategorizationAppStateProps {
   hideSearch?: boolean;
   hideTitle?: boolean;
   initialCategoryField?: string;
+  timeRange?: { from: Moment; to: Moment };
 }
 
 export const LogCategorizationAppState: FC<LogCategorizationAppStateProps> = ({
@@ -44,6 +46,7 @@ export const LogCategorizationAppState: FC<LogCategorizationAppStateProps> = ({
   hideSearch,
   hideTitle,
   initialCategoryField,
+  timeRange,
 }) => {
   if (!dataView) return null;
 
@@ -71,6 +74,7 @@ export const LogCategorizationAppState: FC<LogCategorizationAppStateProps> = ({
                 hideSearch={hideSearch}
                 hideTitle={hideTitle}
                 initialCategoryField={initialCategoryField}
+                timeRange={timeRange}
               />
             </DatePickerContextProvider>
           </StorageContextProvider>

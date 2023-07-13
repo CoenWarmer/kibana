@@ -24,6 +24,7 @@ import { Filter, Query } from '@kbn/es-query';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { usePageUrlState, useUrlState } from '@kbn/ml-url-state';
+import { Moment } from 'moment';
 
 import { useDataSource } from '../../hooks/use_data_source';
 import { useData } from '../../hooks/use_data';
@@ -53,6 +54,7 @@ interface Props {
   hideSearch?: boolean;
   hideTitle?: boolean;
   initialCategoryField?: string;
+  timeRange?: { from: Moment; to: Moment };
 }
 
 export const LogCategorizationPage = ({
@@ -60,6 +62,7 @@ export const LogCategorizationPage = ({
   hideSearch,
   hideTitle,
   initialCategoryField = 'error.log.message',
+  timeRange,
 }: Props) => {
   const {
     notifications: { toasts },
@@ -75,6 +78,7 @@ export const LogCategorizationPage = ({
   const [selectedField, setSelectedField] = useState<string | undefined>(initialCategoryField);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedSavedSearch, setSelectedDataView] = useState(savedSearch);
+  const [selectedTimeRange, setSelectedTimeRange] = useState(timeRange);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [eventRate, setEventRate] = useState<EventRate>([]);
@@ -98,13 +102,6 @@ export const LogCategorizationPage = ({
     },
     [cancelRequest]
   );
-
-  useEffect(() => {
-    if (selectedField) {
-      console.log('poep');
-      loadCategories();
-    }
-  }, []);
 
   const setSearchParams = useCallback(
     (searchParams: {
@@ -135,6 +132,16 @@ export const LogCategorizationPage = ({
     aiopsListState
   );
 
+  useEffect(() => {
+    if (
+      timeRange?.from.unix() !== selectedTimeRange?.from.unix() ||
+      timeRange?.to.unix() !== selectedTimeRange?.to.unix()
+    ) {
+      console.log('timeRange', timeRange);
+      setSelectedTimeRange(timeRange);
+    }
+  }, [selectedTimeRange?.from, selectedTimeRange?.to, timeRange]);
+
   const { documentStats, timefilter, earliest, latest, intervalMs } = useData(
     dataView,
     'log_categorization',
@@ -143,7 +150,10 @@ export const LogCategorizationPage = ({
     undefined,
     undefined,
     BAR_TARGET
+    // selectedTimeRange ? { min: selectedTimeRange?.from, max: selectedTimeRange?.to } : undefined
   );
+
+  console.log('documentStats', documentStats);
 
   useEffect(() => {
     if (globalState?.time !== undefined) {
@@ -242,6 +252,12 @@ export const LogCategorizationPage = ({
     intervalMs,
     toasts,
   ]);
+
+  useEffect(() => {
+    if (timeRange?.from || timeRange?.to) {
+      loadCategories();
+    }
+  }, [loadCategories, timeRange?.from, timeRange?.to]);
 
   const onFieldChange = (value: EuiComboBoxOptionOption[] | undefined) => {
     setData(null);

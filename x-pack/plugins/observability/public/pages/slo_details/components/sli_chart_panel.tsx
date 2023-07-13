@@ -9,6 +9,7 @@ import { EuiFlexGroup, EuiFlexItem, EuiPanel, EuiStat, EuiText, EuiTitle } from 
 import numeral from '@elastic/numeral';
 import { i18n } from '@kbn/i18n';
 import { rollingTimeWindowTypeSchema, SLOWithSummaryResponse } from '@kbn/slo-schema';
+import { Moment } from 'moment';
 import React from 'react';
 import { ChartData } from '../../../typings/slo';
 import { useKibana } from '../../../utils/kibana_react';
@@ -19,9 +20,10 @@ export interface Props {
   data: ChartData[];
   isLoading: boolean;
   slo: SLOWithSummaryResponse;
+  onSelectDateRange?: (dateRange: { from: Moment; to: Moment }) => void;
 }
 
-export function SliChartPanel({ data, isLoading, slo }: Props) {
+export function SliChartPanel({ data, isLoading, slo, onSelectDateRange }: Props) {
   const { uiSettings } = useKibana().services;
   const percentFormat = uiSettings.get('format:percent:defaultPattern');
 
@@ -94,6 +96,7 @@ export function SliChartPanel({ data, isLoading, slo }: Props) {
             state={isSloFailed ? 'error' : 'success'}
             data={data}
             isLoading={isLoading}
+            onBrushEnd={onSelectDateRange}
           />
         </EuiFlexItem>
       </EuiFlexGroup>

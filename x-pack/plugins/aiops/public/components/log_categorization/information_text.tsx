@@ -57,7 +57,7 @@ export const InformationText: FC<Props> = ({
             <h2>
               <FormattedMessage
                 id="xpack.aiops.logCategorization.emptyPromptTitle"
-                defaultMessage="Select a text field and click run categorization to start analysis"
+                defaultMessage="Select a time range to start analysis"
               />
             </h2>
           }

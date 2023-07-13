@@ -7,6 +7,7 @@
 
 import React, { Fragment, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Moment } from 'moment';
 import {
   EuiButton,
   EuiFlexGroup,
@@ -70,6 +71,10 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
   const { isLoading: historicalSummaryLoading, data: historicalSummaryBySlo = {} } =
     useFetchHistoricalSummary({ sloIds: [slo.id], shouldRefetch: isAutoRefreshing });
 
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    { from: Moment; to: Moment } | undefined
+  >();
+
   const errorBudgetBurnDownData = formatHistoricalData(
     historicalSummaryBySlo[slo.id],
     'error_budget_remaining'
@@ -81,6 +86,11 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
     indexPatternString: 'remote_cluster:logs-apm*',
     timeFieldName: '@timestamp',
   });
+
+  const handleSelectDateRange = (newDateRange: { from: Moment; to: Moment }) => {
+    console.log('newDateRange', newDateRange);
+    setSelectedDateRange(newDateRange);
+  };
 
   const tabs: EuiTabbedContentTab[] = [
     {
@@ -105,6 +115,7 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
                   data={historicalSliData}
                   isLoading={historicalSummaryLoading}
                   slo={slo}
+                  onSelectDateRange={handleSelectDateRange}
                 />
               </EuiFlexItem>
               <EuiFlexItem>
@@ -112,6 +123,7 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
                   data={errorBudgetBurnDownData}
                   isLoading={historicalSummaryLoading}
                   slo={slo}
+                  onSelectDateRange={handleSelectDateRange}
                 />
               </EuiFlexItem>
               <EuiFlexItem>
@@ -130,7 +142,8 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
                   </EuiTitle>
                   <EuiText color="subdued" size="s">
                     {i18n.translate('xpack.observability.slo.sloDetails.logAnalysis.subtitle', {
-                      defaultMessage: 'See recurring patterns in your logs (last 6 hours)',
+                      defaultMessage:
+                        'See recurring patterns in your logs (select a range in your graph)',
                     })}
                   </EuiText>
                   {dataView ? (
@@ -156,6 +169,7 @@ export function SloDetails({ slo, isAutoRefreshing }: Props) {
                       hideTitle
                       initialCategoryField="error.log.message"
                       savedSearch={'' as unknown as SavedSearch}
+                      timeRange={selectedDateRange}
                     />
                   ) : null}
 

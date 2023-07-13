@@ -8,6 +8,7 @@
 import {
   AreaSeries,
   Axis,
+  BrushEndListener,
   Chart,
   Fit,
   LineSeries,
@@ -20,7 +21,7 @@ import {
 import React, { useRef } from 'react';
 import { EuiIcon, EuiLoadingChart, useEuiTheme } from '@elastic/eui';
 import numeral from '@elastic/numeral';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { useActiveCursor } from '@kbn/charts-plugin/public';
 
 import { ChartData } from '../../../typings';
@@ -35,9 +36,10 @@ export interface Props {
   chart: ChartType;
   state: State;
   isLoading: boolean;
+  onBrushEnd?: (dateRange: { from: Moment; to: Moment }) => void;
 }
 
-export function WideChart({ chart, data, id, isLoading, state }: Props) {
+export function WideChart({ chart, data, id, isLoading, state, onBrushEnd }: Props) {
   const { charts, uiSettings } = useKibana().services;
   const theme = charts.theme.useChartsTheme();
   const baseTheme = charts.theme.useChartsBaseTheme();
@@ -53,6 +55,16 @@ export function WideChart({ chart, data, id, isLoading, state }: Props) {
     isDateHistogram: true,
   });
 
+  const brushEndListener: BrushEndListener = ({ x }) => {
+    if (!x) {
+      return;
+    }
+
+    console.log('x', x);
+
+    onBrushEnd?.({ from: moment(x[0]), to: moment(x[1]) });
+  };
+
   if (isLoading) {
     return <EuiLoadingChart size="m" mono data-test-subj="wideChartLoading" />;
   }
@@ -62,15 +74,16 @@ export function WideChart({ chart, data, id, isLoading, state }: Props) {
       <Tooltip type={TooltipType.VerticalCursor} />
       <Settings
         baseTheme={baseTheme}
-        showLegend={false}
-        theme={[theme]}
-        noResults={<EuiIcon type="visualizeApp" size="l" color="subdued" title="no results" />}
-        onPointerUpdate={handleCursorUpdate}
         externalPointerEvents={{
           tooltip: { visible: true },
         }}
+        noResults={<EuiIcon type="visualizeApp" size="l" color="subdued" title="no results" />}
         pointerUpdateDebounce={0}
         pointerUpdateTrigger={'x'}
+        showLegend={false}
+        theme={[theme]}
+        onBrushEnd={brushEndListener}
+        onPointerUpdate={handleCursorUpdate}
       />
       <Axis
         id="bottom"
