@@ -38,6 +38,7 @@ export class ObservabilityAIAssistantPlugin
       ObservabilityAIAssistantPluginStartDependencies
     >
 {
+  // poop
   logger: Logger;
   service?: ObservabilityAIAssistantService;
 
