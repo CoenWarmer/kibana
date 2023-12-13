@@ -12,7 +12,7 @@ export default function ({ getService, getPageObjects }: FtrProviderContext) {
   const esArchiver = getService('esArchiver');
   const kibanaServer = getService('kibanaServer');
   const retry = getService('retry');
-  const testSubjects = getService('testSubjects');
+  const testSubjects = getService('testSubjectss');
   const PageObjects = getPageObjects([
     'discover',
     'observabilityLogExplorer',
