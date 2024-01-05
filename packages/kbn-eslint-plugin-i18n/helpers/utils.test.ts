@@ -42,10 +42,26 @@ describe('Utils', () => {
       ).toBe('hello great');
     });
 
-    it('should remove all non alphabet characters', () => {
-      expect(cleanString('abc123!@#')).toBe('abc');
+    it('should remove all non alphabet characters unless they are incorporated in a sentence', () => {
+      expect(cleanString('1')).toBe('');
+      expect(cleanString('12')).toBe('');
+      expect(cleanString('123')).toBe('');
+      expect(cleanString('?')).toBe('');
+      expect(cleanString('!')).toBe('');
+      expect(cleanString('!!')).toBe('');
+      expect(cleanString('!!!')).toBe('');
+      expect(cleanString('!!!!')).toBe('');
+      expect(cleanString('@')).toBe('');
       expect(cleanString('!@#$%^&*()_+{}|')).toBe('');
-      expect(cleanString('   Hey, this is great! Success.   ')).toBe('Hey this is great Success');
+
+      expect(cleanString('Hey, you.')).toBe('Hey, you.');
+      expect(cleanString('     Hey, you.   ')).toBe('Hey, you.');
+      expect(cleanString('  Hey?  ')).toBe('Hey?');
+      expect(cleanString('Hey?')).toBe('Hey?');
+      expect(cleanString('Hey, this is great! Success.')).toBe('Hey, this is great! Success.');
+      expect(cleanString('   Hey, this is great! Success.   ')).toBe(
+        'Hey, this is great! Success.'
+      );
     });
 
     it('should leave markdown alone', () => {

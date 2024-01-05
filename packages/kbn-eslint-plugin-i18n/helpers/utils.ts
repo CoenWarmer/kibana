@@ -24,10 +24,35 @@ function isUpperCase(val: string) {
   return /^[A-Z]+$/.test(val);
 }
 
-export function cleanString(str: string) {
+export function cleanIdentifier(str: string) {
   return str
     .replace(/```\w*```/g, '')
     .replace(/\s+/g, ' ')
     .replace(/[^a-zA-Z\s]*/g, '')
     .trim();
+}
+
+export function cleanString(str: string) {
+  const strTrimmed = str.trim();
+
+  if (strTrimmed.length === 1) {
+    return '';
+  }
+
+  // Numbers
+  if (strTrimmed.replace(/[0-9]+/g, '').length === 0) {
+    return '';
+  }
+
+  // Markdown
+  if (strTrimmed.replace(/```\w*```/g, '').length === 0) {
+    return '';
+  }
+
+  // Special characters
+  if (strTrimmed.replace(/[!\@\#\$\%\^\&\*\(\)\_\+\{\}\|]+/g, '').length === 0) {
+    return '';
+  }
+
+  return strTrimmed;
 }

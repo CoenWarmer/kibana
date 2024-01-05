@@ -6,7 +6,7 @@
  * Side Public License, v 1.
  */
 import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/typescript-estree';
-import { cleanString, lowerCaseFirstLetter, upperCaseFirstLetter } from './utils';
+import { cleanIdentifier, lowerCaseFirstLetter, upperCaseFirstLetter } from './utils';
 
 const EXEMPTED_TAG_NAMES = ['EuiCode', 'EuiBetaBadge', 'FormattedMessage'];
 
@@ -15,7 +15,7 @@ export function getIntentFromNode(
   parent: TSESTree.Node | undefined
 ): string | false {
   const processedValue = lowerCaseFirstLetter(
-    cleanString(value)
+    cleanIdentifier(value)
       .split(' ')
       .filter((_, i) => i < 4)
       .map(upperCaseFirstLetter)
