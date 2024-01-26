@@ -38,6 +38,7 @@ import type {
   FunctionResponse,
   Message,
   PendingMessage,
+  Suggestion,
 } from '../common/types';
 import type { ObservabilityAIAssistantAPIClient } from './api';
 import type { InsightProps } from './components/insight/insight';
@@ -65,6 +66,7 @@ export interface ObservabilityAIAssistantChatService {
   }) => Observable<StreamingChatResponseEventWithoutError>;
   getContexts: () => ContextDefinition[];
   getFunctions: (options?: { contexts?: string[]; filter?: string }) => FunctionDefinition[];
+  getSuggestions: () => Suggestion[];
   hasFunction: (name: string) => boolean;
   hasRenderFunction: (name: string) => boolean;
   renderFunction: (
@@ -82,6 +84,7 @@ export interface ObservabilityAIAssistantService {
   getLicenseManagementLocator: () => SharePluginStart;
   start: ({}: { signal: AbortSignal }) => Promise<ObservabilityAIAssistantChatService>;
   register: (fn: ChatRegistrationRenderFunction) => void;
+  registerSuggestions: (suggestions: Suggestion[]) => void;
 }
 
 export type RenderFunction<TArguments, TResponse extends FunctionResponse> = (options: {

@@ -11,6 +11,7 @@ import type { SecurityPluginStart } from '@kbn/security-plugin/public';
 import type { SharePluginStart } from '@kbn/share-plugin/public';
 import { createCallObservabilityAIAssistantAPI } from '../api';
 import type { ChatRegistrationRenderFunction, ObservabilityAIAssistantService } from '../types';
+import type { Suggestion } from '../../common/types';
 
 export function createService({
   analytics,
@@ -30,6 +31,7 @@ export function createService({
   const client = createCallObservabilityAIAssistantAPI(coreStart);
 
   const registrations: ChatRegistrationRenderFunction[] = [];
+  const suggestions: Suggestion[] = [];
 
   return {
     isEnabled: () => {
@@ -38,9 +40,12 @@ export function createService({
     register: (fn) => {
       registrations.push(fn);
     },
+    registerSuggestions: (newSuggestions: Suggestion[]) => {
+      suggestions.push(...newSuggestions);
+    },
     start: async ({ signal }) => {
       const mod = await import('./create_chat_service');
-      return await mod.createChatService({ analytics, client, signal, registrations });
+      return await mod.createChatService({ analytics, client, signal, registrations, suggestions });
     },
     callApi: client,
     getCurrentUser: () => securityStart.authc.getCurrentUser(),

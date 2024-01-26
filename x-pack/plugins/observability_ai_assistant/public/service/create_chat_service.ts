@@ -19,6 +19,7 @@ import {
   type FunctionRegistry,
   type FunctionResponse,
   type Message,
+  Suggestion,
 } from '../../common/types';
 import { filterFunctionDefinitions } from '../../common/utils/filter_function_definitions';
 import { throwSerializedChatCompletionErrors } from '../../common/utils/throw_serialized_chat_completion_errors';
@@ -79,15 +80,16 @@ export async function createChatService({
   analytics,
   signal: setupAbortSignal,
   registrations,
+  suggestions,
   client,
 }: {
   analytics: AnalyticsServiceStart;
   signal: AbortSignal;
   registrations: ChatRegistrationRenderFunction[];
+  suggestions: Suggestion[];
   client: ObservabilityAIAssistantAPIClient;
 }): Promise<ObservabilityAIAssistantChatService> {
   const functionRegistry: FunctionRegistry = new Map();
-
   const renderFunctionRegistry: Map<string, RenderFunction<unknown, FunctionResponse>> = new Map();
 
   const [{ functionDefinitions, contextDefinitions }] = await Promise.all([
@@ -134,6 +136,7 @@ export async function createChatService({
     },
     getContexts: () => contextDefinitions,
     getFunctions,
+    getSuggestions: () => suggestions,
     hasFunction: (name: string) => {
       return functionRegistry.has(name);
     },

@@ -455,6 +455,14 @@ export class ApmPlugin implements Plugin<ApmPluginSetup, ApmPluginStart> {
       }
     );
 
+    plugins.observabilityAIAssistant.service.registerSuggestions([
+      {
+        app: 'apm',
+        prompt: 'Visualize a thing',
+        description: 'Suggest this',
+      },
+    ]);
+
     if (fleet) {
       const agentEnrollmentExtensionData = getApmEnrollmentFlyoutData();
 

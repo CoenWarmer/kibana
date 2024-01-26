@@ -121,6 +121,12 @@ export interface FunctionDefinition<
   contexts: string[];
 }
 
+export interface Suggestion {
+  prompt: string;
+  description: string;
+  app: string;
+}
+
 export type RegisterContextDefinition = (options: ContextDefinition) => void;
 
 export type ContextRegistry = Map<string, ContextDefinition>;

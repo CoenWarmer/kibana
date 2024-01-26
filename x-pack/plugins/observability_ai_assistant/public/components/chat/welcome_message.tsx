@@ -20,11 +20,13 @@ import type { ActionConnector } from '@kbn/triggers-actions-ui-plugin/public';
 import { GenerativeAIForObservabilityConnectorFeatureId } from '@kbn/actions-plugin/common';
 import type { UseKnowledgeBaseResult } from '../../hooks/use_knowledge_base';
 import type { UseGenAIConnectorsResult } from '../../hooks/use_genai_connectors';
+import type { Suggestion } from '../../../common/types';
 import ctaImage from '../../assets/elastic_ai_assistant.png';
 import { Disclaimer } from './disclaimer';
 import { WelcomeMessageConnectors } from './welcome_message_connectors';
 import { WelcomeMessageKnowledgeBase } from './welcome_message_knowledge_base';
 import { useKibana } from '../../hooks/use_kibana';
+import { Suggestions } from '../suggestions/suggestions';
 
 const fullHeightClassName = css`
   height: 100%;
@@ -38,9 +40,13 @@ const centerMaxWidthClassName = css`
 export function WelcomeMessage({
   connectors,
   knowledgeBase,
+  suggestions,
+  onSelectSuggestion,
 }: {
   connectors: UseGenAIConnectorsResult;
   knowledgeBase: UseKnowledgeBaseResult;
+  suggestions: Suggestion[];
+  onSelectSuggestion: ({ prompt, type }: { prompt: string; type: 'select' | 'fill' }) => void;
 }) {
   const breakpoint = useCurrentEuiBreakpoint();
 
@@ -115,6 +121,7 @@ export function WelcomeMessage({
         </EuiFlexItem>
 
         <EuiFlexItem grow={false}>
+          <Suggestions suggestions={suggestions} onSelect={onSelectSuggestion} />
           <EuiSpacer size="m" />
           <Disclaimer />
         </EuiFlexItem>

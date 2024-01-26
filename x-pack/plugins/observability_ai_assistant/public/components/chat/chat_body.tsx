@@ -122,6 +122,8 @@ export function ChatBody({
     onConversationUpdate,
   });
 
+  const suggestions = chatService.getSuggestions();
+
   const timelineContainerRef = useRef<HTMLDivElement | null>(null);
 
   let footer: React.ReactNode;
@@ -176,6 +178,23 @@ export function ChatBody({
       setPromptEditorHeight(0);
     } else {
       setPromptEditorHeight(editorHeight + PADDING_AND_BORDER);
+    }
+  };
+
+  const handleSuggestionSelection = ({
+    prompt,
+    type,
+  }: {
+    prompt: string;
+    type: 'select' | 'fill';
+  }) => {
+    if (type === 'select' && connectors.selectedConnector) {
+      next(
+        messages.concat({
+          '@timestamp': new Date().toISOString(),
+          message: { role: MessageRole.User, content: prompt },
+        })
+      );
     }
   };
 
@@ -257,7 +276,12 @@ export function ChatBody({
               className={animClassName}
             >
               {connectors.connectors?.length === 0 || messages.length === 1 ? (
-                <WelcomeMessage connectors={connectors} knowledgeBase={knowledgeBase} />
+                <WelcomeMessage
+                  connectors={connectors}
+                  knowledgeBase={knowledgeBase}
+                  suggestions={suggestions}
+                  onSelectSuggestion={handleSuggestionSelection}
+                />
               ) : (
                 <ChatTimeline
                   startedFrom={startedFrom}
