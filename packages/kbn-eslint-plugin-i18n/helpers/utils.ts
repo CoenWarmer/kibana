@@ -57,3 +57,28 @@ export function getTranslatableValueFromString(str: string) {
 
   return strTrimmed;
 }
+
+export function cleanString(str: string) {
+  const strTrimmed = str.trim();
+
+  if (strTrimmed.length === 1) {
+    return '';
+  }
+
+  // Numbers
+  if (strTrimmed.replace(/[0-9]+/g, '').length === 0) {
+    return '';
+  }
+
+  // Markdown
+  if (strTrimmed.replace(/```\w*```/g, '').length === 0) {
+    return '';
+  }
+
+  // Special characters
+  if (strTrimmed.replace(/[!\@\#\$\%\^\&\*\(\)\_\+\{\}\|]+/g, '').length === 0) {
+    return '';
+  }
+
+  return strTrimmed;
+}
