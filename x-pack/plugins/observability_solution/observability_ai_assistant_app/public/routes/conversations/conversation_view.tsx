@@ -6,6 +6,7 @@
  */
 import { EuiFlexGroup, EuiFlexItem, EuiLoadingSpinner, EuiSpacer, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/css';
+import useObservable from 'react-use/lib/useObservable';
 import { euiThemeVars } from '@kbn/ui-theme';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -22,6 +23,7 @@ import { useObservabilityAIAssistantAppService } from '../../hooks/use_observabi
 import { useKibana } from '../../hooks/use_kibana';
 import { useConversationKey } from '../../hooks/use_conversation_key';
 import { useConversationList } from '../../hooks/use_conversation_list';
+import { ChatContainer } from '../../components/chat/chat_container';
 
 const SECOND_SLOT_CONTAINER_WIDTH = 400;
 
@@ -134,54 +136,62 @@ export function ConversationView() {
     }
   `;
 
-  return (
-    <EuiFlexGroup direction="row" className={containerClassName} gutterSize="none">
-      <EuiFlexItem grow={false} className={conversationListContainerName}>
-        <ConversationList
-          selectedConversationId={conversationId}
-          conversations={conversationList.conversations}
-          isLoading={conversationList.isLoading}
-          onConversationDeleteClick={(deletedConversationId) => {
-            conversationList.deleteConversation(deletedConversationId).then(() => {
-              if (deletedConversationId === conversationId) {
-                navigateToConversation(undefined);
-              }
-            });
-          }}
-        />
-        <EuiSpacer size="s" />
-      </EuiFlexItem>
+  const { messages, title } = useObservable(service.conversations.predefinedConversation$) ?? {
+    messages: [],
+    title: undefined,
+  };
 
-      {!chatService.value ? (
-        <EuiFlexGroup direction="column" alignItems="center" gutterSize="l">
-          <EuiFlexItem grow={false}>
-            <EuiSpacer size="xl" />
-            <EuiLoadingSpinner size="l" />
-          </EuiFlexItem>
-        </EuiFlexGroup>
-      ) : null}
+  return chatService.value ? (
+    <ObservabilityAIAssistantChatServiceContext.Provider value={chatService.value}>
+      <ChatContainer initialMessages={messages} initialTitle={title ?? ''} />
+    </ObservabilityAIAssistantChatServiceContext.Provider>
+  ) : null;
+  // <EuiFlexGroup direction="row" className={containerClassName} gutterSize="none">
+  //   <EuiFlexItem grow={false} className={conversationListContainerName}>
+  //     <ConversationList
+  //       selectedConversationId={conversationId}
+  //       conversations={conversationList.conversations}
+  //       isLoading={conversationList.isLoading}
+  //       onConversationDeleteClick={(deletedConversationId) => {
+  //         conversationList.deleteConversation(deletedConversationId).then(() => {
+  //           if (deletedConversationId === conversationId) {
+  //             navigateToConversation(undefined);
+  //           }
+  //         });
+  //       }}
+  //     />
+  //     <EuiSpacer size="s" />
+  //   </EuiFlexItem>
 
-      {chatService.value && (
-        <ObservabilityAIAssistantChatServiceContext.Provider value={chatService.value}>
-          <ChatBody
-            key={bodyKey}
-            currentUser={currentUser}
-            connectors={connectors}
-            initialConversationId={conversationId}
-            knowledgeBase={knowledgeBase}
-            showLinkToConversationsApp={false}
-            onConversationUpdate={handleConversationUpdate}
-          />
+  //   {!chatService.value ? (
+  //     <EuiFlexGroup direction="column" alignItems="center" gutterSize="l">
+  //       <EuiFlexItem grow={false}>
+  //         <EuiSpacer size="xl" />
+  //         <EuiLoadingSpinner size="l" />
+  //       </EuiFlexItem>
+  //     </EuiFlexGroup>
+  //   ) : null}
 
-          <div className={sidebarContainerClass}>
-            <ChatInlineEditingContent
-              setContainer={setSecondSlotContainer}
-              visible={isSecondSlotVisible}
-              style={{ width: '100%' }}
-            />
-          </div>
-        </ObservabilityAIAssistantChatServiceContext.Provider>
-      )}
-    </EuiFlexGroup>
-  );
+  //   {chatService.value && (
+  //     <ObservabilityAIAssistantChatServiceContext.Provider value={chatService.value}>
+  //       <ChatBody
+  //         key={bodyKey}
+  //         currentUser={currentUser}
+  //         connectors={connectors}
+  //         initialConversationId={conversationId}
+  //         knowledgeBase={knowledgeBase}
+  //         showLinkToConversationsApp={false}
+  //         onConversationUpdate={handleConversationUpdate}
+  //       />
+
+  //       <div className={sidebarContainerClass}>
+  //         <ChatInlineEditingContent
+  //           setContainer={setSecondSlotContainer}
+  //           visible={isSecondSlotVisible}
+  //           style={{ width: '100%' }}
+  //         />
+  //       </div>
+  //     </ObservabilityAIAssistantChatServiceContext.Provider>
+  //   )}
+  // </EuiFlexGroup>
 }

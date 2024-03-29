@@ -33,6 +33,8 @@ const minWidthClassName = css`
 const chatHeaderClassName = css`
   padding-top: 12px;
   padding-bottom: 12px;
+  // width: 560px;
+  width: 100%;
 `;
 
 const chatHeaderMobileClassName = css`
@@ -115,7 +117,7 @@ export function ChatHeader({
         <EuiFlexItem grow className={minWidthClassName}>
           <EuiInlineEditTitle
             heading="h2"
-            size={breakpoint === 'xs' ? 'xs' : 's'}
+            size="xs"
             value={newTitle}
             className={css`
               color: ${!!title ? theme.euiTheme.colors.text : theme.euiTheme.colors.subduedText};

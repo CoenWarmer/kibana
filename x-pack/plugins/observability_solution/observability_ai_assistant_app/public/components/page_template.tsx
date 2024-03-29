@@ -9,8 +9,9 @@ import React from 'react';
 import { useKibana } from '../hooks/use_kibana';
 
 const pageSectionContentClassName = css`
-  width: 100%;
   display: flex;
+  width: 100%;
+  max-width: 100% !important;
   flex-grow: 1;
   padding-top: 0;
   padding-bottom: 0;

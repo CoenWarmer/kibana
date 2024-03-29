@@ -45,6 +45,7 @@ export const FlyoutWrapper = ({
           css={css`
             pointer-events: auto;
             background-color: ${euiThemeVars.euiColorEmptyShade};
+            height: 56px;
           `}
           data-test-subj="editFlyoutHeader"
         >

@@ -51,6 +51,9 @@ const fullHeightClassName = css`
 const timelineClassName = (scrollBarStyles: string) => css`
   overflow-y: auto;
   ${scrollBarStyles}
+  // width: 560px;
+  width: 100%;
+  align-self: center;
 `;
 
 const promptEditorClassname = css`
@@ -70,6 +73,8 @@ const chatBodyContainerClassNameWithError = css`
 const promptEditorContainerClassName = css`
   padding-top: 12px;
   padding-bottom: 8px;
+  display: flex;
+  justify-content: center;
 `;
 
 const fadeInAnimation = keyframes`
@@ -88,6 +93,11 @@ const animClassName = css`
   opacity: 0;
   animation: ${fadeInAnimation} ${euiThemeVars.euiAnimSpeedNormal}
     ${euiThemeVars.euiAnimSlightBounce} ${euiThemeVars.euiAnimSpeedNormal} forwards;
+`;
+
+const foo = css`
+  width: 100%;
+  max-width: 700px;
 `;
 
 const PADDING_AND_BORDER = 32;
@@ -162,6 +172,8 @@ export function ChatBody({
 
   const headerContainerClassName = css`
     padding-right: ${showLinkToConversationsApp ? '32px' : '0'};
+    align-items: center;
+    height: 56px;
   `;
 
   const [stickToBottom, setStickToBottom] = useState(true);
@@ -381,20 +393,22 @@ export function ChatBody({
             color="subdued"
             className={promptEditorContainerClassName}
           >
-            <PromptEditor
-              disabled={!connectors.selectedConnector || !hasCorrectLicense}
-              hidden={connectors.loading || connectors.connectors?.length === 0}
-              loading={isLoading}
-              onChangeHeight={handleChangeHeight}
-              onSendTelemetry={(eventWithPayload) =>
-                chatService.sendAnalyticsEvent(eventWithPayload)
-              }
-              onSubmit={(message) => {
-                setStickToBottom(true);
-                return next(messages.concat(message));
-              }}
-            />
-            <EuiSpacer size="s" />
+            <div className={foo}>
+              <PromptEditor
+                disabled={!connectors.selectedConnector || !hasCorrectLicense}
+                hidden={connectors.loading || connectors.connectors?.length === 0}
+                loading={isLoading}
+                onChangeHeight={handleChangeHeight}
+                onSendTelemetry={(eventWithPayload) =>
+                  chatService.sendAnalyticsEvent(eventWithPayload)
+                }
+                onSubmit={(message) => {
+                  setStickToBottom(true);
+                  return next(messages.concat(message));
+                }}
+              />
+              <EuiSpacer size="s" />
+            </div>
           </EuiPanel>
         </EuiFlexItem>
       </>
