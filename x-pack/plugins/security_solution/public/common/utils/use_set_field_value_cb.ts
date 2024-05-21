@@ -18,7 +18,7 @@ export const useSetFieldValueWithCallback = ({
   setFieldValue: FormHook['setFieldValue'];
 }) => {
   const isWaitingRef = useRef(false);
-  const valueRef = useRef();
+  const valueRef = useRef(undefined);
   const [callback, setCallback] = useState<() => void>(() => null);
 
   useEffect(() => {

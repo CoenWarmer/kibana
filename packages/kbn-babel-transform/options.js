@@ -26,6 +26,7 @@ function getBabelOptions(path, config = {}) {
     babelrc: false,
     sourceMaps: config.disableSourceMaps ? false : 'both',
     ast: false,
+    plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]],
   };
 }
 

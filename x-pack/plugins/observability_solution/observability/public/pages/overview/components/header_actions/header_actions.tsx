@@ -34,7 +34,7 @@ export function HeaderActions({
   onTimeRangeRefresh,
   onTourDismiss,
 }: HeaderActionsProps) {
-  const buttonRef = useRef();
+  const buttonRef = useRef(undefined);
 
   const { relativeStart, relativeEnd, refreshInterval, refreshPaused } = useDatePickerContext();
 

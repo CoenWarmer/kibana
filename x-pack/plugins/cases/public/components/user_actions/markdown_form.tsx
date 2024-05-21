@@ -27,7 +27,7 @@ const UserActionMarkdownComponent = forwardRef<
   UserActionMarkdownRefObject,
   UserActionMarkdownProps
 >(({ id, content, caseId, isEditable, onChangeEditable, onSaveContent }, ref) => {
-  const editorRef = useRef();
+  const editorRef = useRef(undefined);
   const fieldName = 'content';
 
   return isEditable ? (
