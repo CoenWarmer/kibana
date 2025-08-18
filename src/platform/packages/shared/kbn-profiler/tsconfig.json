@@ -13,8 +13,5 @@
   "exclude": [
     "target/**/*"
   ],
-  "kbn_references": [
-    "@kbn/repo-info",
-    "@kbn/tooling-log",
-  ]
+  "kbn_references": []
 }

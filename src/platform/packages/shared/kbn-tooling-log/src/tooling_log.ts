@@ -154,6 +154,13 @@ export class ToolingLog implements SomeDevLog {
     });
   }
 
+  public withContext(context: string) {
+    return new ToolingLog(undefined, {
+      parent: this,
+      context,
+    });
+  }
+
   private sendToWriters({ type, context }: { type: MessageTypes; context?: string }, args: any[]) {
     const indent = this.indentWidth$.getValue();
     const writers = this.writers$.getValue();

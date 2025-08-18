@@ -37,4 +37,6 @@ export interface CloneWorkspaceOptions {
 export interface CloneWorkspaceResult {
   /** Absolute path on disk to the cloned (or reused) working copy. */
   dest: string;
+  /** True if the workspace's checked out commit changed during this invocation (requiring rebuild). */
+  changed: boolean;
 }

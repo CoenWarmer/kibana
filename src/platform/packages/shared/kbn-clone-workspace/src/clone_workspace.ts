@@ -9,6 +9,7 @@
 import Os from 'os';
 import Path from 'path';
 import { REPO_ROOT } from '@kbn/repo-info';
+import execa from 'execa';
 import type { CloneWorkspaceOptions, CloneWorkspaceResult } from './types';
 import { ensureTempRepo } from './ensure_temp_repo';
 import { checkoutAndBootstrap } from './checkout_and_bootstrap';
@@ -37,6 +38,14 @@ export async function cloneWorkspace(
     destinationDir,
     log,
   });
+  // record current HEAD (may fail on fresh clone before first checkout)
+  let beforeRef: string | undefined;
+  try {
+    const { stdout } = await execa('git', ['rev-parse', 'HEAD'], { cwd: destinationDir });
+    beforeRef = stdout.trim();
+  } catch {
+    // ignore
+  }
 
   await checkoutAndBootstrap({
     force,
@@ -45,7 +54,16 @@ export async function cloneWorkspace(
     repositoryDir: destinationDir,
   });
 
+  let afterRef: string | undefined;
+  try {
+    const { stdout } = await execa('git', ['rev-parse', 'HEAD'], { cwd: destinationDir });
+    afterRef = stdout.trim();
+  } catch {
+    // ignore
+  }
+
   return {
     dest: destinationDir,
+    changed: beforeRef !== afterRef,
   };
 }
