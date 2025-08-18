@@ -16,6 +16,7 @@ import type { InitialBenchConfig } from '../src/config/types';
  */
 const config: InitialBenchConfig = {
   runs: 2,
+  name: 'example',
   benchmarks: [
     {
       kind: 'module',

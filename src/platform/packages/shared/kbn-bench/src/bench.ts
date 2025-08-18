@@ -20,6 +20,7 @@ import { reportResults } from './report/report_results';
 import { writeResults } from './write_results';
 import { getDefaultDataDir } from './filesystem/get_default_data_dir';
 import type { GlobalRunContext } from './types';
+import { collectAndRunForCompare } from './collect_and_run_for_compare';
 
 export async function bench({
   log,
@@ -48,14 +49,17 @@ export async function bench({
     globalConfig,
     runtimeOverrides,
     dataDir: getDefaultDataDir(),
+    baseWorkspaceDir: REPO_ROOT,
     log,
   };
 
   const baseRefContext: GlobalRunContext = {
     ...globalRunContext,
-    workspaceDir: REPO_ROOT,
+    workspaceDir: globalRunContext.baseWorkspaceDir,
     ref: baseRef,
   };
+
+  log.info(`Running benchmarks for base ref (${baseRef})`);
 
   const baseRefResults = await collectAndRun({
     configGlob,
@@ -77,7 +81,9 @@ export async function bench({
   const fullCompareRef = (
     await execa('git', ['rev-parse', compareRef!], { cwd: REPO_ROOT })
   ).stdout.trim();
+
   const { dest } = await cloneWorkspace({ ref: fullCompareRef, log });
+
   log.info(`Cloned compare ref ${fullCompareRef} to ${dest}`);
 
   const compareRefContext: GlobalRunContext = {
@@ -86,18 +92,19 @@ export async function bench({
     ref: fullCompareRef,
   };
 
-  log.info(`Collecting & running benchmarks for compare ref (${fullCompareRef})`);
-  const compareRefResults = await collectAndRun({
+  log.info(`Running benchmarks for compare ref (${fullCompareRef})`);
+
+  const compareRefResults = await collectAndRunForCompare({
     context: compareRefContext,
-    configGlob,
+    baseRefResults,
   });
+
   log.info(`Completed benchmarks for compare ref (${fullCompareRef})`);
 
   await writeResults(compareRefContext, compareRefResults);
 
   log.debug(`Wrote results for compare ref (${fullCompareRef})`);
 
-  log.info('Reporting benchmark diff');
   reportDiff(
     log,
     {

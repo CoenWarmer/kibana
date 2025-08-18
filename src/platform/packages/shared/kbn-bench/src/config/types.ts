@@ -7,6 +7,9 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
+export type CompareExists = 'lhs' | 'virtual' | 'rhs';
+export type CompareMissing = 'skip' | 'lhs' | 'virtual';
+
 export interface BenchmarkBase {
   kind: string;
   name: string;
@@ -15,6 +18,10 @@ export interface BenchmarkBase {
   runs?: number;
   timeout?: number;
   skip?: boolean;
+  compare?: {
+    exists?: CompareExists;
+    missing?: CompareMissing;
+  };
 }
 
 export interface ModuleBenchmark extends BenchmarkBase {
@@ -36,6 +43,7 @@ export interface ScriptBenchmark extends BenchmarkBase {
 export type Benchmark = ModuleBenchmark | ScriptBenchmark;
 
 export interface InitialBenchConfig {
+  name: string;
   benchmarks: Benchmark[];
   runs?: number;
   tags?: string[];
