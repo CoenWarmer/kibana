@@ -90,6 +90,7 @@ export async function collectAndRun({
       );
     } catch (err) {
       log.error(`Config path= ${relConfigPath} failed: ${err.message}`);
+      log.debug(err.stack);
     }
   }
 

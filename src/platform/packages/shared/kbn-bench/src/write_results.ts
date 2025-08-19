@@ -17,7 +17,7 @@ export async function writeResults(context: GlobalRunContext, results: ConfigRes
     results.map(async (result) => {
       const destDir = getFileBaseDir({
         ...context,
-        configPath: result.config.path,
+        configName: result.config.name,
       });
       const dest = Path.join(destDir, 'results.json');
 

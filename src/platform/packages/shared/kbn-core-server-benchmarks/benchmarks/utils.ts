@@ -82,7 +82,6 @@ async function ensureKibanaBuild({
         'scripts/build',
         '--skip-archives',
         '--skip-cdn-assets',
-        '--skip-node-download',
         '--skip-os-packages',
         '--skip-docker-cloud',
         '--skip-docker-serverless',
@@ -286,6 +285,13 @@ async function startKibana({
   });
   log.info('Kibana is now available');
 
+  // log rest of output while the process is running
+  waitForStdout({
+    proc,
+    log,
+    search: 'this_will_never_happen',
+  }).catch((error) => {});
+
   return { proc };
 }
 
@@ -301,33 +307,45 @@ export async function stopGracefully(
     log: ToolingLog;
   }
 ) {
-  const gracefulSignal = 'SIGTERM';
-  const forceSignal = 'SIGKILL';
+  if (proc.exitCode !== null) {
+    return;
+  }
+
+  log.debug(`Attempting to gracefully shut down ${name} (pid=${proc.pid})`);
+
+  async function sendAndWait(signal: NodeJS.Signals, timeout: number) {
+    log.debug(`Sending ${signal} to ${name} (pid=${proc.pid})`);
+    proc.kill(signal);
+
+    const waitForProc = proc.then(
+      () => true,
+      () => true // ignore error rejection caused by signal
+    );
+
+    const exited = await Promise.race([
+      waitForProc,
+      new Promise<boolean>((r) => setTimeout(() => r(false), timeout)),
+    ]);
+
+    return exited;
+  }
 
   // Already exited?
   if (proc.exitCode !== null) return;
 
-  log.debug(`Stopping ${name} with ${gracefulSignal} (pid=${proc.pid})`);
-
-  proc.kill(gracefulSignal);
-
-  const waitForExit = proc.then(
-    () => true,
-    () => true // ignore error rejection caused by signal
-  );
-
-  const timedOut = await Promise.race([
-    waitForExit,
-    new Promise<boolean>((r) => setTimeout(() => r(false), timeoutMs)),
-  ]);
-
-  if (!timedOut && proc.exitCode === null) {
-    log.warning(
-      `${name} did not exit within ${timeoutMs}ms after ${gracefulSignal}, sending ${forceSignal}`
-    );
-    proc.kill(forceSignal);
-    await waitForExit; // final wait
+  if (await sendAndWait('SIGINT', 30000)) {
+    log.debug('Gracefully exited after SIGINT');
+    return;
   }
+
+  if (await sendAndWait('SIGTERM', 30000)) {
+    log.debug('Gracefully exited after SIGTERM');
+    return;
+  }
+
+  log.warning(`${name} did not exit within ${timeoutMs}ms after SIGINT/SIGTERM, sending SIGKILL`);
+
+  await sendAndWait('SIGKILL', 1000);
 }
 
 export { ensureKibanaBuild, startEs, startKibana };

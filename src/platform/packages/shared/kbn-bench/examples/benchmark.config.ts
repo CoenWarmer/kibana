@@ -23,6 +23,9 @@ const config: InitialBenchConfig = {
       name: 'cpu.primes-inline',
       description: 'Compute a list of prime numbers (in-process module benchmark)',
       module: require.resolve('./primes_benchmark'),
+      compare: {
+        missing: 'skip',
+      },
     },
     {
       kind: 'script',
@@ -31,6 +34,9 @@ const config: InitialBenchConfig = {
       run: {
         cmd: 'node',
         args: [require.resolve('./worker_script')],
+      },
+      compare: {
+        missing: 'skip',
       },
     },
   ],

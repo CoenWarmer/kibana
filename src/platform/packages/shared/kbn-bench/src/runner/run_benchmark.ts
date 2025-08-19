@@ -131,7 +131,7 @@ export async function runBenchmark({
   const testResultsBaseDir = Path.join(
     getFileBaseDir({
       ...context,
-      configPath: config.path,
+      configName: config.name,
     }),
     benchmark.name
   );

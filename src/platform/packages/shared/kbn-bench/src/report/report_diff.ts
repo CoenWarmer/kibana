@@ -7,7 +7,6 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import Path from 'path';
 import chalk from 'chalk';
 import { table } from 'table';
 import type { ToolingLog } from '@kbn/tooling-log';
@@ -143,24 +142,23 @@ export function reportDiff(log: ToolingLog, from: ResultSet, to: ResultSet) {
   lines.push('');
   lines.push(chalk.bold.cyan(`Benchmark diff: ${baseRef} -> ${nextRef}`));
 
-  // Match configs by relative path
-  const byPath = (rs: ResultSet) => {
+  // Match configs by config name instead of file path
+  const byName = (rs: ResultSet) => {
     const map = new Map<string, ConfigResult>();
     for (const cfg of rs.results) {
-      const rel = `./${Path.relative(rs.dir, cfg.config.path)}`;
-      map.set(rel, cfg);
+      map.set(cfg.config.name, cfg);
     }
     return map;
   };
 
-  const fromMap = byPath(from);
-  const toMap = byPath(to);
-  const allPaths = Array.from(new Set([...fromMap.keys(), ...toMap.keys()])).sort();
+  const fromMap = byName(from);
+  const toMap = byName(to);
+  const allNames = Array.from(new Set([...fromMap.keys(), ...toMap.keys()])).sort();
 
-  for (const relPath of allPaths) {
-    const baseCfg = fromMap.get(relPath);
-    const nextCfg = toMap.get(relPath);
-    lines.push(chalk.bold(`Config: ${relPath}`));
+  for (const cfgName of allNames) {
+    const baseCfg = fromMap.get(cfgName);
+    const nextCfg = toMap.get(cfgName);
+    lines.push(chalk.bold(`Config: ${cfgName}`));
     const rendered = renderBenchmarkDiff(log as any, baseCfg, nextCfg, baseRef, nextRef);
     if (rendered) {
       lines.push(...rendered, '');

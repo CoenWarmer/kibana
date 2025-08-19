@@ -6,18 +6,3 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import Path from 'path';
-
-export function getFileBaseDir({
-  dataDir,
-  configName,
-  ref,
-}: {
-  dataDir: string;
-  configName: string;
-  ref: string;
-}) {
-  const configDataDir = Path.join(dataDir, configName, ref);
-
-  return configDataDir;
-}

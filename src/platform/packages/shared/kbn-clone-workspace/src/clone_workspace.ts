@@ -6,7 +6,6 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import Os from 'os';
 import Path from 'path';
 import { REPO_ROOT } from '@kbn/repo-info';
 import execa from 'execa';
@@ -29,7 +28,7 @@ import { checkoutAndBootstrap } from './checkout_and_bootstrap';
 export async function cloneWorkspace(
   options: CloneWorkspaceOptions
 ): Promise<CloneWorkspaceResult> {
-  const destinationDir = options.tmpDir || Path.join(Os.tmpdir(), 'kibana-workspace');
+  const destinationDir = options.tmpDir || Path.join(REPO_ROOT, 'data', 'kibana-workspace');
   const force = options.force ?? false;
   const log = options.log;
 

@@ -10,16 +10,23 @@
 import type { InitialBenchConfig } from '@kbn/bench';
 
 const config: InitialBenchConfig = {
+  name: 'kibana_server',
   benchmarks: [
     {
       kind: 'module',
-      name: 'kibana_server.warm_start',
+      name: 'warm_start',
       module: require.resolve('./benchmarks/warm_start.bench.ts'),
+      compare: {
+        missing: 'lhs',
+      },
     },
     {
       kind: 'module',
-      name: 'kibana_server.cold_start',
+      name: 'cold_start',
       module: require.resolve('./benchmarks/cold_start.bench.ts'),
+      compare: {
+        missing: 'lhs',
+      },
     },
   ],
   runs: 1,

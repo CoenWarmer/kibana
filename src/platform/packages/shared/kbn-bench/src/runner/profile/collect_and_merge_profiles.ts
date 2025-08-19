@@ -9,7 +9,7 @@
 import Path from 'path';
 import Fs from 'fs/promises';
 import type { ToolingLog } from '@kbn/tooling-log';
-import { mergeProfiles } from '@kbn/profiler';
+import { concatenateProfiles } from '@kbn/profiler';
 import { partition } from 'lodash';
 
 /**
@@ -47,21 +47,22 @@ export async function collectAndMergeCpuProfiles({
 
   // --cpu-prof creates files that start with CPU.
   const [spawnedProfiles, mainThreadProfiles] = partition(unmergedProfileFiles, (file) =>
-    file.startsWith('CPU.')
+    Path.basename(file).startsWith('CPU')
   );
 
   // because these two overlap, we pick one or the other.
   const profilesToMerge = spawnedProfiles.length ? spawnedProfiles : mainThreadProfiles;
 
-  log.debug(`Merging ${unmergedProfileFiles.length} CPU profiles from ${profilesDir}`);
-
-  const mergedProfileJson = await mergeProfiles(name, profilesToMerge);
-
-  // await Promise.all(unmergedProfileFiles.map((profile) => Fs.unlink(profile).catch(() => {})));
+  log.debug(`Merging ${profilesToMerge.length} CPU profiles from ${profilesDir}`);
 
   const mergedOutputPath = Path.join(profilesDir, `${name}.merged.cpuprofile`);
 
-  await Fs.writeFile(mergedOutputPath, mergedProfileJson, 'utf8');
+  await concatenateProfiles({
+    log,
+    name,
+    out: mergedOutputPath,
+    profilePaths: profilesToMerge,
+  });
 
   log.debug(`Merged profile written to ${mergedOutputPath}`);
 

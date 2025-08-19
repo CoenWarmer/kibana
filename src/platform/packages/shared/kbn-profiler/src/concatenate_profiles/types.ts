@@ -6,18 +6,21 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import Path from 'path';
 
-export function getFileBaseDir({
-  dataDir,
-  configName,
-  ref,
-}: {
-  dataDir: string;
-  configName: string;
-  ref: string;
-}) {
-  const configDataDir = Path.join(dataDir, configName, ref);
+export interface CpuProfileNode {
+  id: number;
+  callFrame: Record<string, unknown>;
+  children?: number[];
+  parent?: number;
+  [extra: string]: unknown;
+}
 
-  return configDataDir;
+export interface CpuProfile {
+  nodes: CpuProfileNode[];
+  samples: number[];
+  timeDeltas: number[];
+  startTime?: number;
+  endTime?: number;
+  title?: string;
+  [extra: string]: unknown;
 }
