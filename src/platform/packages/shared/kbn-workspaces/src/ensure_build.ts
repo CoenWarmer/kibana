@@ -7,14 +7,8 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { ToolingLog } from '@kbn/tooling-log';
-import type { IWorkspace } from '@kbn/workspaces';
-import type { GlobalBenchConfig } from './config/types';
-
-export interface GlobalRunContext {
-  log: ToolingLog;
-  dataDir: string;
-  globalConfig: GlobalBenchConfig;
-  runtimeOverrides: Partial<GlobalBenchConfig>;
-  workspace: IWorkspace;
+export interface EnsureBuildOptions {
+  // placeholder for future build options
+  // shape intentionally generic; real build will define explicit fields
+  [key: string]: unknown;
 }

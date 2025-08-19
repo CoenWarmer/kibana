@@ -7,8 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-module.exports = {
-  preset: '@kbn/test/jest_node',
-  rootDir: '../../../../..',
-  roots: ['<rootDir>/src/platform/packages/shared/kbn-clone-workspace'],
-};
+export { activateWorktree } from './src/activate_worktree';
+export { getWorkspaceFromSourceRepo } from './src/get_workspace_from_source_repo';
+
+export type { IWorkspace } from './src/types';

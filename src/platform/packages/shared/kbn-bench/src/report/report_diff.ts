@@ -14,8 +14,7 @@ import type { ConfigResult } from '../runner/types';
 import { summarizeBenchmark, formatDuration } from './report_utils';
 
 interface ResultSet {
-  ref: string;
-  dir: string;
+  name: string;
   results: ConfigResult[];
 }
 
@@ -134,13 +133,10 @@ function renderBenchmarkDiff(
   }
 }
 
-export function reportDiff(log: ToolingLog, from: ResultSet, to: ResultSet) {
-  const baseRef = from.ref;
-  const nextRef = to.ref;
-
+export function reportDiff(log: ToolingLog, left: ResultSet, right: ResultSet) {
   const lines: string[] = [];
   lines.push('');
-  lines.push(chalk.bold.cyan(`Benchmark diff: ${baseRef} -> ${nextRef}`));
+  lines.push(chalk.bold.cyan(`Benchmark diff: ${left.name} -> ${right.name}`));
 
   // Match configs by config name instead of file path
   const byName = (rs: ResultSet) => {
@@ -151,15 +147,15 @@ export function reportDiff(log: ToolingLog, from: ResultSet, to: ResultSet) {
     return map;
   };
 
-  const fromMap = byName(from);
-  const toMap = byName(to);
-  const allNames = Array.from(new Set([...fromMap.keys(), ...toMap.keys()])).sort();
+  const leftMap = byName(left);
+  const rightMap = byName(right);
+  const allNames = Array.from(new Set([...leftMap.keys(), ...rightMap.keys()])).sort();
 
   for (const cfgName of allNames) {
-    const baseCfg = fromMap.get(cfgName);
-    const nextCfg = toMap.get(cfgName);
+    const baseCfg = leftMap.get(cfgName);
+    const nextCfg = rightMap.get(cfgName);
     lines.push(chalk.bold(`Config: ${cfgName}`));
-    const rendered = renderBenchmarkDiff(log as any, baseCfg, nextCfg, baseRef, nextRef);
+    const rendered = renderBenchmarkDiff(log as any, baseCfg, nextCfg, left.name, right.name);
     if (rendered) {
       lines.push(...rendered, '');
     }

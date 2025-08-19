@@ -7,116 +7,123 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { cloneWorkspace } from '@kbn/clone-workspace';
-import { REPO_ROOT } from '@kbn/repo-info';
 import type { ToolingLog } from '@kbn/tooling-log';
-import execa from 'execa';
-
+import type { IWorkspace } from '@kbn/workspaces';
+import { activateWorktree, getWorkspaceFromSourceRepo } from '@kbn/workspaces';
 import { collectAndRun } from './collect_and_run';
+import { collectAndRunForRightHandSide } from './collect_and_run_for_right_hand_side';
 import { getGlobalConfig } from './config/get_global_config';
 import type { GlobalBenchConfig } from './config/types';
+import { getDefaultDataDir } from './filesystem/get_default_data_dir';
 import { reportDiff } from './report/report_diff';
 import { reportResults } from './report/report_results';
-import { writeResults } from './write_results';
-import { getDefaultDataDir } from './filesystem/get_default_data_dir';
 import type { GlobalRunContext } from './types';
-import { collectAndRunForCompare } from './collect_and_run_for_compare';
+import { writeResults } from './write_results';
 
 export async function bench({
   log,
   config: configGlob,
-  compare: compareRef,
+  left,
+  right,
   profile,
   openProfile,
   grep,
 }: {
   log: ToolingLog;
   config?: string | string[];
-  compare?: string;
+  left?: string;
+  right?: string;
   profile?: boolean;
   openProfile?: boolean;
   grep?: string | string[];
 }) {
-  const baseRef = (await execa('git', ['rev-parse', 'HEAD'], { cwd: REPO_ROOT })).stdout.trim();
+  log.info(`Creating workspace for ${left || 'current working directory'}`);
 
-  log.debug(`Base ref resolved: ${baseRef}`);
+  const leftWorkspace = left
+    ? await activateWorktree({
+        log,
+        ref: left,
+      })
+    : await getWorkspaceFromSourceRepo({
+        log,
+      });
+
+  let rightWorkspace: IWorkspace | undefined;
+
+  if (right) {
+    log.info(`Creating workspace for ${right}`);
+
+    rightWorkspace = await activateWorktree({
+      log,
+      ref: right,
+    });
+  }
 
   const globalConfig = getGlobalConfig();
   const grepArray = Array.isArray(grep) ? grep : grep ? [grep] : undefined;
   const runtimeOverrides: Partial<GlobalBenchConfig> = { profile, openProfile, grep: grepArray };
 
-  const globalRunContext: Omit<GlobalRunContext, 'ref' | 'workspaceDir'> = {
+  const globalRunContext: Omit<GlobalRunContext, 'workspace'> = {
+    dataDir: getDefaultDataDir(),
+    log,
     globalConfig,
     runtimeOverrides,
-    dataDir: getDefaultDataDir(),
-    baseWorkspaceDir: REPO_ROOT,
-    log,
   };
 
-  const baseRefContext: GlobalRunContext = {
+  const leftContext: GlobalRunContext = {
     ...globalRunContext,
-    workspaceDir: globalRunContext.baseWorkspaceDir,
-    ref: baseRef,
+    workspace: leftWorkspace,
   };
 
-  log.info(`Running benchmarks for base ref (${baseRef})`);
+  const leftLog = log.withContext(leftWorkspace.getDisplayName());
 
-  const baseRefResults = await collectAndRun({
+  leftLog.info(`Running benchmarks`);
+
+  const leftResults = await collectAndRun({
     configGlob,
-    context: baseRefContext,
+    context: leftContext,
   });
 
-  log.info(`Completed benchmarks for base ref (${baseRef})`);
+  leftLog.info(`Completed benchmarks`);
 
-  await writeResults(baseRefContext, baseRefResults);
-  log.debug(`Wrote results for base ref (${baseRef})`);
+  await writeResults(leftContext, leftResults);
+  leftLog.debug(`Wrote results to disk`);
 
-  if (!compareRef) {
-    log.info('No compare ref provided; reporting single-run results');
-    reportResults(log, baseRefResults);
+  if (!rightWorkspace) {
+    log.debug('No right-hand side ref provided; reporting single-run results');
+    reportResults(log, leftResults);
     return;
   }
 
-  // Expand compare ref to full hash if it's abbreviated
-  const fullCompareRef = (
-    await execa('git', ['rev-parse', compareRef!], { cwd: REPO_ROOT })
-  ).stdout.trim();
-
-  const { dest } = await cloneWorkspace({ ref: fullCompareRef, log });
-
-  log.info(`Cloned compare ref ${fullCompareRef} to ${dest}`);
-
-  const compareRefContext: GlobalRunContext = {
+  const rightContext: GlobalRunContext = {
     ...globalRunContext,
-    workspaceDir: dest,
-    ref: fullCompareRef,
+    workspace: rightWorkspace,
   };
 
-  log.info(`Running benchmarks for compare ref (${fullCompareRef})`);
+  const rightLog = log.withContext(rightWorkspace.getDisplayName());
 
-  const compareRefResults = await collectAndRunForCompare({
-    context: compareRefContext,
-    baseRefResults,
+  rightLog.info(`Running benchmarks`);
+
+  const rightResults = await collectAndRunForRightHandSide({
+    context: rightContext,
+    leftResults,
   });
 
-  log.info(`Completed benchmarks for compare ref (${fullCompareRef})`);
+  rightLog.info(`Completed benchmarks`);
 
-  await writeResults(compareRefContext, compareRefResults);
+  await writeResults(rightContext, rightResults);
 
-  log.debug(`Wrote results for compare ref (${fullCompareRef})`);
+  rightLog.debug(`Wrote results to disk`);
 
   reportDiff(
     log,
     {
-      ref: baseRef,
-      results: baseRefResults,
-      dir: REPO_ROOT,
+      name: leftWorkspace.getDisplayName(),
+      results: leftResults,
     },
     {
-      ref: fullCompareRef,
-      results: compareRefResults,
-      dir: dest,
+      name: leftWorkspace.getDisplayName(),
+      results: rightResults,
     }
   );
-  log.info('Benchmark diff reported');
 }

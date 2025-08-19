@@ -6,7 +6,6 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import Path from 'path';
 import { collectConfigPaths } from './config/collect_config_paths';
 import { loadConfigs } from './config/load_configs';
 import { parseConfigs } from './config/parse_configs';
@@ -15,22 +14,20 @@ import type { ConfigResult } from './runner/types';
 import type { GlobalRunContext } from './types';
 import type { Benchmark, Script } from './config/types';
 
-export async function collectAndRunForCompare({
+export async function collectAndRunForRightHandSide({
   context,
-  baseRefResults,
+  leftResults,
 }: {
   context: GlobalRunContext;
-  baseRefResults: ConfigResult[];
+  leftResults: ConfigResult[];
 }): Promise<ConfigResult[]> {
-  const { log, globalConfig, runtimeOverrides, workspaceDir } = context;
+  const { log, globalConfig, runtimeOverrides, workspace } = context;
 
   const startAll = performance.now();
 
   log.debug('Collecting benchmark configs');
 
-  log.debug(`collectAndRun: workspaceDir=${workspaceDir} glob=${workspaceDir}`);
-
-  const configPaths = collectConfigPaths({ glob: workspaceDir });
+  const configPaths = collectConfigPaths({ glob: workspace.getDir() });
 
   log.debug(`Discovered ${configPaths.length} config path(s)`);
 
@@ -49,7 +46,7 @@ export async function collectAndRunForCompare({
 
   const results: ConfigResult[] = [];
 
-  for (const { config, benchmarks: benchmarkResults } of baseRefResults) {
+  for (const { config, benchmarks: benchmarkResults } of leftResults) {
     const startConfig = performance.now();
 
     const runnableBenchmarks = benchmarkResults.flatMap((benchmarkResult) => {
@@ -77,16 +74,14 @@ export async function collectAndRunForCompare({
 
         case 'virtual':
           return toVirtual(
-            { benchmark, workspaceDir: context.baseWorkspaceDir },
-            { benchmark: compareBenchmark!, workspaceDir: context.workspaceDir }
+            { benchmark, workspaceDir: context.workspace.getDir() },
+            { benchmark: compareBenchmark!, workspaceDir: context.workspace.getDir() }
           );
 
         case 'rhs':
           return compareBenchmark!;
       }
     });
-
-    const relConfigPath = `./${Path.relative(context.baseWorkspaceDir, config.path)}`;
 
     try {
       results.push(
@@ -99,12 +94,10 @@ export async function collectAndRunForCompare({
         })
       );
       log.info(
-        `Finished config path= ${relConfigPath} in ${Math.round(
-          (performance.now() - startConfig) / 1000
-        )}s`
+        `Finished config ${config.name} in ${Math.round((performance.now() - startConfig) / 1000)}s`
       );
     } catch (err) {
-      log.error(`Config path= ${relConfigPath} failed: ${err.message}`);
+      log.error(`Config ${config.name} failed: ${err.message}`);
       log.debug(err);
     }
   }

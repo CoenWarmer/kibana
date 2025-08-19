@@ -4293,10 +4293,6 @@
   version "0.0.0"
   uid ""
 
-"@kbn/clone-workspace@link:src/platform/packages/shared/kbn-clone-workspace":
-  version "0.0.0"
-  uid ""
-
 "@kbn/cloud-chat-plugin@link:x-pack/platform/plugins/private/cloud_integrations/cloud_chat":
   version "0.0.0"
   uid ""
@@ -8622,6 +8618,10 @@
   uid ""
 
 "@kbn/workflows@link:src/platform/packages/shared/kbn-workflows":
+  version "0.0.0"
+  uid ""
+
+"@kbn/workspaces@link:src/platform/packages/shared/kbn-workspaces":
   version "0.0.0"
   uid ""
 

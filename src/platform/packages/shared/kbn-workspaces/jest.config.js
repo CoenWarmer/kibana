@@ -7,14 +7,8 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { ToolingLog } from '@kbn/tooling-log';
-import type { IWorkspace } from '@kbn/workspaces';
-import type { GlobalBenchConfig } from './config/types';
-
-export interface GlobalRunContext {
-  log: ToolingLog;
-  dataDir: string;
-  globalConfig: GlobalBenchConfig;
-  runtimeOverrides: Partial<GlobalBenchConfig>;
-  workspace: IWorkspace;
-}
+module.exports = {
+  preset: '@kbn/test/jest_node',
+  rootDir: '../../../../..',
+  roots: ['<rootDir>/src/platform/packages/shared/kbn-workspaces'],
+};

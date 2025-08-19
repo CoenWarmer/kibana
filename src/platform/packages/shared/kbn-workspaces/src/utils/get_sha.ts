@@ -7,6 +7,10 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-export { cloneWorkspace } from './src/clone_workspace';
+import execa from 'execa';
 
-export type { CloneWorkspaceOptions, CloneWorkspaceResult } from './src/types';
+export async function getSha(cwd: string, ref: string): Promise<string> {
+  const { stdout: shaStdout } = await execa('git', ['rev-parse', ref], { cwd });
+
+  return shaStdout.trim();
+}

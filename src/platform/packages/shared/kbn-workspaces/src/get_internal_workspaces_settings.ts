@@ -7,14 +7,14 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { ToolingLog } from '@kbn/tooling-log';
-import type { IWorkspace } from '@kbn/workspaces';
-import type { GlobalBenchConfig } from './config/types';
+import type { InternalWorkspaceSettings, WorkspaceSettings } from './types';
 
-export interface GlobalRunContext {
-  log: ToolingLog;
-  dataDir: string;
-  globalConfig: GlobalBenchConfig;
-  runtimeOverrides: Partial<GlobalBenchConfig>;
-  workspace: IWorkspace;
+const DEFAULT_MAX_WORKSPACES = 10;
+
+export function getInternalWorkspaceSettings(
+  settings: Pick<WorkspaceSettings, 'maxWorkspaces'>
+): InternalWorkspaceSettings {
+  return {
+    maxWorkspaces: settings.maxWorkspaces || DEFAULT_MAX_WORKSPACES,
+  };
 }

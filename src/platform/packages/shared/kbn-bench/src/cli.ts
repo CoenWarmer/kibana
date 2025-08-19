@@ -16,7 +16,8 @@ export function cli() {
     async ({ flags, log }) => {
       return bench({
         log: log.withContext('bench'),
-        compare: flags.compare,
+        left: flags.left,
+        right: flags.right,
         config: flags.config,
         profile: Boolean(flags.profile),
         openProfile: Boolean(flags['open-profile']),
@@ -25,10 +26,11 @@ export function cli() {
     },
     {
       flags: {
-        string: ['config', 'compare', 'grep'],
+        string: ['config', 'left', 'right', 'grep'],
         boolean: ['profile', 'open-profile'],
         help: `--config           Location (glob) of benchmark config files
-      --compare         Git ref to compare against
+      --left            Git ref for baseline (defaults to current working directory)
+      --right           Git ref to compare against
       --profile         Collect a CPU profile for each benchmark suite
       --open-profile    After merging, open each merged profile in speedscope
       --grep            Filter benchmarks by (case-insensitive) substring(s); can repeat

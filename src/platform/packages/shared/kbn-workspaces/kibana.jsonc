@@ -1,6 +1,6 @@
 {
   "type": "shared-server",
-  "id": "@kbn/clone-workspace",
+  "id": "@kbn/workspaces",
   "owner": "@elastic/kibana-operations",
   "group": "platform",
   "visibility": "shared",

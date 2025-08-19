@@ -6,7 +6,6 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
-import Path from 'path';
 import { collectConfigPaths } from './config/collect_config_paths';
 import { loadConfigs } from './config/load_configs';
 import { parseConfigs } from './config/parse_configs';
@@ -21,19 +20,19 @@ export async function collectAndRun({
   context: GlobalRunContext;
   configGlob?: string | string[];
 }): Promise<ConfigResult[]> {
-  const { log, globalConfig, runtimeOverrides, workspaceDir } = context;
+  const { log, globalConfig, runtimeOverrides, workspace } = context;
 
   const startAll = performance.now();
 
   log.debug('Collecting benchmark configs');
 
   log.debug(
-    `collectAndRun: workspaceDir=${workspaceDir} glob=${
-      Array.isArray(configGlob) ? configGlob.join(',') : configGlob || workspaceDir
+    `collectAndRun: glob=${
+      Array.isArray(configGlob) ? configGlob.join(',') : configGlob || workspace.getDir()
     }`
   );
 
-  const configPaths = collectConfigPaths({ glob: configGlob || workspaceDir });
+  const configPaths = collectConfigPaths({ glob: configGlob || workspace.getDir() });
 
   log.debug(`Discovered ${configPaths.length} config path(s)`);
 
@@ -65,12 +64,10 @@ export async function collectAndRun({
   for (const config of configsWithBenchmarks) {
     const startConfig = performance.now();
 
-    const relConfigPath = `./${Path.relative(context.workspaceDir, config.path)}`;
-
     const runnableBenchmarks = config.benchmarks.filter((benchmark) => !benchmark.skip);
 
     log.info(
-      `Running config path= ${relConfigPath} with ${runnableBenchmarks.length}/${config.benchmarks.length} benchmark(s)`
+      `Running config ${config.name} with ${runnableBenchmarks.length}/${config.benchmarks.length} benchmark(s)`
     );
 
     try {
@@ -84,12 +81,10 @@ export async function collectAndRun({
         })
       );
       log.info(
-        `Finished config path= ${relConfigPath} in ${Math.round(
-          (performance.now() - startConfig) / 1000
-        )}s`
+        `Finished config ${config.name} in ${Math.round((performance.now() - startConfig) / 1000)}s`
       );
     } catch (err) {
-      log.error(`Config path= ${relConfigPath} failed: ${err.message}`);
+      log.error(`Config ${config.name} failed: ${err.message}`);
       log.debug(err.stack);
     }
   }

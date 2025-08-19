@@ -6,3 +6,14 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
+import Fs from 'fs/promises';
+
+/**
+ * Returns whether a file exists
+ */
+export async function exists(path: string): Promise<boolean> {
+  return await Fs.access(path).then(
+    () => true,
+    () => false
+  );
+}

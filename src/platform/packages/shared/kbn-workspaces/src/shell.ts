@@ -11,23 +11,24 @@ import type { ToolingLog } from '@kbn/tooling-log';
 import execa from 'execa';
 import type { ExecaReturnValue } from 'execa';
 
-export async function shell({
-  log,
-  cwd,
-  cmd,
-  env = {},
-  capture = false,
-}: {
-  log: ToolingLog;
-  cwd: string;
-  cmd: string;
-  env?: Record<string, string>;
-  capture?: boolean; // when true, capture stdout/stderr instead of inheriting
-}): Promise<ExecaReturnValue<string>> {
-  log.debug(`$ (cwd: ${cwd}) ${cmd}`);
+export async function shell(
+  command: string,
+  {
+    log,
+    cwd,
+    env = {},
+    capture = false,
+  }: {
+    log: ToolingLog;
+    cwd: string;
+    env?: Record<string, string>;
+    capture?: boolean; // when true, capture stdout/stderr instead of inheriting
+  }
+): Promise<ExecaReturnValue<string>> {
+  log.debug(`$ (cwd: ${cwd}) ${command}`);
   const stdio = capture ? 'pipe' : 'inherit';
   // execa handles errors by throwing with stdout/stderr attached
-  return execa(cmd, {
+  return execa(command, {
     cwd,
     shell: true,
     env: { ...process.env, ...env, UNSAFE_DISABLE_NODE_VERSION_VALIDATION: '1' },
