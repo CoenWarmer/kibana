@@ -15,12 +15,13 @@
     "target/**/*"
   ],
   "kbn_references": [
-    "@kbn/clone-workspace",
     "@kbn/repo-info",
     "@kbn/tooling-log",
     "@kbn/dev-cli-runner",
     "@kbn/zod-helpers",
     "@kbn/zod",
     "@kbn/profiler",
+    "@kbn/workspaces",
+    "@kbn/std",
   ]
 }
