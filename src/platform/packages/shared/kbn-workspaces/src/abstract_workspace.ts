@@ -6,7 +6,10 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
+import objectHash from 'object-hash';
 import { bootstrap } from './bootstrap';
+import type { BuildOptions } from './build';
+import { build } from './build';
 import type {
   IWorkspace,
   WorkspaceGlobalContext,
@@ -57,7 +60,25 @@ export abstract class AbstractWorkspace implements IWorkspace {
     });
   }
 
-  async ensureBuild(): Promise<void> {}
+  async ensureBuild(options?: BuildOptions): Promise<void> {
+    const cacheKey = [await this.getCacheKey(), objectHash(options ?? {})].join('');
+
+    if (this.state.tasks.build?.cacheKey === cacheKey) {
+      return;
+    }
+
+    await this.ensureBootstrap();
+
+    await build({
+      log: this.context.log,
+      dir: this.getDir(),
+      options,
+    });
+
+    await this.controller.updateEntry(this.getState(), (e) => {
+      e.tasks.build = { cacheKey };
+    });
+  }
 
   async ensureCheckout(): Promise<void> {}
 }

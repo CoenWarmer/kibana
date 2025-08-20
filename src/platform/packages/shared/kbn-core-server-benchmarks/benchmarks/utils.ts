@@ -13,106 +13,6 @@ import execa, { type ExecaChildProcess } from 'execa';
 import type { ToolingLog } from '@kbn/tooling-log';
 import { DOWNLOAD_PLATFORMS, type Platform } from '../../../../../dev/build/lib/platform';
 
-interface BuildInfo {
-  sha: string;
-  number: number;
-  date: string;
-  version: string;
-  path: string; // root of built kibana
-}
-
-async function ensureKibanaBuild({
-  log,
-  cwd,
-  ref,
-  cache,
-}: {
-  log: ToolingLog;
-  cwd: string;
-  ref: string;
-  cache: boolean;
-}): Promise<BuildInfo> {
-  const buildRoot = Path.join(cwd, 'build', 'kibana');
-  const pkgPath = Path.join(buildRoot, 'package.json');
-
-  let existing: BuildInfo | undefined;
-  try {
-    const raw = await Fs.readFile(pkgPath, 'utf8');
-    const pkg = JSON.parse(raw);
-    if (pkg.build?.sha) {
-      existing = {
-        sha: pkg.build.sha,
-        number: pkg.build.number,
-        date: pkg.build.date,
-        version: pkg.version,
-        path: buildRoot,
-      };
-    }
-  } catch {
-    // ignore
-  }
-
-  // Decide if we need to build: missing marker, no existing info, sha mismatch vs ref, or cache disabled.
-  // If the provided ref is a short hash (<=12 chars) allow prefix matching against the full build sha.
-  const isShortRef = ref.length <= 12;
-  const matchesRef =
-    existing && (existing.sha === ref || (isShortRef && existing.sha.startsWith(ref)));
-  const needBuild = !cache || !existing || !matchesRef;
-  if (existing) {
-    if (needBuild) {
-      log.info(
-        `Kibana build cache mismatch (have sha=${existing.sha} version=${existing.version})` +
-          ` expected ref=${ref}${isShortRef ? ' (short)' : ''}; rebuilding`
-      );
-    } else {
-      log.debug(
-        `Reusing existing Kibana build sha=${existing.sha} version=${existing.version}` +
-          ` (cache hit, ref=${ref}$${isShortRef ? ' (short)' : ''})`
-      );
-    }
-  } else if (!existing) {
-    log.info(`No existing Kibana build found at ${buildRoot}; building (ref=${ref})`);
-  }
-  if (needBuild) {
-    const start = performance.now();
-    log.info('Starting Kibana build');
-    await execa(
-      'node',
-      [
-        'scripts/build',
-        '--skip-archives',
-        '--skip-cdn-assets',
-        '--skip-os-packages',
-        '--skip-docker-cloud',
-        '--skip-docker-serverless',
-        '--skip-docker-contexts',
-      ],
-      {
-        cwd,
-        stdio: 'inherit',
-      }
-    );
-    log.info(`Kibana build finished in ${Math.round((performance.now() - start) / 1000)}s`);
-
-    // reread package.json
-    const raw = await Fs.readFile(pkgPath, 'utf8');
-    const pkg = JSON.parse(raw);
-    existing = {
-      sha: pkg.build?.sha || ref,
-      number: pkg.build?.number || 0,
-      date: pkg.build?.date || new Date().toISOString(),
-      version: pkg.version,
-      path: buildRoot,
-    };
-  }
-
-  if (!existing) {
-    throw new Error('Build failed to produce package.json with build info');
-  }
-
-  return existing;
-}
-
 async function waitForStdout({
   log,
   proc,
@@ -348,4 +248,4 @@ export async function stopGracefully(
   await sendAndWait('SIGKILL', 1000);
 }
 
-export { ensureKibanaBuild, startEs, startKibana };
+export { startEs, startKibana };

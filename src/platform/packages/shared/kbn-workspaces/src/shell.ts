@@ -11,27 +11,52 @@ import type { ToolingLog } from '@kbn/tooling-log';
 import execa from 'execa';
 import type { ExecaReturnValue } from 'execa';
 
+interface ShellOptions {
+  log: ToolingLog;
+  cwd: string;
+  env?: Record<string, string>;
+}
+
 export async function shell(
   command: string,
-  {
-    log,
-    cwd,
-    env = {},
-    capture = false,
-  }: {
-    log: ToolingLog;
-    cwd: string;
-    env?: Record<string, string>;
-    capture?: boolean; // when true, capture stdout/stderr instead of inheriting
-  }
+  options: ShellOptions
+): Promise<ExecaReturnValue<string>>;
+
+export async function shell(
+  file: string,
+  args: string[],
+  options: ShellOptions
+): Promise<ExecaReturnValue<string>>;
+
+export async function shell(
+  ...args: [string, ShellOptions] | [string, string[], ShellOptions]
 ): Promise<ExecaReturnValue<string>> {
-  log.debug(`$ (cwd: ${cwd}) ${command}`);
-  const stdio = capture ? 'pipe' : 'inherit';
-  // execa handles errors by throwing with stdout/stderr attached
-  return execa(command, {
+  const { cwd, env, log } = args.length === 2 ? args[1] : args[2];
+
+  const execaOpts = {
     cwd,
     shell: true,
     env: { ...process.env, ...env, UNSAFE_DISABLE_NODE_VERSION_VALIDATION: '1' },
-    stdio,
-  });
+    stdio: 'pipe' as const,
+  };
+
+  const result =
+    args.length === 2
+      ? await execa.command(args[0], execaOpts)
+      : await execa(args[0], args[1], execaOpts);
+
+  const stdout = result.stdout?.trim();
+  const stderr = (result as any).stderr?.trim();
+  if (stdout) {
+    for (const line of stdout.split(/\r?\n/)) {
+      if (line) log.verbose(line);
+    }
+  }
+  if (stderr) {
+    for (const line of stderr.split(/\r?\n/)) {
+      if (line) log.verbose(line);
+    }
+  }
+
+  return result;
 }

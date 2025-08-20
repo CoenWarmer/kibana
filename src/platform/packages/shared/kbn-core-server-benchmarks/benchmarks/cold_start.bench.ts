@@ -9,7 +9,7 @@
 import type { BenchmarkRunnable } from '@kbn/bench';
 import getPort from 'get-port';
 import type { ExecaChildProcess } from 'execa';
-import { ensureKibanaBuild, startEs, startKibana, stopGracefully } from './utils';
+import { startEs, startKibana, stopGracefully } from './utils';
 
 // eslint-disable-next-line import/no-default-export
 export default async (): Promise<BenchmarkRunnable> => {
@@ -21,26 +21,21 @@ export default async (): Promise<BenchmarkRunnable> => {
   let kbnProc: ExecaChildProcess | undefined;
 
   return {
-    async beforeAll({ workspaceDir, log, ref }) {
-      await ensureKibanaBuild({
-        cwd: workspaceDir,
-        cache: true,
-        log,
-        ref,
-      });
+    async beforeAll({ workspace, log }) {
+      await workspace.ensureBuild();
     },
-    async before({ workspaceDir, log }) {
+    async before({ workspace, log }) {
       const { proc, port } = await startEs({
-        cwd: workspaceDir,
+        cwd: workspace.getDir(),
         log,
       });
 
       esPort = port;
       esProc = proc;
     },
-    async run({ workspaceDir, log }) {
+    async run({ workspace, log }) {
       const { proc } = await startKibana({
-        cwd: workspaceDir,
+        cwd: workspace.getDir(),
         log,
         port: kbnPort,
         esPort: esPort!,

@@ -14,15 +14,20 @@ import { getFileBaseDir } from './filesystem/get_file_base_dir';
 
 export async function writeResults(context: GlobalRunContext, results: ConfigResult[]) {
   await Promise.all(
-    results.map(async (result) => {
-      const destDir = getFileBaseDir({
-        ...context,
-        configName: result.config.name,
-      });
-      const dest = Path.join(destDir, 'results.json');
+    results.flatMap(async (result) => {
+      return result.benchmarks.map(async (benchmarkResult) => {
+        const destDir = getFileBaseDir({
+          dataDir: context.dataDir,
+          configName: result.config.name,
+          benchmarkName: benchmarkResult.benchmark.name,
+          workspaceName: context.workspace.getDisplayName(),
+        });
 
-      await Fs.mkdir(destDir, { recursive: true });
-      await Fs.writeFile(dest, JSON.stringify(result, null, 2));
+        const dest = Path.join(destDir, 'results.json');
+
+        await Fs.mkdir(destDir, { recursive: true });
+        await Fs.writeFile(dest, JSON.stringify(result, null, 2));
+      });
     })
   );
 }

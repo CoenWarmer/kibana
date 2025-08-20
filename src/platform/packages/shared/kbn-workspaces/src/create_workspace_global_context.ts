@@ -13,12 +13,14 @@ import type { WorkspaceGlobalContext, WorkspaceSettings } from './types';
 import { getInternalWorkspaceSettings } from './get_internal_workspaces_settings';
 
 export function createWorkspaceGlobalContext({
-  log,
+  log: parentLog,
   settings,
 }: {
   log: ToolingLog;
   settings?: WorkspaceSettings;
 }): WorkspaceGlobalContext {
+  const log = parentLog.withContext('@kbn/workspaces');
+
   const repoRoot = settings?.repoRoot ?? REPO_ROOT;
   const workspacesRoot = settings?.workspacesRoot ?? Path.join(repoRoot, 'data', 'kbn-workspaces');
 

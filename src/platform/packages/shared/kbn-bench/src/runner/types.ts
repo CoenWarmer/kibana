@@ -8,6 +8,7 @@
  */
 
 import type { ToolingLog } from '@kbn/tooling-log';
+import type { IWorkspace } from '@kbn/workspaces';
 import type { Benchmark, LoadedBenchConfig } from '../config/types';
 
 export interface BenchmarkMetric {
@@ -49,8 +50,7 @@ export interface ConfigResult {
 
 export interface BenchmarkRunContext {
   log: ToolingLog;
-  workspaceDir: string;
-  ref: string;
+  workspace: IWorkspace;
 }
 
 export interface BenchmarkRunnable {

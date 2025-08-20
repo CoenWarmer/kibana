@@ -7,8 +7,6 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import Path from 'path';
-
 import type { Benchmark, LoadedBenchConfig } from '../config/types';
 import { getFileBaseDir } from '../filesystem/get_file_base_dir';
 import type { GlobalRunContext } from '../types';
@@ -113,28 +111,25 @@ export async function runBenchmark({
   benchmark: Benchmark;
   runnable: BenchmarkRunnable;
 }): Promise<BenchmarkResult> {
-  const { log: parentLog, workspaceDir, ref } = context;
-  const log = parentLog.withContext('bench');
+  const { log: parentLog, workspace } = context;
 
   parentLog.info(
     `Start benchmark name=${benchmark.name} kind=${benchmark.kind} runs=${config.runs}`
   );
 
   const benchmarkContext: BenchmarkRunContext = {
-    log,
-    workspaceDir,
-    ref,
+    log: context.log,
+    workspace,
   };
 
   const wrapInTimeout = createCallbackWrapper(benchmarkContext, config.timeout);
 
-  const testResultsBaseDir = Path.join(
-    getFileBaseDir({
-      ...context,
-      configName: config.name,
-    }),
-    benchmark.name
-  );
+  const testResultsBaseDir = getFileBaseDir({
+    dataDir: context.dataDir,
+    configName: config.name,
+    benchmarkName: benchmark.name,
+    workspaceName: workspace.getDisplayName(),
+  });
 
   const results: BenchmarkRunResult[] = [];
 
@@ -170,7 +165,7 @@ export async function runBenchmark({
     profile = await collectAndMergeCpuProfiles({
       profilesDir,
       name: benchmark.name,
-      log,
+      log: context.log,
     });
   }
 

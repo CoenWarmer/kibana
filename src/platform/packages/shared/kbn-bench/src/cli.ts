@@ -15,7 +15,7 @@ export function cli() {
   return run(
     async ({ flags, log }) => {
       return bench({
-        log: log.withContext('bench'),
+        log: log.withContext('@kbn/bench'),
         left: flags.left,
         right: flags.right,
         config: flags.config,

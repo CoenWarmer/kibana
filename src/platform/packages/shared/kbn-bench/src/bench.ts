@@ -63,19 +63,19 @@ export async function bench({
   const grepArray = Array.isArray(grep) ? grep : grep ? [grep] : undefined;
   const runtimeOverrides: Partial<GlobalBenchConfig> = { profile, openProfile, grep: grepArray };
 
-  const globalRunContext: Omit<GlobalRunContext, 'workspace'> = {
+  const globalRunContext: Omit<GlobalRunContext, 'workspace' | 'log'> = {
     dataDir: getDefaultDataDir(),
-    log,
     globalConfig,
     runtimeOverrides,
   };
 
+  const leftLog = log.withContext(leftWorkspace.getDisplayName());
+
   const leftContext: GlobalRunContext = {
     ...globalRunContext,
     workspace: leftWorkspace,
+    log: leftLog,
   };
-
-  const leftLog = log.withContext(leftWorkspace.getDisplayName());
 
   leftLog.info(`Running benchmarks`);
 
@@ -91,16 +91,17 @@ export async function bench({
 
   if (!rightWorkspace) {
     log.debug('No right-hand side ref provided; reporting single-run results');
-    reportResults(log, leftResults);
+    log.info('\n' + reportResults(leftResults));
     return;
   }
+
+  const rightLog = log.withContext(rightWorkspace.getDisplayName());
 
   const rightContext: GlobalRunContext = {
     ...globalRunContext,
     workspace: rightWorkspace,
+    log: rightLog,
   };
-
-  const rightLog = log.withContext(rightWorkspace.getDisplayName());
 
   rightLog.info(`Running benchmarks`);
 
@@ -115,15 +116,17 @@ export async function bench({
 
   rightLog.debug(`Wrote results to disk`);
 
-  reportDiff(
-    log,
-    {
-      name: leftWorkspace.getDisplayName(),
-      results: leftResults,
-    },
-    {
-      name: leftWorkspace.getDisplayName(),
-      results: rightResults,
-    }
+  log.info(
+    '\n' +
+      reportDiff(
+        {
+          name: leftWorkspace.getDisplayName(),
+          results: leftResults,
+        },
+        {
+          name: leftWorkspace.getDisplayName(),
+          results: rightResults,
+        }
+      )
   );
 }

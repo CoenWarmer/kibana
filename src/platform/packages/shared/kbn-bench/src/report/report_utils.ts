@@ -7,19 +7,24 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-// Shared utilities for benchmark reporting.
+import { mapValues, sum } from 'lodash';
 import type { BenchmarkRunResultCompleted, BenchmarkResult, ConfigResult } from '../runner/types';
+
+export interface MetricSummary {
+  count: number;
+  sum: number | null;
+  avg: number | null;
+  min: number | null;
+  max: number | null;
+  stdDev: number | null;
+}
 
 export interface BenchmarkSummary {
   name: string;
   completed: number;
   failed: number;
-  avgTime?: number;
-  stdDevTime?: number;
-  minTime?: number;
-  maxTime?: number;
-  metricsAvg: Record<string, number>; // averaged metrics
-  metricsStdDev: Record<string, number>; // std dev per metric
+  time: MetricSummary;
+  metrics: Record<string, { description: string; summary: MetricSummary }>;
 }
 
 export function formatDuration(ms: number | undefined): string {
@@ -30,60 +35,109 @@ export function formatDuration(ms: number | undefined): string {
   return `${fixed}s`;
 }
 
+export function formatNumber(value: number | undefined): string {
+  if (value == null) return '—';
+  const abs = Math.abs(value);
+
+  // Determine unit (simple K/M/B scaling)
+  let divisor = 1;
+  let suffix = '';
+  if (abs >= 1_000_000_000) {
+    divisor = 1_000_000_000;
+    suffix = 'B';
+  } else if (abs >= 1_000_000) {
+    divisor = 1_000_000;
+    suffix = 'M';
+  } else if (abs >= 1_000) {
+    divisor = 1_000;
+    suffix = 'K';
+  }
+
+  const scaled = value / divisor;
+
+  let str: string;
+  if (Math.abs(scaled) >= 1) {
+    // two digit precision above 1, trim trailing zeros
+    str = scaled.toFixed(2);
+    str = str.replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+  } else {
+    // show up to 3 decimals when between -1 and 1
+    str = scaled.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  return str + suffix;
+}
+
+function toMetricSummary(numbers: number[]): MetricSummary {
+  if (!numbers.length) {
+    return {
+      avg: null,
+      min: null,
+      max: null,
+      sum: null,
+      stdDev: null,
+      count: 0,
+    };
+  }
+
+  const count = numbers.length;
+  const sumOf = sum(numbers);
+  const avg = sumOf / count;
+  const min = Math.min(...numbers);
+  const max = Math.max(...numbers);
+
+  const variance = numbers.reduce((acc, v) => acc + Math.pow(v - avg, 2), 0) / count;
+
+  const stdDev = Math.sqrt(variance);
+
+  return {
+    avg,
+    min,
+    max,
+    sum: sumOf,
+    stdDev,
+    count,
+  };
+}
+
 export function summarizeBenchmark(result: BenchmarkResult): BenchmarkSummary {
   const completed = result.runs.filter(
     (r): r is BenchmarkRunResultCompleted => r.status === 'completed'
   );
-  const failed = result.runs.length - completed.length;
 
-  const times = completed.map((r) => r.time);
-  const avgTime = times.length ? times.reduce((a, b) => a + b, 0) / times.length : undefined;
-  const minTime = times.length ? Math.min(...times) : undefined;
-  const maxTime = times.length ? Math.max(...times) : undefined;
+  const numFailed = result.runs.length - completed.length;
 
-  const metricSums = new Map<string, { total: number; count: number; values: number[] }>();
-  for (const run of completed) {
-    for (const [k, v] of Object.entries(run.metrics)) {
-      const val = typeof v === 'number' ? v : v.value;
-      if (typeof val !== 'number' || Number.isNaN(val)) continue;
-      const curr = metricSums.get(k) || { total: 0, count: 0, values: [] };
-      curr.total += val;
-      curr.count += 1;
-      curr.values.push(val);
-      metricSums.set(k, curr);
-    }
-  }
-  const metricsAvg: Record<string, number> = {};
-  const metricsStdDev: Record<string, number> = {};
-  for (const [k, { total, count, values }] of metricSums) {
-    const mean = total / count;
-    metricsAvg[k] = mean;
-    if (values.length > 1) {
-      const variance = values.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / values.length;
-      metricsStdDev[k] = Math.sqrt(variance);
-    } else {
-      metricsStdDev[k] = 0;
-    }
-  }
+  const times = completed.map((run) => run.time);
 
-  let stdDevTime: number | undefined;
-  if (times.length > 1 && avgTime != null) {
-    const variance = times.reduce((acc, t) => acc + Math.pow(t - avgTime, 2), 0) / times.length;
-    stdDevTime = Math.sqrt(variance);
-  } else if (times.length === 1) {
-    stdDevTime = 0;
-  }
+  const time = toMetricSummary(times);
+
+  const metrics = completed.reduce((prev, run) => {
+    Object.entries(run.metrics).forEach(([name, metric]) => {
+      const { value, description } =
+        typeof metric === 'number' ? { description: name, value: metric } : metric;
+
+      if (!prev[name]) {
+        prev[name] = { values: [value], description };
+        return;
+      }
+
+      prev[name].values.push(value);
+    });
+
+    return prev;
+  }, {} as Record<string, { values: number[]; description: string }>);
 
   return {
     name: result.benchmark.name,
     completed: completed.length,
-    failed,
-    avgTime,
-    stdDevTime,
-    minTime,
-    maxTime,
-    metricsAvg,
-    metricsStdDev,
+    failed: numFailed,
+    time,
+    metrics: mapValues(metrics, (value, key) => {
+      return {
+        description: value.description,
+        summary: toMetricSummary(value.values),
+      };
+    }),
   };
 }
 

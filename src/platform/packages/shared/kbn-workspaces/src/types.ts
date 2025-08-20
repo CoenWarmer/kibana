@@ -34,7 +34,7 @@ export interface WorkspaceGlobalContext {
 export interface WorkspaceTasksState {
   checkout: { cacheKey: string } | null;
   bootstrap: { cacheKey: string } | null;
-  build: { cacheKey: string; buildOptionsCacheKey: string } | null;
+  build: { cacheKey: string } | null;
 }
 
 interface WorkspaceStateBase {

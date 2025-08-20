@@ -6,20 +6,46 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
+import Path from 'path';
+import execa from 'execa';
+import minimatch from 'minimatch';
 
-import path from 'path';
-import fastGlob from 'fast-glob';
-import { REPO_ROOT } from '@kbn/repo-info';
+export async function collectConfigPaths({
+  patterns,
+  cwd,
+}: {
+  patterns: string[];
+  cwd: string;
+}): Promise<string[]> {
+  const filename = 'benchmark.config.ts';
 
-export function collectConfigPaths({ glob }: { glob: string | string[] }): string[] {
-  const globs = Array.isArray(glob) ? glob : [glob];
-  const patterns = globs.map((g) =>
-    path.isAbsolute(g)
-      ? path.join(g, '**/benchmark.config.ts')
-      : path.join(REPO_ROOT, g, '**/benchmark.config.ts')
+  // get all the benchmark files first, this is much faster than globbing directly
+  const { stdout: lsFilesStdout } = await execa(
+    'git',
+    [
+      'ls-files',
+      // without -z, some files will be returned with quotes (core.quotePath)
+      '-z',
+      filename,
+      `**/${filename}`,
+    ],
+    { cwd }
   );
-  const files = patterns.flatMap((p) =>
-    fastGlob.sync(p, { onlyFiles: true, followSymbolicLinks: false, ignore: ['node_modules'] })
-  );
-  return files;
+
+  const files = lsFilesStdout
+    .split('\0')
+    .filter((f) => f.endsWith(filename))
+    .map((file) => Path.resolve(cwd, file));
+
+  const matchers = patterns.filter(Boolean).map((pattern) => {
+    return minimatch.makeRe(Path.isAbsolute(pattern) ? pattern : Path.join(cwd, pattern));
+  });
+
+  const matchingFiles = matchers.length
+    ? files.filter((file) => {
+        return matchers.some((matcher) => matcher.test(file));
+      })
+    : files;
+
+  return matchingFiles;
 }

@@ -6,6 +6,7 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
+import { castArray } from 'lodash';
 import { collectConfigPaths } from './config/collect_config_paths';
 import { loadConfigs } from './config/load_configs';
 import { parseConfigs } from './config/parse_configs';
@@ -26,13 +27,9 @@ export async function collectAndRun({
 
   log.debug('Collecting benchmark configs');
 
-  log.debug(
-    `collectAndRun: glob=${
-      Array.isArray(configGlob) ? configGlob.join(',') : configGlob || workspace.getDir()
-    }`
-  );
+  const patterns = castArray(configGlob ?? []);
 
-  const configPaths = collectConfigPaths({ glob: configGlob || workspace.getDir() });
+  const configPaths = await collectConfigPaths({ patterns, cwd: workspace.getDir() });
 
   log.debug(`Discovered ${configPaths.length} config path(s)`);
 

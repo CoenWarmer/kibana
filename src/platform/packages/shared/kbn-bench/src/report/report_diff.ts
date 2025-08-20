@@ -7,159 +7,184 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
+import { maybe } from '@kbn/std';
 import chalk from 'chalk';
+import { keyBy, uniq } from 'lodash';
 import { table } from 'table';
-import type { ToolingLog } from '@kbn/tooling-log';
 import type { ConfigResult } from '../runner/types';
-import { summarizeBenchmark, formatDuration } from './report_utils';
+import { getTableConfig } from './get_table_config';
+import type { BenchmarkSummary, MetricSummary } from './report_utils';
+import { formatDuration, formatNumber, summarizeBenchmark } from './report_utils';
 
 interface ResultSet {
   name: string;
   results: ConfigResult[];
 }
 
-function colorDelta(base: number | undefined, next: number | undefined, invert = false) {
-  if (base == null || next == null) return '—';
-  const diff = next - base;
-  const pct = base === 0 ? 0 : (diff / base) * 100;
+// Calculate delta. If right is 100, and left is 150, this will show 50/50%
+function calcDelta(left: number | null, right: number | null) {
+  if (left == null || right == null) return null;
+  const diff = left - right;
+  const pct = left === 0 ? 0 : (diff / left) * 100;
+  return { diff, pct };
+}
+
+function getStatus(left?: BenchmarkSummary, right?: BenchmarkSummary) {
+  if (!left) return chalk.green('added');
+  if (!right) return chalk.red('removed');
+  return '-';
+}
+
+// Format and colorize a previously computed delta. Lower values are better unless invert is true.
+function colorDelta(delta: ReturnType<typeof calcDelta>, invert = false) {
+  if (!delta) return '—';
+  const { diff, pct } = delta;
   const sign = diff === 0 ? '' : diff > 0 ? '+' : '';
   const formatted = `${sign}${diff.toFixed(2)} (${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%)`;
-  const improved = invert ? diff > 0 : diff < 0; // invert when higher is better
   if (diff === 0) return chalk.dim(formatted);
+  const improved = invert ? diff > 0 : diff < 0;
   return improved ? chalk.green(formatted) : chalk.red(formatted);
 }
 
+function getMetricRowFactory(
+  formatter: (value: number) => string,
+  left?: MetricSummary,
+  right?: MetricSummary
+): (label: string, prop: keyof MetricSummary) => [string, string, string] {
+  return function getRow(label: string, prop: keyof MetricSummary) {
+    const leftVal = left ? left[prop] : null;
+    const rightVal = right ? right[prop] : null;
+
+    const leftStr = leftVal != null ? formatter(leftVal) : '—';
+    const rightStr = rightVal != null ? formatter(rightVal) : '—';
+    const delta = calcDelta(leftVal, rightVal); // compute raw delta
+    return [label, `${leftStr} -> ${rightStr}`, colorDelta(delta)];
+  };
+}
+
+function getRunSummary(left?: BenchmarkSummary) {
+  if (!left) return '';
+  const total = left.completed + left.failed;
+  if (left.failed) {
+    return chalk.red(` ${left.failed}/${total} failed`);
+  }
+  return chalk.dim(` ${total} run${total === 1 ? '' : 's'}`);
+}
+
 function renderBenchmarkDiff(
-  log: ToolingLog,
-  baseCfg: ConfigResult | undefined,
-  nextCfg: ConfigResult | undefined,
-  baseRef: string,
-  nextRef: string
+  left?: { name: string; result: ConfigResult },
+  right?: { name: string; result: ConfigResult }
 ) {
   // Map benchmark name -> summary
-  const baseMap = new Map<string, ReturnType<typeof summarizeBenchmark>>();
-  const nextMap = new Map<string, ReturnType<typeof summarizeBenchmark>>();
 
-  if (baseCfg) {
-    for (const b of baseCfg.benchmarks) {
-      baseMap.set(b.benchmark.name, summarizeBenchmark(b));
-    }
-  }
-  if (nextCfg) {
-    for (const b of nextCfg.benchmarks) {
-      nextMap.set(b.benchmark.name, summarizeBenchmark(b));
-    }
-  }
+  const leftBenchmarkResultsByName = keyBy(
+    left?.result.benchmarks,
+    (benchmarkResult) => benchmarkResult.benchmark.name
+  );
 
-  const allNames = Array.from(new Set([...baseMap.keys(), ...nextMap.keys()])).sort();
+  const rightBenchmarkResultsByName = keyBy(
+    right?.result.benchmarks,
+    (benchmarkResult) => benchmarkResult.benchmark.name
+  );
+
+  const allNames = uniq([
+    ...Object.keys(leftBenchmarkResultsByName),
+    ...Object.keys(rightBenchmarkResultsByName),
+  ]);
 
   for (const name of allNames) {
-    const baseSummary = baseMap.get(name);
-    const nextSummary = nextMap.get(name);
+    const leftBenchmarkResult = maybe(leftBenchmarkResultsByName[name]);
+    const rightBenchmarkResult = maybe(rightBenchmarkResultsByName[name]);
 
-    const statusText = (() => {
-      if (!baseSummary) return chalk.green('added');
-      if (!nextSummary) return chalk.red('removed');
-      if (nextSummary.failed) return chalk.red('fail');
-      if (baseSummary.failed && !nextSummary.failed) return chalk.green('fixed');
-      return 'ok';
-    })();
+    const leftSummary = leftBenchmarkResult ? summarizeBenchmark(leftBenchmarkResult) : undefined;
+    const rightSummary = rightBenchmarkResult
+      ? summarizeBenchmark(rightBenchmarkResult)
+      : undefined;
+
+    const status = getStatus(leftSummary, rightSummary);
 
     const rows: string[][] = [];
 
-    const timeRow = (label: string, getter: (s: typeof baseSummary) => number | undefined) => {
-      const baseVal = baseSummary && getter(baseSummary);
-      const nextVal = nextSummary && getter(nextSummary);
-      const baseStr = baseVal != null ? formatDuration(baseVal) : '—';
-      const nextStr = nextVal != null ? formatDuration(nextVal) : '—';
-      const delta = colorDelta(baseVal, nextVal); // lower is better for time
-      rows.push([label, `${baseStr} -> ${nextStr}`, delta]);
-    };
+    const getTimeRow = getMetricRowFactory(formatDuration, leftSummary?.time, rightSummary?.time);
 
-    timeRow('Avg Time', (s) => s?.avgTime);
-    timeRow('Std Dev', (s) => s?.stdDevTime);
+    rows.push(getTimeRow('Avg Time', 'avg'));
+    rows.push(getTimeRow('Std dev', 'stdDev'));
 
-    const baseMetrics = baseSummary ? Object.keys(baseSummary.metricsAvg) : [];
-    const nextMetrics = nextSummary ? Object.keys(nextSummary.metricsAvg) : [];
-    const allMetricKeys = Array.from(new Set([...baseMetrics, ...nextMetrics])).sort();
+    const leftMetrics = leftSummary?.metrics;
+    const rightMetrics = rightSummary?.metrics;
 
-    for (const key of allMetricKeys) {
-      const baseAvg = baseSummary?.metricsAvg[key];
-      const nextAvg = nextSummary?.metricsAvg[key];
-      const baseStd = baseSummary?.metricsStdDev[key];
-      const nextStd = nextSummary?.metricsStdDev[key];
-      const baseStr = baseAvg != null ? baseAvg.toFixed(2) : '—';
-      const nextStr = nextAvg != null ? nextAvg.toFixed(2) : '—';
-      const baseStdStr = baseStd != null ? chalk.dim(baseStd.toFixed(2)) : chalk.dim('—');
-      const nextStdStr = nextStd != null ? chalk.dim(nextStd.toFixed(2)) : chalk.dim('—');
-      const delta = colorDelta(baseAvg, nextAvg, false); // lower better assumed
-      rows.push([`${key} (σ)`, `${baseStdStr} -> ${nextStdStr}`, chalk.dim('')]);
-      rows.push([key, `${baseStr} -> ${nextStr}`, delta]);
+    const allMetricKeys = uniq([
+      ...Object.keys(leftMetrics ?? {}),
+      ...Object.keys(rightMetrics ?? {}),
+    ]);
+
+    for (const metricKey of allMetricKeys) {
+      const leftMetric = leftSummary?.metrics[metricKey];
+      const rightMetric = leftSummary?.metrics[metricKey];
+
+      const getMetricRow = getMetricRowFactory(
+        formatNumber,
+        leftMetric?.summary,
+        rightMetric?.summary
+      );
+
+      rows.push(getMetricRow(`${metricKey}`, 'avg'));
+      rows.push(getMetricRow(`${metricKey} (σ)`, 'stdDev'));
     }
 
-    const runInfo = (() => {
-      if (!nextSummary) return '';
-      const total = nextSummary.completed + nextSummary.failed;
-      if (nextSummary.failed) {
-        return chalk.red(` ${nextSummary.failed}/${total} failed`);
-      }
-      return chalk.dim(` ${total} run${total === 1 ? '' : 's'}`);
-    })();
-    const nameCol = `${name}${runInfo} ${chalk.dim(`[${statusText}]`)}`;
-    const header = [chalk.bold(nameCol), chalk.bold(`${baseRef} -> ${nextRef}`), chalk.bold('Δ')];
+    const runInfo = getRunSummary(leftSummary);
 
-    const output = table([header, ...rows], {
-      border: {
-        topBody: '',
-        topJoin: '',
-        topLeft: '',
-        topRight: '',
-        bottomBody: '',
-        bottomJoin: '',
-        bottomLeft: '',
-        bottomRight: '',
-        bodyLeft: '',
-        bodyRight: '',
-        bodyJoin: ' ',
-        joinBody: '',
-        joinLeft: '',
-        joinRight: '',
-        joinJoin: ' ',
-      },
-      singleLine: true,
-    });
+    const nameCol = `${name}${runInfo} ${chalk.dim(`[${status}]`)}`;
+    const header = [
+      chalk.bold(nameCol),
+      chalk.bold(`${left?.name ?? right?.name}`),
+      chalk.bold('Δ'),
+    ];
+
+    const output = table([header, ...rows], getTableConfig());
 
     return output.split('\n');
   }
 }
 
-export function reportDiff(log: ToolingLog, left: ResultSet, right: ResultSet) {
+export function reportDiff(left: ResultSet, right: ResultSet) {
   const lines: string[] = [];
+
   lines.push('');
+
   lines.push(chalk.bold.cyan(`Benchmark diff: ${left.name} -> ${right.name}`));
 
-  // Match configs by config name instead of file path
-  const byName = (rs: ResultSet) => {
-    const map = new Map<string, ConfigResult>();
-    for (const cfg of rs.results) {
-      map.set(cfg.config.name, cfg);
-    }
-    return map;
-  };
+  const leftConfigs = keyBy(left.results, (res) => res.config.name);
 
-  const leftMap = byName(left);
-  const rightMap = byName(right);
-  const allNames = Array.from(new Set([...leftMap.keys(), ...rightMap.keys()])).sort();
+  const rightConfigs = keyBy(right.results, (res) => res.config.name);
 
-  for (const cfgName of allNames) {
-    const baseCfg = leftMap.get(cfgName);
-    const nextCfg = rightMap.get(cfgName);
-    lines.push(chalk.bold(`Config: ${cfgName}`));
-    const rendered = renderBenchmarkDiff(log as any, baseCfg, nextCfg, left.name, right.name);
+  const allNames = uniq(Object.keys(leftConfigs).concat(Object.keys(rightConfigs)));
+
+  for (const configName of allNames) {
+    const leftCfg = maybe(leftConfigs[configName]);
+    const rightCfg = maybe(rightConfigs[configName]);
+
+    lines.push(chalk.bold(`Config: ${configName}`));
+
+    const rendered = renderBenchmarkDiff(
+      leftCfg
+        ? {
+            name: left.name,
+            result: leftCfg,
+          }
+        : undefined,
+      rightCfg
+        ? {
+            name: right.name,
+            result: rightCfg,
+          }
+        : undefined
+    );
+
     if (rendered) {
       lines.push(...rendered, '');
     }
   }
 
-  log.info('\n' + lines.join('\n'));
+  return lines.join('\n').trim();
 }

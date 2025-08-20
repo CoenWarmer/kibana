@@ -25,7 +25,7 @@ function scriptToRunnableMethod(script?: Script) {
 
   return async (context: BenchmarkRunContext) => {
     await execa(cmd, args, {
-      cwd: cwd ?? context.workspaceDir,
+      cwd: cwd ?? context.workspace.getDir(),
     });
   };
 }

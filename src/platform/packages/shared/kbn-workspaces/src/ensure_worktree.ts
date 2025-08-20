@@ -21,7 +21,10 @@ export async function ensureWorktree(
 ): Promise<void> {
   const { log, baseCloneDir } = context;
 
-  const gitDir = Path.join(path, '.git');
+  const gitDir = Path.join(baseCloneDir, '..', path, '.git');
+
+  log.debug(`Checking for worktree at ${gitDir}`);
+
   const worktreeExists = await exists(gitDir);
 
   if (worktreeExists) {
@@ -30,7 +33,8 @@ export async function ensureWorktree(
   }
 
   log.info(`Creating worktree at ${path} for ref ${ref}`);
-  await shell(`git worktree add --detach ${path} ${ref}`, {
+
+  await shell(`git worktree add --detach ../${path} ${ref}`, {
     log,
     cwd: baseCloneDir,
   });

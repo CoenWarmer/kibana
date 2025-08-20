@@ -27,7 +27,7 @@ export async function collectAndRunForRightHandSide({
 
   log.debug('Collecting benchmark configs');
 
-  const configPaths = collectConfigPaths({ glob: workspace.getDir() });
+  const configPaths = await collectConfigPaths({ patterns: [], cwd: workspace.getDir() });
 
   log.debug(`Discovered ${configPaths.length} config path(s)`);
 

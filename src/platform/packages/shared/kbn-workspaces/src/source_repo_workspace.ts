@@ -6,6 +6,8 @@
  * your election, the "Elastic License 2.0", the "GNU Affero General Public
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
+import { createHash } from 'crypto';
+import execa from 'execa';
 import { AbstractWorkspace } from './abstract_workspace';
 import type { SourceRepoWorkspaceState, WorkspaceGlobalContext, WorkspaceState } from './types';
 import { getRef } from './utils/get_ref';
@@ -29,10 +31,20 @@ export class SourceRepoWorkspace extends AbstractWorkspace {
   }
 
   protected async getCacheKey(): Promise<string> {
-    const ref = await getRef(this.dir());
-    const sha = await getSha(this.dir(), ref);
+    const directory = this.getDir();
 
-    return sha;
+    const ref = await getRef(directory);
+    const baseCommitSha = await getSha(directory, ref);
+
+    const { stdout: combinedDiff } = await execa('git', ['diff', 'HEAD'], { cwd: directory });
+    const hash = createHash('sha256');
+    hash.update(baseCommitSha, 'utf8');
+    if (combinedDiff) {
+      hash.update('\0', 'utf8');
+      hash.update(combinedDiff, 'utf8');
+    }
+
+    return hash.digest('hex');
   }
 
   protected getState(): WorkspaceState {

@@ -11,13 +11,15 @@ import Path from 'path';
 export function getFileBaseDir({
   dataDir,
   configName,
-  ref,
+  benchmarkName,
+  workspaceName,
 }: {
   dataDir: string;
   configName: string;
-  ref: string;
+  benchmarkName: string;
+  workspaceName: string;
 }) {
-  const configDataDir = Path.join(dataDir, configName, ref);
+  const configDataDir = Path.join(dataDir, configName, benchmarkName, workspaceName);
 
   return configDataDir;
 }

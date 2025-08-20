@@ -30,7 +30,9 @@ export class WorktreeWorkspace extends AbstractWorkspace {
   }
 
   protected async getSha(): Promise<string> {
-    return await getSha(this.getDir(), this.worktreeState.ref);
+    // Resolve the ref's SHA against the base clone so that new commits to the ref
+    // are detected even if the worktree is currently detached at an older commit.
+    return await getSha(this.context.baseCloneDir, this.worktreeState.ref);
   }
 
   protected async getCacheKey(): Promise<string> {
@@ -45,10 +47,11 @@ export class WorktreeWorkspace extends AbstractWorkspace {
     const cacheKey = await this.getCacheKey();
 
     if (this.state.tasks.checkout?.cacheKey !== cacheKey) {
+      const sha = await this.getSha();
       await checkout({
         log: this.context.log,
         dir: this.getDir(),
-        sha: await this.getSha(),
+        sha,
       });
 
       await this.controller.updateEntry(this.getState(), (e) => {
