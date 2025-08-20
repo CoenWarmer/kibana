@@ -8,7 +8,7 @@
  */
 
 import { z } from '@kbn/zod';
-import type { ModuleBenchmark, Script, ScriptBenchmark } from './types';
+import type { InitialBenchConfig, ModuleBenchmark, Script, ScriptBenchmark } from './types';
 
 const benchmarkSchemaBase = z.object({
   // Restrict benchmark name to filename-safe characters we allow for generated artifacts
@@ -48,11 +48,12 @@ const scriptBenchmarkSchema = benchmarkSchemaBase.extend({
 const benchmarkSchema = z.union([moduleBenchmarkSchema, scriptBenchmarkSchema]);
 
 const configSchema = z.object({
+  name: z.string(),
   runs: z.number().optional(),
   timeout: z.number().optional(),
   profile: z.boolean().optional(),
   openProfile: z.boolean().optional(),
   benchmarks: z.array(benchmarkSchema),
-});
+}) satisfies z.Schema<InitialBenchConfig>;
 
 export { configSchema };

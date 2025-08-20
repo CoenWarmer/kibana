@@ -1,4 +1,4 @@
-## @kbn/clone-workspace
+## @kbn/workspaces
 
 Utilities for creating and managing ephemeral Kibana workspaces backed by git worktrees.
 
@@ -43,10 +43,6 @@ Each task invalidates the successive steps.
 - Uses git worktrees to avoid multiple full clones (saves disk & time).
 - Detached checkouts prevent accidental commits inside benchmark worktrees.
 - Bootstrap enforces the current runtime Node version by updating `package.json` engines and `.nvmrc` / `.node-version` inside the worktree to reduce friction with older refs. (Ideally we'd use a Node.js version manager)
-
-### Current limitations / TODO
-
-- Build step is a placeholder; build caching not implemented.
 
 ### When to use
 
