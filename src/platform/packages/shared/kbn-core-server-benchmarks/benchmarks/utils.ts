@@ -11,7 +11,7 @@ import Path from 'path';
 import Fs from 'fs/promises';
 import execa, { type ExecaChildProcess } from 'execa';
 import type { ToolingLog } from '@kbn/tooling-log';
-import { DOWNLOAD_PLATFORMS, type Platform } from '../../../../../dev/build/lib/platform';
+import { getBuildDir } from './get_build_dir';
 
 async function waitForStdout({
   log,
@@ -110,44 +110,8 @@ async function startKibana({
   const log = parentLog.withContext('kbn-start');
 
   const defaultBuildRoot = Path.join(cwd, 'build', 'default');
-  const nodePlatform = process.platform as 'darwin' | 'linux' | 'win32';
-  const nodeArch = (process.arch === 'arm64' ? 'arm64' : 'x64') as 'arm64' | 'x64';
-  const platform = DOWNLOAD_PLATFORMS.find(
-    (platformCandidate: Platform) =>
-      platformCandidate.getName() === nodePlatform &&
-      platformCandidate.getArchitecture() === nodeArch
-  );
 
-  if (!platform) {
-    throw new Error(`Unsupported platform ${nodePlatform}-${process.arch}`);
-  }
-
-  const buildName = platform.getBuildName();
-  log.debug(`Detected node platform=${nodePlatform} arch=${nodeArch} => buildName=${buildName}`);
-
-  let distDir: string | undefined;
-  try {
-    const entries = await Fs.readdir(defaultBuildRoot, { withFileTypes: true });
-    const match = entries
-      .filter((entry) => entry.isDirectory() && entry.name.startsWith('kibana-'))
-      .map((entry) => entry.name)
-      .find((candidateName) => candidateName.endsWith(buildName));
-
-    if (match) {
-      const candidatePath = Path.join(defaultBuildRoot, match);
-      await Fs.access(Path.join(candidatePath, 'bin', 'kibana'));
-      distDir = candidatePath;
-      log.debug(`Found Kibana dist dir: ${distDir}`);
-    }
-  } catch {
-    // ignore, will handle missing below
-  }
-
-  if (!distDir) {
-    throw new Error(
-      `Unable to locate built Kibana distribution for buildName "${buildName}" under ${defaultBuildRoot}`
-    );
-  }
+  const distDir = await getBuildDir(defaultBuildRoot);
 
   const binFile = Path.join(distDir, 'bin', 'kibana');
 
