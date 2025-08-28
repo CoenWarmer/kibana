@@ -1,0 +1,19 @@
+---
+id: kibDevDocsOpsBabelRequireTransformer
+slug: /kibana-dev-docs/ops/babel-require-transformer
+title: '@kbn/babel-require-transformer'
+description: A package with a Babel plugin that rewrites require statements to CommonJS imports
+date: 2025-09-25
+tags: ['kibana', 'dev', 'contributor', 'operations', 'babel', 'require', 'transformer', 'commonjs']
+---
+
+Convert top-level CommonJS require() patterns into "inlined" CommonJS requires.
+Examples:
+const { a, b } = require('pkg');
+-> const \_pkg = require('pkg'); const { a, b } = \_pkg;
+
+const x = require('pkg').x;
+-> const \_pkg = require('pkg'); const x = \_pkg.x;
+
+const x = require('pkg'); // unchanged (already inline)
+-> require('pkg'); // unchanged (side-effect)

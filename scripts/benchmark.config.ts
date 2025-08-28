@@ -10,24 +10,24 @@
 import type { InitialBenchConfig } from '@kbn/bench';
 
 const config: InitialBenchConfig = {
-  name: 'kibana_server',
+  name: 'Babel Plugin Benchmark',
   benchmarks: [
     {
       kind: 'module',
-      name: 'warm_start',
-      module: require.resolve('./benchmarks/warm_start.bench.ts'),
+      name: 'jest_unit_tests',
+      module: require.resolve('./benchmarks/jest_unit.ts'),
       compare: {
         missing: 'lhs',
       },
     },
-    {
-      kind: 'module',
-      name: 'cold_start',
-      module: require.resolve('./benchmarks/cold_start.bench.ts'),
-      compare: {
-        missing: 'lhs',
-      },
-    },
+    // {
+    //   kind: 'module',
+    //   name: 'warm_start',
+    //   module: require.resolve('./benchmarks/warm_start.bench.ts'),
+    //   compare: {
+    //     missing: 'lhs',
+    //   },
+    // },
   ],
   runs: 5,
   timeout: 10 * 60_000_000,
