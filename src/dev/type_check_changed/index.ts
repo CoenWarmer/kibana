@@ -205,6 +205,7 @@ run(
   async ({ log, flags }) => {
     const baseRef = (flags['base-ref'] as string) ?? 'main';
     const dryRun = flags['dry-run'] as boolean;
+    const useNative = flags.native as boolean;
     const depthFlag = flags.depth as string | undefined;
     const maxDepth = depthFlag === undefined ? 1 : Number(depthFlag);
 
@@ -294,17 +295,26 @@ run(
     }
 
     // Step 6: Run type-check for each impacted project
-    log.info('\nRunning type-check...\n');
+    const compiler = useNative ? 'tsgo (native)' : 'tsc';
+    log.info(`\nRunning type-check with ${compiler}...\n`);
 
     const failures: Array<{ project: string; error: string }> = [];
 
     for (const tsconfigPath of tsconfigPaths.sort()) {
       log.info(`Checking: ${tsconfigPath}`);
       try {
-        execFileSync('node', ['scripts/type_check.js', '--project', tsconfigPath], {
-          cwd: REPO_ROOT,
-          stdio: 'inherit',
-        });
+        if (useNative) {
+          const tsgoPath = Path.resolve(REPO_ROOT, 'node_modules', '.bin', 'tsgo');
+          execFileSync(tsgoPath, ['--project', tsconfigPath, '--noEmit'], {
+            cwd: REPO_ROOT,
+            stdio: 'inherit',
+          });
+        } else {
+          execFileSync('node', ['scripts/type_check.js', '--project', tsconfigPath], {
+            cwd: REPO_ROOT,
+            stdio: 'inherit',
+          });
+        }
         log.success(`  passed: ${tsconfigPath}`);
       } catch (e) {
         const errorMessage = e instanceof Error ? e.message : String(e);
@@ -334,10 +344,11 @@ run(
       'Find packages impacted by your changes (compared to main) and run type-checking on them.',
     flags: {
       string: ['base-ref', 'depth'],
-      boolean: ['dry-run'],
+      boolean: ['dry-run', 'native'],
       default: {
         'base-ref': 'main',
         'dry-run': false,
+        native: false,
         depth: '1',
       },
       help: `
@@ -347,6 +358,9 @@ run(
                          2, 3, ... = transitive dependents up to N levels
                          0 = full transitive closure (unlimited)
         --dry-run      List impacted projects without running type-check
+        --native       Use tsgo (TypeScript native/Go compiler) instead of tsc.
+                         Requires @typescript/native-preview to be installed.
+                         Note: tsgo is experimental and may not support all TypeScript features.
       `,
     },
   }
