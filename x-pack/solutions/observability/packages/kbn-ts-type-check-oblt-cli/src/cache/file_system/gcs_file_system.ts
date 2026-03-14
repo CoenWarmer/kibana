@@ -5,15 +5,14 @@
  * 2.0.
  */
 
-import { Readable, Transform } from 'stream';
+import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
 import { x as tarExtract } from 'tar';
 import { REPO_ROOT } from '@kbn/repo-info';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import execa from 'execa';
-import { SingleBar } from 'cli-progress';
-import { isCiEnvironment } from '../utils';
 import { GCS_BUCKET_NAME, GCS_BUCKET_PATH, GCS_BUCKET_URI, COMMITS_PATH } from '../constants';
+import { createDownloadProgressBar, formatBytes } from '../download_progress';
 import { getTarCreateArgs, resolveTarEnvironment } from './utils';
 import { AbstractFileSystem } from './abstract_file_system';
 import type { ArchiveMetadata } from './types';
@@ -26,76 +25,6 @@ import { join } from './utils';
 function gsUriToHttpsUrl(gsUri: string): string {
   return gsUri.replace(/^gs:\/\//, 'https://storage.googleapis.com/');
 }
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-const SPEED_WINDOW_MS = 500;
-
-/**
- * Creates a passthrough Transform stream that tracks bytes received and drives
- * a `cli-progress` bar. On CI the bar is suppressed; `stop()` is always safe
- * to call regardless.
- */
-const createDownloadProgressBar = (
-  contentLength: number | undefined
-): { meter: Transform; stop: () => void } => {
-  const total = contentLength ?? 0;
-  const showBar = !isCiEnvironment();
-
-  let bar: SingleBar | undefined;
-
-  if (showBar) {
-    bar = new SingleBar({
-      barsize: 30,
-      format: ' Downloading [{bar}] {percentage}% | {received}/{total} | {speed}/s',
-      hideCursor: true,
-      clearOnComplete: true,
-    });
-
-    bar.start(total || 1, 0, {
-      received: formatBytes(0),
-      total: total ? formatBytes(total) : '?',
-      speed: '?',
-    });
-  }
-
-  let bytesReceived = 0;
-  let lastUpdate = Date.now();
-  let lastBytes = 0;
-
-  const meter = new Transform({
-    transform(chunk, _encoding, callback) {
-      bytesReceived += chunk.length;
-
-      if (bar) {
-        const now = Date.now();
-        const elapsed = now - lastUpdate;
-
-        if (elapsed >= SPEED_WINDOW_MS) {
-          const speed = Math.round(((bytesReceived - lastBytes) / elapsed) * 1000);
-          lastUpdate = now;
-          lastBytes = bytesReceived;
-
-          bar.update(total ? bytesReceived : 1, {
-            received: formatBytes(bytesReceived),
-            total: total ? formatBytes(total) : '?',
-            speed: formatBytes(speed),
-          });
-        }
-      }
-
-      callback(null, chunk);
-    },
-  });
-
-  const stop = () => bar?.stop();
-
-  return { meter, stop };
-};
 
 export class GcsFileSystem extends AbstractFileSystem {
   private accessToken: string | undefined;
@@ -178,16 +107,17 @@ export class GcsFileSystem extends AbstractFileSystem {
       const elapsed = Date.now() - start;
       const totalSize = contentLength ?? 0;
 
-      const speedLabel =
-        totalSize && elapsed > 0
-          ? ` at ${formatBytes(Math.round(totalSize / (elapsed / 1000)))}/s`
-          : '';
-
-      this.log.info(
-        `Restored TypeScript build artifacts (${formatBytes(totalSize)})${speedLabel} in ${(
-          elapsed / 1000
-        ).toFixed(1)}s`
-      );
+      if (totalSize) {
+        // archivePath is gs://bucket/commits/{sha}/archive.tar.gz — SHA is [-2]
+        const shortSha = archivePath.split('/').at(-2)?.slice(0, 12) ?? '';
+        const speedLabel =
+          elapsed > 0 ? ` at ${formatBytes(Math.round(totalSize / (elapsed / 1000)))}/s` : '';
+        this.log.info(
+          `[Cache] Retrieved archive for commit ${shortSha} (${formatBytes(
+            totalSize
+          )}${speedLabel})`
+        );
+      }
     } catch (error) {
       const details = error instanceof Error ? error.message : String(error);
 
@@ -273,8 +203,12 @@ export class GcsFileSystem extends AbstractFileSystem {
    * Lists commit SHAs with archived artifacts in GCS using the JSON API.
    * Paginates through `storage.googleapis.com/storage/v1/b/{bucket}/o` with
    * a prefix + delimiter to enumerate "directory" prefixes.
+   *
+   * Returns the set of SHAs and the elapsed time in milliseconds so the caller
+   * can log at the appropriate level (info when GCS will actually be used,
+   * verbose when a cache server will handle the restore).
    */
-  async listAvailableCommitShas(): Promise<Set<string>> {
+  async listAvailableCommitShas(): Promise<{ shas: Set<string>; elapsedMs: number }> {
     const objectPrefix = `${GCS_BUCKET_PATH}/${COMMITS_PATH}/`;
     const baseUrl = `https://storage.googleapis.com/storage/v1/b/${GCS_BUCKET_NAME}/o`;
     const start = Date.now();
@@ -317,14 +251,11 @@ export class GcsFileSystem extends AbstractFileSystem {
         pageToken = data.nextPageToken;
       } while (pageToken);
 
-      this.log.info(
-        `Listed ${shas.size} available archive(s) from GCS via API (${Date.now() - start}ms)`
-      );
-      return shas;
+      return { shas, elapsedMs: Date.now() - start };
     } catch (error) {
       const details = error instanceof Error ? error.message : String(error);
       this.log.verbose(`Failed to list GCS archives: ${details} (${Date.now() - start}ms)`);
-      return new Set();
+      return { shas: new Set(), elapsedMs: Date.now() - start };
     }
   }
 

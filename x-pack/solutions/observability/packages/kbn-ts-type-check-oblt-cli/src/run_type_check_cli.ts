@@ -28,14 +28,15 @@ run(
 
     const isVerbose = flagsReader.boolean('verbose');
     const projectFilter = normalizeProjectPath(flagsReader.path('project'), log);
-    const shouldRestoreOnly = flagsReader.boolean('restore-artifacts');
+    const restoreArtifactsArg = flagsReader.string('restore-artifacts');
     const extendedDiagnostics = flagsReader.boolean('extended-diagnostics');
     const shouldCleanCache = flagsReader.boolean('clean-cache');
 
     const useProgressBar = !isCiEnvironment() && !isVerbose;
 
-    if (shouldRestoreOnly) {
-      await restoreTSBuildArtifacts(log, undefined, { skipExistingArtifactsCheck: true });
+    if (restoreArtifactsArg !== undefined) {
+      const specificSha = restoreArtifactsArg || undefined;
+      await restoreTSBuildArtifacts(log, specificSha, { skipExistingArtifactsCheck: true });
       return;
     }
 
@@ -67,9 +68,11 @@ run(
       await updateRootRefsConfig(log);
 
       if (!projectFilter) {
-        const { shouldRestore, bestSha } = await resolveRestoreStrategy(log, TS_PROJECTS);
-        if (shouldRestore && bestSha) {
-          await restoreTSBuildArtifacts(log, bestSha);
+        const strategy = await resolveRestoreStrategy(log, TS_PROJECTS);
+        if (strategy.shouldRestore && strategy.bestSha) {
+          await restoreTSBuildArtifacts(log, strategy.bestSha, {
+            staleProjects: strategy.staleProjects,
+          });
           didRestore = true;
         }
       }
@@ -116,7 +119,7 @@ run(
       );
 
       // +1 for the root refs config that references all projects.
-      log.info(`[Full pass] Checking ${projectsToCheck.length + 1} projects...`);
+      log.info(`[TypeCheck] [Full pass] Checking ${projectsToCheck.length + 1} projects...`);
 
       didTypeCheckFail = !(await runTsc({
         procRunner,
@@ -147,7 +150,7 @@ run(
     }
 
     const elapsed = ((Date.now() - scriptStart) / 1000).toFixed(1);
-    log.info(`Total elapsed time: ${elapsed}s`);
+    log.info(`[TypeCheck] Total elapsed time: ${elapsed}s`);
 
     if (didTypeCheckFail) {
       throw createFailError('Unable to build TS project refs');
@@ -165,15 +168,17 @@ run(
         node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_check.js --project packages/kbn-pm/tsconfig.json
     `,
     flags: {
-      string: ['project'],
-      boolean: ['clean-cache', 'extended-diagnostics', 'restore-artifacts'],
+      string: ['project', 'restore-artifacts'],
+      boolean: ['clean-cache', 'extended-diagnostics'],
       help: `
         --project [path]        Path to a tsconfig.json file determines the project to check
         --help                  Show this message
         --clean-cache           Delete all TypeScript caches and generated config files.
         --extended-diagnostics  Turn on extended diagnostics in the TypeScript compiler
-        --restore-artifacts     Only restore cached build artifacts (from GCS or local cache) without
-                                  running the type check. Useful for pre-populating the cache.
+        --restore-artifacts [sha]  Only restore cached build artifacts (from GCS or local cache) without
+                                     running the type check. When [sha] is provided, restores that exact
+                                     commit's archive; otherwise runs full candidate discovery.
+                                     Useful for pre-populating the cache or testing a specific archive.
       `,
     },
   }

@@ -7,11 +7,16 @@ CLI tool for running TypeScript type checks across Kibana Observability projects
 This package wraps `tsc --build` and adds several performance features on top:
 
 - **Smart cache restore**: Before each run, the CLI checks whether local artifacts are already
-  fresh. If not, it automatically fetches a matching archive from GCS (no flags needed) and
-  restores it silently. A restored cache makes the full type check **10-20× faster** (1-2 min
-  vs 20-25 min) because `tsc` skips every project whose outputs are already up-to-date. Once
-  restored, the cache stays useful across branch switches — on the next run `tsc` only rebuilds
-  the projects touched by your local changes.
+  fresh. If not, it automatically fetches a matching archive and restores it silently (no flags
+  needed). A restored cache makes the full type check **10-20× faster** (1-2 min vs 20-25 min)
+  because `tsc` skips every project whose outputs are already up-to-date. Once restored, the
+  cache stays useful across branch switches — on the next run `tsc` only rebuilds the projects
+  touched by your local changes.
+
+- **Selective restore**: When a local cache server is running and only a subset of projects are
+  stale, the CLI sends the list of stale projects to the server and receives back only the
+  per-project archives it actually needs. This avoids downloading and extracting the full
+  ~180 MB archive when only a handful of projects changed.
 
 - **Effective rebuild count**: Staleness is measured not just by which projects changed directly,
   but by how many projects would need rebuilding in total (including all transitive dependents).
@@ -45,6 +50,9 @@ node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_che
 # Only restore cached build artifacts without running the type check
 node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_check.js --restore-artifacts
 
+# Restore a specific commit's archive without running the type check
+node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_check.js --restore-artifacts 8b2b01245a74921cdea9d149f9e894c8d3cce046
+
 # Show extended TypeScript compiler diagnostics
 node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_check.js --extended-diagnostics
 ```
@@ -55,8 +63,31 @@ node x-pack/solutions/observability/packages/kbn-ts-type-check-oblt-cli/type_che
 |------|-------------|
 | `--project <path>` | Path to a `tsconfig.json` file; limits type checking to that project only. |
 | `--clean-cache` | Deletes all TypeScript caches and generated config files. |
-| `--restore-artifacts` | Only restores cached build artifacts from GCS without running the type check. Useful for pre-populating the cache. |
+| `--restore-artifacts [sha]` | Only restores cached build artifacts without running the type check. When a SHA is provided, restores that exact commit's archive; otherwise runs full candidate discovery. Useful for pre-populating the cache or testing a specific archive. |
 | `--extended-diagnostics` | Passes `--extendedDiagnostics` to `tsc` for detailed compiler performance output. |
+
+## Cache server (optional)
+
+When restoring artifacts, the CLI first tries a **local cache server** (default `http://127.0.0.1:3081`). The server pre-ingests GCS archives into granular per-project blobs so only the stale projects need to be transferred.
+
+- Set `TS_TYPE_CHECK_CACHE_SERVER_URL` to the server base URL (e.g. `http://127.0.0.1:3081`). Omit or leave unset to use the default. Using `127.0.0.1` instead of `localhost` avoids IPv6 resolution issues.
+- Set `TS_TYPE_CHECK_CACHE_SERVER_URL=` (empty) to disable the cache server and always use GCS.
+
+### Restore protocols
+
+The CLI uses two different protocols depending on the restore type:
+
+**Selective restore** (stale projects known): the CLI POSTs the list of stale project paths to the server. The server responds with `Content-Type: application/x-artifact-stream` — a sequence of length-prefixed blobs, one per project:
+
+```
+[4-byte big-endian uint32: blob length][raw .tar.gz blob] × N
+```
+
+Each blob is a complete per-project `.tar.gz` that the CLI extracts immediately as it arrives, pipelining download and extraction without buffering the full response. Progress is shown as `Restoring X/N projects`.
+
+**Full restore** (no project filter, or server unavailable): the CLI falls back to streaming the full combined archive directly from GCS (`Content-Type: application/gzip`). Progress is shown as a download bar with speed and size, followed by an extraction bar with percentage and estimated time remaining.
+
+In both cases, stale artifact directories are cleaned before new files are written — for a selective restore only the `target/types` directories of the affected projects are removed; for a full restore all type-check artifact directories are wiped.
 
 ## How the cache works
 
@@ -80,15 +111,31 @@ On each run the CLI goes through the following steps:
      is equally stale (e.g. the user intentionally changed a foundational package), skip the
      restore and let `tsc` handle it locally.
 
-4. **Generate configs**: Write (or update) `tsconfig.type_check.json` files for every project.
+4. **Restore** *(when needed)*: If a local cache server is running and the stale project list
+   is known, request only those project archives via the selective restore protocol. Otherwise
+   download the full archive from GCS. Either way, stale artifact directories are cleaned
+   before new files are written.
+
+5. **Generate configs**: Write (or update) `tsconfig.type_check.json` files for every project.
    After a restore, the mtime of any rewritten config is reset to its pre-write value so `tsc`
    does not treat updated reference lists as a reason to rebuild on the first post-restore run.
 
-5. **Fail-fast pass** *(local only)*: Type-check the projects with uncommitted changes.
+6. **Fail-fast pass** *(local only)*: Type-check the projects with uncommitted changes.
 
-6. **Full pass**: Run `tsc --build` across all projects.
+7. **Full pass**: Run `tsc --build` across all projects.
 
-7. **Record state**: Write the current HEAD SHA to the state file.
+8. **Record state**: Write the current HEAD SHA to the state file.
+
+## Log output
+
+All log lines are prefixed with a category in brackets:
+
+| Category | Meaning |
+|----------|---------|
+| `[Cache check]` | Staleness assessment and restore decision logic. |
+| `[Cache]` | Cache server communication, archive download, and extraction progress. |
+| `[TypeCheck]` | TypeScript compiler invocations and overall elapsed time. |
+| `[timing]` | Verbose-only internal timing breakdowns (download, extraction, scan). |
 
 ## Artifact storage
 

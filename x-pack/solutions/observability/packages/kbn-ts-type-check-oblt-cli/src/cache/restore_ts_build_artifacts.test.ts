@@ -36,9 +36,14 @@ jest.mock('./utils', () => ({
 
 jest.mock('./file_system/gcs_file_system', () => ({
   GcsFileSystem: jest.fn().mockImplementation(() => ({
-    listAvailableCommitShas: jest.fn().mockResolvedValue(new Set()),
+    listAvailableCommitShas: jest.fn().mockResolvedValue({ shas: new Set(), elapsedMs: 0 }),
     restoreArchive: jest.fn().mockResolvedValue(undefined),
   })),
+}));
+
+jest.mock('./cache_server_client', () => ({
+  isCacheServerAvailable: jest.fn().mockResolvedValue(false),
+  tryRestoreFromCacheServer: jest.fn().mockResolvedValue(false),
 }));
 
 jest.mock('./detect_stale_artifacts', () => ({
@@ -127,9 +132,7 @@ describe('restoreTSBuildArtifacts', () => {
 
     await restoreTSBuildArtifacts(log);
 
-    expect(log.info).toHaveBeenCalledWith(
-      'No commit history available for TypeScript cache restore.'
-    );
+    expect(log.info).toHaveBeenCalledWith('[Cache] No commit history available for cache restore.');
     expect(restoreSpy).not.toHaveBeenCalled();
   });
 
@@ -164,7 +167,7 @@ describe('restoreTSBuildArtifacts', () => {
 
     await restoreTSBuildArtifacts(log);
 
-    expect(log.warning).toHaveBeenCalledWith('Failed to restore TypeScript build artifacts: boom');
+    expect(log.warning).toHaveBeenCalledWith('[Cache] Failed to restore artifacts: boom');
   });
 
   describe('full-discovery GCS restore', () => {
@@ -183,7 +186,9 @@ describe('restoreTSBuildArtifacts', () => {
       (GcsFileSystem as jest.MockedClass<typeof GcsFileSystem>).mockImplementationOnce(
         () =>
           ({
-            listAvailableCommitShas: jest.fn().mockResolvedValue(new Set([restoredSha])),
+            listAvailableCommitShas: jest
+              .fn()
+              .mockResolvedValue({ shas: new Set([restoredSha]), elapsedMs: 0 }),
             restoreArchive: mockGcsRestore,
           } as unknown as GcsFileSystem)
       );
@@ -274,7 +279,7 @@ describe('resolveRestoreStrategy', () => {
     mockedBuildCandidateShaList.mockReturnValue(['head-sha', 'ancestor-sha']);
     detectStaleArtifacts.mockResolvedValue(new Set());
 
-    gcsListMock = jest.fn().mockResolvedValue(new Set(['ancestor-sha']));
+    gcsListMock = jest.fn().mockResolvedValue({ shas: new Set(['ancestor-sha']), elapsedMs: 0 });
     (GcsFileSystem as jest.MockedClass<typeof GcsFileSystem>).mockImplementation(
       () =>
         ({
@@ -308,7 +313,7 @@ describe('resolveRestoreStrategy', () => {
   });
 
   it('returns shouldRestore: false when no local artifacts exist and GCS has no archive', async () => {
-    gcsListMock.mockResolvedValue(new Set());
+    gcsListMock.mockResolvedValue({ shas: new Set(), elapsedMs: 0 });
 
     const log = createLog();
     const result = await resolveRestoreStrategy(log, []);
@@ -332,7 +337,7 @@ describe('resolveRestoreStrategy', () => {
   it('returns shouldRestore: false when local artifacts exist with unknown state and GCS has no archive', async () => {
     accessSpy.mockResolvedValue(undefined);
     readFileSpy.mockImplementation(makeReadFileMock(null, ['some/tsconfig.json']));
-    gcsListMock.mockResolvedValue(new Set());
+    gcsListMock.mockResolvedValue({ shas: new Set(), elapsedMs: 0 });
 
     const log = createLog();
     const result = await resolveRestoreStrategy(log, []);
@@ -388,7 +393,7 @@ describe('resolveRestoreStrategy', () => {
     // Artifacts exist but >10 stale projects → triggers GCS lookup → GCS has nothing.
     accessSpy.mockResolvedValue(undefined);
     readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
-    gcsListMock.mockResolvedValue(new Set());
+    gcsListMock.mockResolvedValue({ shas: new Set(), elapsedMs: 0 });
     detectStaleArtifacts.mockResolvedValue(
       new Set(Array.from({ length: 11 }, (_, i) => `/repo/p${i}/tsconfig.type_check.json`))
     );

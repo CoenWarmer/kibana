@@ -153,14 +153,28 @@ describe('type_check orchestration', () => {
   });
 
   describe('early exits', () => {
-    it('--restore-artifacts: restores artifacts and returns without type checking', async () => {
+    it('--restore-artifacts: restores artifacts via full discovery and returns without type checking', async () => {
       const log = createLog();
       const procRunner = createProcRunner();
-      const flagsReader = makeFlagsReader({ 'restore-artifacts': true });
+      const flagsReader = makeFlagsReader({ 'restore-artifacts': '' });
 
       await runCallback({ log, flagsReader, procRunner });
 
       expect(restoreTSBuildArtifacts).toHaveBeenCalledWith(log, undefined, {
+        skipExistingArtifactsCheck: true,
+      });
+      expect(runTsc).not.toHaveBeenCalled();
+      expect(runTscFastPass).not.toHaveBeenCalled();
+    });
+
+    it('--restore-artifacts=<sha>: restores the specific SHA and returns without type checking', async () => {
+      const log = createLog();
+      const procRunner = createProcRunner();
+      const flagsReader = makeFlagsReader({ 'restore-artifacts': 'abc123def456' });
+
+      await runCallback({ log, flagsReader, procRunner });
+
+      expect(restoreTSBuildArtifacts).toHaveBeenCalledWith(log, 'abc123def456', {
         skipExistingArtifactsCheck: true,
       });
       expect(runTsc).not.toHaveBeenCalled();
@@ -197,7 +211,9 @@ describe('type_check orchestration', () => {
       await runCallback({ log, flagsReader, procRunner });
 
       expect(resolveRestoreStrategy).toHaveBeenCalledWith(log, expect.any(Array));
-      expect(restoreTSBuildArtifacts).toHaveBeenCalledWith(log, 'abc123def456');
+      expect(restoreTSBuildArtifacts).toHaveBeenCalledWith(log, 'abc123def456', {
+        staleProjects: undefined,
+      });
     });
 
     it('skips restore when shouldRestore is false', async () => {

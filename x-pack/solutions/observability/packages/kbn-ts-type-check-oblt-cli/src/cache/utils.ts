@@ -148,7 +148,7 @@ export async function cleanTypeCheckArtifacts(log: SomeDevLog) {
   });
 
   if (directoryPaths.length > 0 || configPaths.length > 0) {
-    log.info(
+    log.verbose(
       `Cleared ${directoryPaths.length} type cache directories and ${configPaths.length} config files before restore.`
     );
   }

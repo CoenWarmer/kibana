@@ -29,6 +29,7 @@ import {
   resolveUpstreamRemote,
 } from './utils';
 import { detectStaleArtifacts } from './detect_stale_artifacts';
+import { isCacheServerAvailable, tryRestoreFromCacheServer } from './cache_server_client';
 
 const STALE_RESTORE_THRESHOLD = 10;
 
@@ -57,7 +58,7 @@ export async function readArtifactsState(): Promise<string | undefined> {
 }
 
 export type RestoreStrategy =
-  | { shouldRestore: true; bestSha: string }
+  | { shouldRestore: true; bestSha: string; staleProjects: string[] }
   | { shouldRestore: false; bestSha?: undefined };
 
 /**
@@ -85,10 +86,22 @@ async function resolveGcsMatchedShas(
         })
     : Promise.resolve();
 
-  const [availableShas] = await Promise.all([gcsFs.listAvailableCommitShas(), fetchUpstream]);
+  const [{ shas: availableShas, elapsedMs }, , cacheServerAvailable] = await Promise.all([
+    gcsFs.listAvailableCommitShas(),
+    fetchUpstream,
+    isCacheServerAvailable(),
+  ]);
 
   if (availableShas.size === 0) {
     log.warning('GCS returned 0 archives. The bucket may be temporarily unavailable.');
+  } else {
+    const listMsg = `Listed ${availableShas.size} available archive(s) from GCS via API (${elapsedMs}ms)`;
+
+    if (cacheServerAvailable) {
+      log.verbose(listMsg);
+    } else {
+      log.info(listMsg);
+    }
   }
 
   const mainShas = upstreamRemote
@@ -100,7 +113,7 @@ async function resolveGcsMatchedShas(
 
   if (matched.length === 0 && candidates.length > 0 && availableShas.size > 0) {
     log.info(
-      `None of the ${candidates.length} candidate commit(s) matched ` +
+      `[Cache] None of the ${candidates.length} candidate commit(s) matched ` +
         `the ${availableShas.size} archived commit(s) in GCS.`
     );
   }
@@ -163,28 +176,34 @@ export async function resolveRestoreStrategy(
   ]);
 
   if (!hasLocalArtifacts) {
-    log.info('[Cache check] No local TypeScript artifacts found — will restore from GCS.');
+    log.info('[Cache check] No local artifacts found — will restore from cache.');
+
     const bestSha = await resolveBestGcsSha(log, gcsFs);
+
     if (!bestSha) {
       log.info('[Cache check] No GCS archive available — tsc will build from scratch.');
+
       return { shouldRestore: false };
     }
-    return { shouldRestore: true, bestSha };
+
+    return { shouldRestore: true, bestSha, staleProjects: [] };
   }
 
   if (!localStateSha) {
     // Local artifacts exist but we have no record of what commit they correspond to
     // (e.g. first run after adding this tool, or state file was deleted). Treat
     // as unknown freshness and restore from GCS so we start from a known baseline.
-    log.info(
-      '[Cache check] Local artifacts found but their state is unknown — will restore from GCS.'
-    );
+    log.info('[Cache check] Local artifact state unknown — will restore from cache.');
+
     const bestSha = await resolveBestGcsSha(log, gcsFs);
+
     if (!bestSha) {
       log.info('[Cache check] No GCS archive available — tsc will handle staleness incrementally.');
+
       return { shouldRestore: false };
     }
-    return { shouldRestore: true, bestSha };
+
+    return { shouldRestore: true, bestSha, staleProjects: [] };
   }
 
   // Phase 2: staleness check — git diff, no network I/O.
@@ -204,6 +223,7 @@ export async function resolveRestoreStrategy(
         12
       )}.`
     );
+
     return { shouldRestore: false, bestSha: undefined };
   }
 
@@ -237,12 +257,14 @@ export async function resolveRestoreStrategy(
   // Second git diff: how many projects are stale relative to the GCS archive SHA?
   // This is a cheap local operation — no download involved.
   let gcsEffectiveCount: number;
+
   try {
     const gcsStale = await detectStaleArtifacts({
       fromCommit: bestGcsSha,
       toCommit: 'HEAD',
       sourceConfigPaths: tsProjects.map((p) => p.path),
     });
+
     gcsEffectiveCount = computeEffectiveRebuildSet(gcsStale, reverseDeps).size;
   } catch {
     // If the GCS SHA is not in local git history we can't compare; assume the
@@ -252,16 +274,20 @@ export async function resolveRestoreStrategy(
 
   if (gcsEffectiveCount < effectiveRebuildSet.size) {
     log.info(
-      `[Cache check] GCS archive (${bestGcsSha.slice(0, 12)}) reduces rebuild count ` +
+      `[Cache check] Having archive for ${bestGcsSha.slice(0, 12)} would reduce rebuild count ` +
         `from ${effectiveRebuildSet.size} to ${gcsEffectiveCount} — will restore.`
     );
-    return { shouldRestore: true, bestSha: bestGcsSha };
+
+    const staleProjects = toServerProjectPaths([...effectiveRebuildSet]);
+
+    return { shouldRestore: true, bestSha: bestGcsSha, staleProjects };
   }
 
   log.info(
     `[Cache check] ✓ GCS archive (${bestGcsSha.slice(0, 12)}) would not reduce the rebuild ` +
       `count (${gcsEffectiveCount} vs ${effectiveRebuildSet.size} locally) — skipping restore.`
   );
+
   return { shouldRestore: false, bestSha: undefined };
 }
 
@@ -271,14 +297,30 @@ function buildReverseDependencyMap(tsProjects: TsProject[]): Map<string, Set<str
   for (const project of tsProjects) {
     for (const dep of project.getKbnRefs(tsProjects)) {
       const depPath = dep.typeCheckConfigPath;
+
       if (!reverseDeps.has(depPath)) {
         reverseDeps.set(depPath, new Set());
       }
+
       reverseDeps.get(depPath)!.add(project.typeCheckConfigPath);
     }
   }
 
   return reverseDeps;
+}
+
+/**
+ * Converts absolute tsconfig.type_check.json paths (as produced by detectStaleArtifacts /
+ * computeEffectiveRebuildSet) to the relative tsconfig.json paths that the cache server
+ * stores in its index. E.g.:
+ *   /abs/path/kibana/packages/foo/tsconfig.type_check.json → packages/foo/tsconfig.json
+ */
+function toServerProjectPaths(absoluteTypeCheckPaths: string[]): string[] {
+  return absoluteTypeCheckPaths.map((absPath) => {
+    const rel = Path.relative(REPO_ROOT, absPath);
+
+    return rel.replace(/tsconfig\.type_check\.json$/, 'tsconfig.json');
+  });
 }
 
 /**
@@ -296,6 +338,7 @@ export function computeEffectiveRebuildSet(
 
   while (queue.length > 0) {
     const current = queue.shift()!;
+
     for (const dependent of reverseDeps.get(current) ?? []) {
       if (!result.has(dependent)) {
         result.add(dependent);
@@ -320,36 +363,49 @@ export function computeEffectiveRebuildSet(
 export async function restoreTSBuildArtifacts(
   log: SomeDevLog,
   specificSha?: string,
-  options: { skipExistingArtifactsCheck?: boolean } = {}
+  options: { skipExistingArtifactsCheck?: boolean; staleProjects?: string[] } = {}
 ) {
   try {
     if (specificSha) {
       // Direct restore — SHA already determined by resolveRestoreStrategy.
-      // Existing artifacts are cleaned as part of the extraction.
-      log.info(`Restoring TypeScript build artifacts (${specificSha.slice(0, 12)})...`);
+      // Try cache server first (e.g. localhost:3081), then GCS.
+      log.info(`[Cache] Restoring artifacts (${specificSha.slice(0, 12)})...`);
+
+      const fromServer = await tryRestoreFromCacheServer(log, specificSha, options.staleProjects);
+
+      if (fromServer) {
+        await writeArtifactsState(specificSha);
+
+        return;
+      }
+
       const gcsFs = new GcsFileSystem(log);
+
       const prNumber = getPullRequestNumber();
+
       await gcsFs.restoreArchive({
         shas: [specificSha],
         prNumber,
         skipExistenceCheck: true,
       });
-      // Record the SHA so subsequent runs can accurately assess staleness.
+
       await writeArtifactsState(specificSha);
+
       return;
     }
 
     // Full discovery path: used by --restore-artifacts and CI.
-    log.info('Restoring TypeScript build artifacts');
+    log.info('[Cache] Restoring artifacts...');
 
     // Skip if artifacts already exist locally (only when not explicitly
     // pre-populating: --restore-artifacts passes skipExistingArtifactsCheck so
     // a single prior --project run does not turn restore into a no-op).
     if (!isCiEnvironment() && !options.skipExistingArtifactsCheck) {
       const hasExistingArtifacts = await checkForExistingBuildArtifacts();
+
       if (hasExistingArtifacts) {
         log.info(
-          'Found existing type cache directories — skipping archive restore (tsc incremental build will handle it).'
+          '[Cache] Found existing artifacts — skipping restore (tsc incremental build will handle staleness).'
         );
         return;
       }
@@ -364,11 +420,12 @@ export async function restoreTSBuildArtifacts(
     const candidateShas = buildCandidateShaList(currentSha, history);
 
     if (candidateShas.length === 0) {
-      log.info('No commit history available for TypeScript cache restore.');
+      log.info('[Cache] No commit history available for cache restore.');
       return;
     }
 
     const prNumber = getPullRequestNumber();
+
     const restoreOptions = {
       shas: candidateShas,
       prNumber,
@@ -377,6 +434,7 @@ export async function restoreTSBuildArtifacts(
 
     if (isCiEnvironment()) {
       await new GcsFileSystem(log).restoreArchive(restoreOptions);
+
       return;
     }
 
@@ -413,10 +471,18 @@ export async function restoreTSBuildArtifacts(
         }
 
         log.info(
-          `Found ${
+          `[Cache] Found ${
             matchedShas.length
           } matching archive(s) in GCS, restoring best match (${bestMatch.slice(0, 12)})...`
         );
+
+        const fromServer = await tryRestoreFromCacheServer(log, bestMatch);
+
+        if (fromServer) {
+          await writeArtifactsState(bestMatch);
+
+          return;
+        }
 
         const restored = await gcsFs.restoreArchive({
           ...restoreOptions,
@@ -427,23 +493,22 @@ export async function restoreTSBuildArtifacts(
         });
 
         if (restored) {
-          // Record the restored SHA so subsequent runs accurately assess
-          // staleness rather than treating the artifacts as unknown state.
           await writeArtifactsState(restored);
+
           return;
         }
       }
 
-      log.info('Falling back to local cache.');
+      log.info('[Cache] Falling back to local cache.');
     } catch (gcsError) {
       const gcsErrorDetails = gcsError instanceof Error ? gcsError.message : String(gcsError);
-      log.warning(`GCS restore failed (${gcsErrorDetails}), falling back to local cache.`);
+      log.warning(`[Cache] GCS restore failed (${gcsErrorDetails}), falling back to local cache.`);
     }
 
     try {
       await Fs.promises.access(LOCAL_CACHE_ROOT);
     } catch {
-      log.info('No local cache exists yet. It will be populated after this type check completes.');
+      log.info('[Cache] No local cache exists yet — it will be populated after this type check.');
       return;
     }
 
@@ -458,7 +523,7 @@ export async function restoreTSBuildArtifacts(
     }
   } catch (error) {
     const restoreErrorDetails = error instanceof Error ? error.message : String(error);
-    log.warning(`Failed to restore TypeScript build artifacts: ${restoreErrorDetails}`);
+    log.warning(`[Cache] Failed to restore artifacts: ${restoreErrorDetails}`);
   }
 }
 

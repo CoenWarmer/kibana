@@ -100,7 +100,7 @@ export async function runTscFastPass({
   const multi = affectedRefs.size > 1;
 
   log.info(
-    `[First pass] Checking ${affectedRefs.size} changed ${
+    `[TypeCheck] [First pass] Checking ${affectedRefs.size} changed ${
       multi ? 'projects' : 'project'
     } first (${projectNames.join(', ')}) with ${
       multi ? 'their' : 'its'
