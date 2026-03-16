@@ -606,31 +606,22 @@ export const resetDefsCounter = () => {
 const COMPONENT_ID_MARKER = 'x-kbn-oas-component-id';
 
 /**
- * Maps Zod v4 schema instances to their desired OAS `components/schemas` names.
- * Uses a WeakMap so schema objects can be GC-ed when no longer referenced.
- */
-const zodV4OasComponentRegistry = new WeakMap<object, string>();
-
-/**
- * Register a Zod v4 schema so that the OAS converter emits it as a named
- * component (`$ref: '#/components/schemas/<name>'`) instead of inlining it.
+ * Reads the stable OAS component name for a Zod v4 schema, if one was declared
+ * via `.meta({ id: '<name>' })` on the schema.
  *
- * Call this once per schema, at module load time (e.g. in an `oas_definitions.ts`
- * file next to the schema definitions):
- *
+ * Example:
  * ```ts
- * import { registerZodV4Component } from '@kbn/router-to-openapispec';
- * import { conditionSchema } from './schemas';
- *
- * registerZodV4Component(conditionSchema, 'Condition');
+ * import { z } from '@kbn/zod/v4';
+ * export const Condition = z.discriminatedUnion(...).meta({ id: 'Condition' });
  * ```
  *
- * The name must be unique across all registered schemas in the document.
- * Names follow the same rules as OpenAPI component names: `[a-zA-Z0-9._-]+`.
+ * The name must be unique across all schemas in the document and follow OpenAPI
+ * component naming rules: `[a-zA-Z0-9._-]+`.
  */
-export const registerZodV4Component = (schema: z4.ZodType, name: string): void => {
-  zodV4OasComponentRegistry.set(schema as object, name);
-};
+function getZodV4ComponentId(schema: z4.ZodType): string | undefined {
+  const meta = z4.globalRegistry.get(schema);
+  return typeof meta?.id === 'string' ? meta.id : undefined;
+}
 
 /**
  * Recursively rewrite every `$ref` value that starts with `#/$defs/`
@@ -662,8 +653,8 @@ function rewriteDefsRefs(obj: unknown, replacements: Record<string, string>): un
  * document root.
  *
  * When a `$defs` entry carries the `COMPONENT_ID_MARKER` property (injected by
- * the `override` callback for registered schemas), that stable name is used
- * instead of the auto-generated `_zod_v4_{batchId}_{key}` name.
+ * the `override` callback for schemas that declare `.meta({ id })`), that stable
+ * name is used instead of the auto-generated `_zod_v4_{batchId}_{key}` name.
  */
 function extractDefsToShared(
   defs: Record<string, unknown>,
@@ -866,10 +857,10 @@ export const convert = (schema: z.ZodTypeAny) => {
           return;
         }
 
-        // Inject the stable OAS component name for registered schemas.
-        // This marker is picked up by extractDefsToShared (for $defs entries)
+        // Inject the stable OAS component name for schemas that declare
+        // .meta({ id }). Picked up by extractDefsToShared (for $defs entries)
         // and hoistMarkedSchemas (for inline, single-use schemas).
-        const componentName = zodV4OasComponentRegistry.get(zodSchema as object);
+        const componentName = getZodV4ComponentId(zodSchema as z4.ZodType);
 
         if (componentName) {
           (js as any)[COMPONENT_ID_MARKER] = componentName;
