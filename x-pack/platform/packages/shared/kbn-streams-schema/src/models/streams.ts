@@ -31,6 +31,27 @@ export namespace Streams {
     export type UpsertRequest = ingest.all.UpsertRequest | QueryStream.UpsertRequest;
   }
 
+  const allDefinitionSchema = z.union([
+    nWiredStream.Definition.right,
+    nClassicStream.Definition.right,
+    nQueryStream.Definition.right,
+  ]);
+  const allSourceSchema = z.union([
+    nWiredStream.Source.right,
+    nClassicStream.Source.right,
+    nQueryStream.Source.right,
+  ]);
+  const allGetResponseSchema = z.union([
+    nWiredStream.GetResponse.right,
+    nClassicStream.GetResponse.right,
+    nQueryStream.GetResponse.right,
+  ]);
+  const allUpsertRequestSchema = z.union([
+    nWiredStream.UpsertRequest.right,
+    nClassicStream.UpsertRequest.right,
+    nQueryStream.UpsertRequest.right,
+  ]);
+
   export const all: {
     Definition: Validation<BaseStream.Model['Definition'], all.Definition>;
     Source: Validation<BaseStream.Model['Definition'], all.Source>;
@@ -38,48 +59,20 @@ export namespace Streams {
     UpsertRequest: Validation<BaseStream.Model['UpsertRequest'], all.UpsertRequest>;
   } = {
     Definition: validation(
-      z.union([
-        nWiredStream.Definition.right,
-        nClassicStream.Definition.right,
-        nQueryStream.Definition.right,
-      ]) as z.Schema<BaseStream.Model['Definition']>,
-      z.union([
-        nWiredStream.Definition.right,
-        nClassicStream.Definition.right,
-        nQueryStream.Definition.right,
-      ])
+      allDefinitionSchema as z.Schema<BaseStream.Model['Definition']>,
+      allDefinitionSchema
     ),
     Source: validation(
-      z.union([
-        nWiredStream.Source.right,
-        nClassicStream.Source.right,
-        nQueryStream.Source.right,
-      ]) as z.Schema<BaseStream.Model['Definition']>,
-      z.union([nWiredStream.Source.right, nClassicStream.Source.right, nQueryStream.Source.right])
+      allSourceSchema as z.Schema<BaseStream.Model['Definition']>,
+      allSourceSchema
     ),
     GetResponse: validation(
-      z.union([
-        nWiredStream.GetResponse.right,
-        nClassicStream.GetResponse.right,
-        nQueryStream.GetResponse.right,
-      ]) as z.Schema<BaseStream.Model['GetResponse']>,
-      z.union([
-        nWiredStream.GetResponse.right,
-        nClassicStream.GetResponse.right,
-        nQueryStream.GetResponse.right,
-      ])
+      allGetResponseSchema as z.Schema<BaseStream.Model['GetResponse']>,
+      allGetResponseSchema
     ),
     UpsertRequest: validation(
-      z.union([
-        nWiredStream.UpsertRequest.right,
-        nClassicStream.UpsertRequest.right,
-        nQueryStream.UpsertRequest.right,
-      ]) as z.Schema<BaseStream.Model['UpsertRequest']>,
-      z.union([
-        nWiredStream.UpsertRequest.right,
-        nClassicStream.UpsertRequest.right,
-        nQueryStream.UpsertRequest.right,
-      ])
+      allUpsertRequestSchema as z.Schema<BaseStream.Model['UpsertRequest']>,
+      allUpsertRequestSchema
     ),
   };
 }
