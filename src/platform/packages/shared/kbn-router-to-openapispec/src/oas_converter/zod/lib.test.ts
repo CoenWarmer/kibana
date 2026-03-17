@@ -9,7 +9,7 @@
 
 import { z } from '@kbn/zod';
 import { z as z4 } from '@kbn/zod/v4';
-import { BooleanFromString, PassThroughAny } from '@kbn/zod-helpers/v4';
+import { BooleanFromString, PassThroughAny } from '@kbn/zod-helpers';
 import { PassThroughAny as PassThroughAnyV4 } from '@kbn/zod-helpers/v4';
 import { DeepStrict } from '@kbn/zod-helpers/v4';
 import {
