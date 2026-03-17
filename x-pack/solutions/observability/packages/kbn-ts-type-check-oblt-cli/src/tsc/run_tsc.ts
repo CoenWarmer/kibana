@@ -117,7 +117,14 @@ export async function runTscFastPass({
     return { depCount, dependentCount };
   });
 
-  const totalAffectedDownstream = perProject.reduce((sum, p) => sum + p.dependentCount, 0);
+  // Union of each changed project's full forward closure = all projects tsc -b will touch.
+  const firstPassProjectCount = configPaths.reduce((acc, configPath) => {
+    const abs = Path.resolve(REPO_ROOT, configPath);
+    for (const p of computeEffectiveRebuildSet(new Set([abs]), forwardDeps)) {
+      acc.add(p);
+    }
+    return acc;
+  }, new Set<string>()).size;
 
   const tableRows = perProject.map(({ depCount, dependentCount }, i) => [
     projectNames[i],
@@ -135,14 +142,7 @@ export async function runTscFastPass({
     log.info(`[TypeCheck] ${line}`);
   }
 
-  log.info(
-    `[TypeCheck] [First pass] Checking ${affectedRefs.size} changed ${
-      multi ? 'projects' : 'project'
-    } with ${multi ? 'their' : 'its'} upstream dependencies for fast feedback` +
-      ` (${totalAffectedDownstream} downstream ${
-        totalAffectedDownstream === 1 ? 'project' : 'projects'
-      } also affected)...`
-  );
+  log.info(`[TypeCheck] [First pass] Checking ${firstPassProjectCount} projects...`);
 
   const success = await runTsc({
     log,
