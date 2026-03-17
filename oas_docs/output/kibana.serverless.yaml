@@ -62131,469 +62131,33 @@ paths:
           application/json:
             schema:
               anyOf:
-                - anyOf:
-                    - allOf:
-                        - additionalProperties: {}
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            dashboards:
-                              items:
-                                type: string
-                              type: array
-                            queries:
-                              items:
-                                type: object
-                                properties:
-                                  description:
-                                    type: string
-                                  esql:
-                                    type: object
-                                    properties:
-                                      query:
-                                        type: string
-                                    required:
-                                      - query
-                                  evidence:
-                                    items:
-                                      type: string
-                                    type: array
-                                  id:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                  severity_score:
-                                    type: number
-                                  title:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                required:
-                                  - id
-                                  - title
-                                  - description
-                                  - esql
-                              type: array
-                            rules:
-                              items:
-                                type: string
-                              type: array
-                          required:
-                            - dashboards
-                            - rules
-                            - queries
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: {}
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            dashboards:
-                              items:
-                                type: string
-                              type: array
-                            queries:
-                              items:
-                                type: object
-                                properties:
-                                  description:
-                                    type: string
-                                  esql:
-                                    type: object
-                                    properties:
-                                      query:
-                                        type: string
-                                    required:
-                                      - query
-                                  evidence:
-                                    items:
-                                      type: string
-                                    type: array
-                                  id:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                  severity_score:
-                                    type: number
-                                  title:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                required:
-                                  - id
-                                  - title
-                                  - description
-                                  - esql
-                              type: array
-                            rules:
-                              items:
-                                type: string
-                              type: array
-                          required:
-                            - dashboards
-                            - rules
-                            - queries
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties: {}
-                    - allOf:
-                        - additionalProperties: {}
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            dashboards:
-                              items:
-                                type: string
-                              type: array
-                            queries:
-                              items:
-                                type: object
-                                properties:
-                                  description:
-                                    type: string
-                                  esql:
-                                    type: object
-                                    properties:
-                                      query:
-                                        type: string
-                                    required:
-                                      - query
-                                  evidence:
-                                    items:
-                                      type: string
-                                    type: array
-                                  id:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                  severity_score:
-                                    type: number
-                                  title:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                required:
-                                  - id
-                                  - title
-                                  - description
-                                  - esql
-                              type: array
-                            rules:
-                              items:
-                                type: string
-                              type: array
-                          required:
-                            - dashboards
-                            - rules
-                            - queries
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: {}
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            dashboards:
-                              items:
-                                type: string
-                              type: array
-                            queries:
-                              items:
-                                type: object
-                                properties:
-                                  description:
-                                    type: string
-                                  esql:
-                                    type: object
-                                    properties:
-                                      query:
-                                        type: string
-                                    required:
-                                      - query
-                                  evidence:
-                                    items:
-                                      type: string
-                                    type: array
-                                  id:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                  severity_score:
-                                    type: number
-                                  title:
-                                    description: A non-empty string.
-                                    minLength: 1
-                                    type: string
-                                required:
-                                  - id
-                                  - title
-                                  - description
-                                  - esql
-                              type: array
-                            rules:
-                              items:
-                                type: string
-                              type: array
-                          required:
-                            - dashboards
-                            - rules
-                            - queries
-                        - additionalProperties: false
-                          type: object
-                          properties:
-                            stream:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                ingest:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    processing:
-                                      additionalProperties: {}
-                                      type: object
-                                      properties:
-                                        updated_at: {}
-                                  required:
-                                    - processing
-                                name: {}
-                                updated_at: {}
-                          required:
-                            - stream
-                        - additionalProperties: false
-                          type: object
-                          properties: {}
-                        - additionalProperties: false
-                          type: object
-                          properties: {}
-                - allOf:
-                    - additionalProperties: {}
-                      type: object
-                      properties: {}
-                    - additionalProperties: false
-                      type: object
-                      properties:
-                        stream:
-                          additionalProperties: {}
-                          type: object
-                          properties:
-                            ingest:
-                              additionalProperties: {}
-                              type: object
-                              properties:
-                                processing:
-                                  additionalProperties: {}
-                                  type: object
-                                  properties:
-                                    updated_at: {}
-                              required:
-                                - processing
-                            name: {}
-                            updated_at: {}
-                      required:
-                        - stream
-                    - additionalProperties: false
-                      type: object
-                      properties:
-                        dashboards:
-                          items:
+                - additionalProperties: false
+                  type: object
+                  properties:
+                    dashboards:
+                      items:
+                        type: string
+                      type: array
+                    queries:
+                      items:
+                        type: object
+                        properties:
+                          description:
                             type: string
-                          type: array
-                        queries:
-                          items:
+                          esql:
                             type: object
                             properties:
-                              description:
-                                type: string
-                              esql:
-                                type: object
-                                properties:
-                                  query:
-                                    type: string
-                                required:
-                                  - query
-                              evidence:
-                                items:
-                                  type: string
-                                type: array
-                              id:
-                                description: A non-empty string.
-                                minLength: 1
-                                type: string
-                              severity_score:
-                                type: number
-                              title:
-                                description: A non-empty string.
-                                minLength: 1
+                              query:
                                 type: string
                             required:
-                              - id
-                              - title
-                              - description
-                              - esql
-                          type: array
-                        rules:
-                          items:
+                              - query
+                          evidence:
+                            items:
+                              type: string
+                            type: array
+                          id:
+                            description: A non-empty string.
+                            minLength: 1
                             type: string
                           severity_score:
                             type: number
@@ -62604,6 +62168,7 @@ paths:
                         required:
                           - id
                           - title
+                          - description
                           - esql
                       type: array
                     rules:
@@ -62890,6 +62455,8 @@ paths:
                       items:
                         type: object
                         properties:
+                          description:
+                            type: string
                           esql:
                             type: object
                             properties:
@@ -62914,6 +62481,7 @@ paths:
                         required:
                           - id
                           - title
+                          - description
                           - esql
                       type: array
                     rules:
@@ -63168,6 +62736,8 @@ paths:
                       items:
                         type: object
                         properties:
+                          description:
+                            type: string
                           esql:
                             type: object
                             properties:
@@ -63192,6 +62762,7 @@ paths:
                         required:
                           - id
                           - title
+                          - description
                           - esql
                       type: array
                     rules:
