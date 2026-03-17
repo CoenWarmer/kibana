@@ -103,10 +103,7 @@ export abstract class SubActionConnector<Config, Secrets> {
     return { 'Content-Type': 'application/json', ...headersWithBasicAuth };
   }
 
-  private validateResponse(
-    responseSchema: z.ZodType<unknown>,
-    data: unknown
-  ) {
+  private validateResponse(responseSchema: z.ZodType<unknown>, data: unknown) {
     try {
       responseSchema.parse(data);
     } catch (resValidationError) {
