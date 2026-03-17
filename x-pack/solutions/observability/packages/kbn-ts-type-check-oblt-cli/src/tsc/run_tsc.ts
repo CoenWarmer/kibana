@@ -22,6 +22,31 @@ import {
   computeEffectiveRebuildSet,
 } from '../cache/restore_ts_build_artifacts';
 
+/**
+ * Renders a simple Unicode box table. Returns one string per row (including
+ * borders) so callers can pass each line to `log.info` independently —
+ * the consistent logger prefix keeps the box borders in column.
+ */
+function formatTable(headers: readonly string[], rows: readonly string[][]): string[] {
+  const colWidths = headers.map((h, i) =>
+    Math.max(h.length, ...rows.map((r) => (r[i] ?? '').length))
+  );
+
+  const border = (l: string, mid: string, r: string) =>
+    l + colWidths.map((w) => '─'.repeat(w + 2)).join(mid) + r;
+
+  const dataRow = (cells: readonly string[]) =>
+    '│ ' + cells.map((c, i) => c.padEnd(colWidths[i])).join(' │ ') + ' │';
+
+  return [
+    border('┌', '┬', '┐'),
+    dataRow(headers),
+    border('├', '┼', '┤'),
+    ...rows.map(dataRow),
+    border('└', '┴', '┘'),
+  ];
+}
+
 interface TscRunOptions {
   type?: 'Full pass' | 'First pass';
   log: SomeDevLog;
@@ -118,15 +143,15 @@ export async function runTscFastPass({
 
   const totalAffectedDownstream = perProject.reduce((sum, p) => sum + p.dependentCount, 0);
 
+  const tableRows = perProject.map(({ depCount, dependentCount }, i) => [
+    projectNames[i],
+    String(depCount),
+    dependentCount === 0 ? '—' : String(dependentCount),
+  ]);
+
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
-  for (let i = 0; i < projectNames.length; i++) {
-    const { depCount, dependentCount } = perProject[i];
-    const depsStr = depCount === 1 ? '1 dependency' : `${depCount} dependencies`;
-    const deptsStr =
-      dependentCount === 0
-        ? 'no dependents'
-        : `${dependentCount} dependent${dependentCount === 1 ? '' : 's'}`;
-    log.info(`[TypeCheck]   - ${projectNames[i]} (${depsStr}) ==> ${deptsStr}`);
+  for (const line of formatTable(['Project', 'Dependencies', 'Dependents'], tableRows)) {
+    log.info(`[TypeCheck] ${line}`);
   }
 
   log.info(
