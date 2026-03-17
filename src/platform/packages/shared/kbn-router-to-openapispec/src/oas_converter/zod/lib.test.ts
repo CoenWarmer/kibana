@@ -12,13 +12,7 @@ import { z as z4 } from '@kbn/zod/v4';
 import { BooleanFromString, PassThroughAny } from '@kbn/zod-helpers';
 import { PassThroughAny as PassThroughAnyV4 } from '@kbn/zod-helpers/v4';
 import { DeepStrict } from '@kbn/zod-helpers/v4';
-import {
-  convert,
-  convertPathParameters,
-  convertQuery,
-  registerZodV4Component,
-  resetDefsCounter,
-} from './lib';
+import { convert, convertPathParameters, convertQuery, resetDefsCounter } from './lib';
 
 import { createLargeSchema, createLargeSchemaV4 } from './lib.test.util';
 
@@ -588,7 +582,7 @@ describe('zod v4', () => {
     });
   });
 
-  describe('registerZodV4Component', () => {
+  describe('stable OAS component names via .meta({ id })', () => {
     beforeEach(() => resetDefsCounter());
 
     test('recursive schema: stable name used in $defs and $ref', () => {
@@ -598,8 +592,7 @@ describe('zod v4', () => {
           z4.object({ and: z4.array(condition) }),
           z4.object({ or: z4.array(condition) }),
         ])
-      );
-      registerZodV4Component(condition, 'Condition');
+      ).meta({ id: 'Condition' });
 
       const body = z4.object({ condition, name: z4.string() });
       const result = convert(body as any);
@@ -623,8 +616,7 @@ describe('zod v4', () => {
     });
 
     test('non-recursive schema: stable name used when schema is inlined (single use)', () => {
-      const address = z4.object({ street: z4.string(), city: z4.string() });
-      registerZodV4Component(address, 'Address');
+      const address = z4.object({ street: z4.string(), city: z4.string() }).meta({ id: 'Address' });
 
       const body = z4.object({ address, name: z4.string() });
       const result = convert(body as any);
@@ -653,9 +645,8 @@ describe('zod v4', () => {
       expect(outputStr).not.toContain('x-kbn-oas-component-id');
     });
 
-    test('registered schema passed directly to convert() produces $ref', () => {
-      const tag = z4.object({ id: z4.string(), label: z4.string() });
-      registerZodV4Component(tag, 'Tag');
+    test('schema with .meta({ id }) passed directly to convert() produces $ref', () => {
+      const tag = z4.object({ id: z4.string(), label: z4.string() }).meta({ id: 'Tag' });
 
       const result = convert(tag as any);
 
@@ -663,40 +654,42 @@ describe('zod v4', () => {
       expect(result.schema).toEqual({ $ref: '#/components/schemas/Tag' });
     });
 
-    test('discriminator extension is merged into the component schema', () => {
-      const catSchema = z4.object({ type: z4.literal('cat'), meow: z4.string() });
-      const dogSchema = z4.object({ type: z4.literal('dog'), bark: z4.string() });
-      const petSchema = z4.union([catSchema, dogSchema]);
-
-      registerZodV4Component(catSchema, 'Cat');
-      registerZodV4Component(dogSchema, 'Dog');
-      registerZodV4Component(petSchema, 'Pet', {
-        discriminator: {
-          propertyName: 'type',
-          mapping: {
-            cat: '#/components/schemas/Cat',
-            dog: '#/components/schemas/Dog',
+    test('.meta({ openapi }) extensions are merged into the component schema', () => {
+      const wired = z4.object({ type: z4.literal('wired') }).meta({ id: 'WiredDef' });
+      const classic = z4.object({ type: z4.literal('classic') }).meta({ id: 'ClassicDef' });
+      const streamDef = z4
+        .union([wired, classic])
+        .meta({
+          id: 'StreamDefinition',
+          openapi: {
+            discriminator: {
+              propertyName: 'type',
+              mapping: {
+                wired: '#/components/schemas/WiredDef',
+                classic: '#/components/schemas/ClassicDef',
+              },
+            },
           },
-        },
-      });
+        });
 
-      const body = z4.object({ pet: petSchema });
+      const body = z4.object({ stream: streamDef });
       const result = convert(body as any);
 
-      // discriminator is present on the Pet component
-      expect(result.shared.Pet).toMatchObject({
+      expect(result.shared).toHaveProperty('StreamDefinition');
+      expect(result.shared.StreamDefinition).toMatchObject({
         discriminator: {
           propertyName: 'type',
           mapping: {
-            cat: '#/components/schemas/Cat',
-            dog: '#/components/schemas/Dog',
+            wired: '#/components/schemas/WiredDef',
+            classic: '#/components/schemas/ClassicDef',
           },
         },
       });
 
-      // no marker leaks through
+      // no markers should leak into the output
       const outputStr = JSON.stringify(result);
       expect(outputStr).not.toContain('x-kbn-oas-component-id');
+      expect(outputStr).not.toContain('x-kbn-oas-extensions');
     });
   });
 });

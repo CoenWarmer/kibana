@@ -43,13 +43,14 @@ Streams.QueryStream = nQueryStream;
 
 /**
  * Flat Zod union of all three stream definition schemas, discriminated by the
- * `type` literal field.  Intended for OAS component registration — register
- * this schema with a `discriminator` extension so code generators can produce
- * properly typed structs:
+ * `type` literal field.  Registered as a named OAS component with a
+ * `discriminator` extension so code generators can produce properly typed
+ * structs:
  *
  * ```ts
- * registerZodV4Component(streamDefinitionSchema, 'StreamDefinition', {
- *   discriminator: { propertyName: 'type' },
+ * streamDefinitionSchema.meta({
+ *   id: 'StreamDefinition',
+ *   openapi: { discriminator: { propertyName: 'type' } },
  * });
  * ```
  */

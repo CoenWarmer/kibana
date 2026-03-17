@@ -13,7 +13,7 @@
  * instead of inlining or using auto-generated names like `_zod_v4_1___schema1`.
  */
 
-import { registerZodV4Component } from '@kbn/router-to-openapispec';
+import type { OasMetaExtensions } from '@kbn/router-to-openapispec';
 import { streamsOasDefinitions } from '@kbn/streams-schema';
 import { streamlangOasDefinitions } from '@kbn/streamlang';
 
@@ -21,10 +21,10 @@ import { streamlangOasDefinitions } from '@kbn/streamlang';
  * Schemas that require extra OAS properties beyond what Zod can express.
  * Keyed by the same names as in `streamsOasDefinitions`.
  */
-const streamDefinitionExtensions = {
+const streamDefinitionExtensions: Record<string, OasMetaExtensions> = {
   StreamDefinition: {
     discriminator: {
-      propertyName: 'type' as const,
+      propertyName: 'type',
       mapping: {
         wired: '#/components/schemas/WiredStreamDefinition',
         classic: '#/components/schemas/ClassicStreamDefinition',
@@ -32,14 +32,14 @@ const streamDefinitionExtensions = {
       },
     },
   },
-} as const;
+};
 
 export function registerStreamsOasComponents() {
   for (const [name, schema] of Object.entries(streamsOasDefinitions)) {
-    const extensions = streamDefinitionExtensions[name as keyof typeof streamDefinitionExtensions];
-    registerZodV4Component(schema, name, extensions);
+    const openapi = streamDefinitionExtensions[name];
+    schema.meta({ id: name, ...(openapi ? { openapi } : {}) });
   }
   for (const [name, schema] of Object.entries(streamlangOasDefinitions)) {
-    registerZodV4Component(schema, name);
+    schema.meta({ id: name });
   }
 }
