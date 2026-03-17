@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ZodError } from '@kbn/zod/v4';
+import type { ZodError } from '@kbn/zod';
 import { get } from 'lodash';
 
 const MAX_ERRORS = 5;

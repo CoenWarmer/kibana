@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import { z, isZod } from '@kbn/zod/v4';
+import { z, isZod } from '@kbn/zod';
 import { z as z4 } from '@kbn/zod/v4';
 import { isPassThroughAny } from '@kbn/zod-helpers/v4';
 import zodToJsonSchema, { jsonDescription } from 'zod-to-json-schema';
