@@ -395,7 +395,7 @@ export async function resolveRestoreStrategy(
   return { shouldRestore: false, bestSha: undefined };
 }
 
-function buildReverseDependencyMap(tsProjects: TsProject[]): Map<string, Set<string>> {
+export function buildReverseDependencyMap(tsProjects: TsProject[]): Map<string, Set<string>> {
   const reverseDeps = new Map<string, Set<string>>();
 
   for (const project of tsProjects) {

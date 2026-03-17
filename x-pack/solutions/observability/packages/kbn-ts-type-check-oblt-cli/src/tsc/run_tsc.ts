@@ -16,6 +16,10 @@ import type { TsProject } from '@kbn/ts-projects';
 
 import { getChangedFiles, getAffectedProjectRefs } from './root_refs_config';
 import { TscProgressTracker } from './tsc_progress_tracker';
+import {
+  buildReverseDependencyMap,
+  computeEffectiveRebuildSet,
+} from '../cache/restore_ts_build_artifacts';
 
 interface TscRunOptions {
   type?: 'Full pass' | 'First pass';
@@ -98,6 +102,20 @@ export async function runTscFastPass({
     return parts.length >= 2 ? parts[parts.length - 2] : c;
   });
   const multi = affectedRefs.size > 1;
+
+  const reverseDeps = buildReverseDependencyMap(projects);
+  const dependentCounts = configPaths.map((configPath) => {
+    const absolutePath = Path.resolve(REPO_ROOT, configPath);
+    // computeEffectiveRebuildSet includes the root itself, so subtract 1.
+    return computeEffectiveRebuildSet(new Set([absolutePath]), reverseDeps).size - 1;
+  });
+
+  log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
+  for (let i = 0; i < projectNames.length; i++) {
+    const n = dependentCounts[i];
+    const suffix = n > 0 ? ` ==> ${n} dependent${n === 1 ? '' : 's'}` : ' ==> no dependents';
+    log.info(`[TypeCheck]   - ${projectNames[i]}${suffix}`);
+  }
 
   log.info(
     `[TypeCheck] [First pass] Checking ${affectedRefs.size} changed ${
