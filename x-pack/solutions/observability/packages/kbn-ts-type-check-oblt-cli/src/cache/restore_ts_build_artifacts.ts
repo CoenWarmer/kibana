@@ -331,8 +331,13 @@ export async function resolveRestoreStrategy(
 
   if (effectiveRebuildSet.size <= STALE_RESTORE_THRESHOLD) {
     log.info(
-      `[Cache check] ✓ Cache freshness is good — only ${effectiveRebuildSet.size} project(s) ` +
-        `need rebuilding.`
+      `[Cache check] ✓ Cache freshness is good${
+        effectiveRebuildSet.size === 1
+          ? ' — only one project needs rebuilding'
+          : effectiveRebuildSet.size > 1
+          ? ' — only ${effectiveRebuildSet.size} projects need rechecking'
+          : ' — no projects need rechecking'
+      }`
     );
     // Invalidate .tsbuildinfo for stale projects so tsc is forced to recheck
     // them. Without this, tsc may treat a project as "up-to-date" if its source
@@ -393,6 +398,18 @@ export async function resolveRestoreStrategy(
   await invalidateTsBuildInfoFiles(effectiveRebuildSet, log);
 
   return { shouldRestore: false, bestSha: undefined };
+}
+
+/** Maps each project's typeCheckConfigPath to the set of its direct dependency typeCheckConfigPaths. */
+export function buildForwardDependencyMap(tsProjects: TsProject[]): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+  for (const p of tsProjects) {
+    map.set(
+      p.typeCheckConfigPath,
+      new Set(p.getKbnRefs(tsProjects).map((dep) => dep.typeCheckConfigPath))
+    );
+  }
+  return map;
 }
 
 export function buildReverseDependencyMap(tsProjects: TsProject[]): Map<string, Set<string>> {

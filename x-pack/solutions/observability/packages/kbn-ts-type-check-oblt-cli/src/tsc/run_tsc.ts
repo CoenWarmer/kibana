@@ -17,6 +17,7 @@ import type { TsProject } from '@kbn/ts-projects';
 import { getChangedFiles, getAffectedProjectRefs } from './root_refs_config';
 import { TscProgressTracker } from './tsc_progress_tracker';
 import {
+  buildForwardDependencyMap,
   buildReverseDependencyMap,
   computeEffectiveRebuildSet,
 } from '../cache/restore_ts_build_artifacts';
@@ -103,29 +104,37 @@ export async function runTscFastPass({
   });
   const multi = affectedRefs.size > 1;
 
+  const forwardDeps = buildForwardDependencyMap(projects);
   const reverseDeps = buildReverseDependencyMap(projects);
-  const dependentCounts = configPaths.map((configPath) => {
-    const absolutePath = Path.resolve(REPO_ROOT, configPath);
-    // computeEffectiveRebuildSet includes the root itself, so subtract 1.
-    return computeEffectiveRebuildSet(new Set([absolutePath]), reverseDeps).size - 1;
+
+  // For each changed project compute both directions of the dep graph.
+  // Counts exclude the root project itself.
+  const perProject = configPaths.map((configPath) => {
+    const abs = Path.resolve(REPO_ROOT, configPath);
+    const depCount = computeEffectiveRebuildSet(new Set([abs]), forwardDeps).size - 1;
+    const dependentCount = computeEffectiveRebuildSet(new Set([abs]), reverseDeps).size - 1;
+    return { depCount, dependentCount };
   });
 
-  let dependentCount = 0;
+  const totalAffectedDownstream = perProject.reduce((sum, p) => sum + p.dependentCount, 0);
 
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
   for (let i = 0; i < projectNames.length; i++) {
-    const n = dependentCounts[i];
-    dependentCount += n;
-    const suffix = n > 0 ? ` ==> ${n} dependent${n === 1 ? '' : 's'}` : ' ==> no dependents';
-    log.info(`[TypeCheck]   - ${projectNames[i]}${suffix}`);
+    const { depCount, dependentCount } = perProject[i];
+    const depsStr = depCount === 1 ? '1 dependency' : `${depCount} dependencies`;
+    const deptsStr =
+      dependentCount === 0
+        ? 'no dependents'
+        : `${dependentCount} dependent${dependentCount === 1 ? '' : 's'}`;
+    log.info(`[TypeCheck]   - ${projectNames[i]} (${depsStr}) ==> ${deptsStr}`);
   }
 
   log.info(
     `[TypeCheck] [First pass] Checking ${affectedRefs.size} changed ${
       multi ? 'projects' : 'project'
     } with ${multi ? 'their' : 'its'} upstream dependencies for fast feedback` +
-      ` (${dependentCount} downstream ${
-        dependentCount === 1 ? 'project' : 'projects'
+      ` (${totalAffectedDownstream} downstream ${
+        totalAffectedDownstream === 1 ? 'project' : 'projects'
       } also affected)...`
   );
 
