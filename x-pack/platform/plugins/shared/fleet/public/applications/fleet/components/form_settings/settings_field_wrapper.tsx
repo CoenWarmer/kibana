@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { z, ZodFirstPartyTypeKind } from '@kbn/zod/v4';
+import { z } from '@kbn/zod/v4';
 import React, { useState } from 'react';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { EuiCode, EuiDescribedFormGroup, EuiFormRow, EuiLink } from '@elastic/eui';
@@ -13,11 +13,21 @@ import { EuiCode, EuiDescribedFormGroup, EuiFormRow, EuiLink } from '@elastic/eu
 import type { SettingsConfig } from '../../../../../common/settings/types';
 import { useAgentPolicyFormContext } from '../../sections/agent_policy/components/agent_policy_form';
 
+// Local replacement for v3's ZodFirstPartyTypeKind, using zod v4 type discriminants.
+export const ZodTypeKind = {
+  ZodString: 'string',
+  ZodNumber: 'number',
+  ZodBoolean: 'boolean',
+  ZodObject: 'object',
+  ZodEnum: 'enum',
+} as const;
+export type ZodTypeKindValue = (typeof ZodTypeKind)[keyof typeof ZodTypeKind];
+
 export const convertValue = (
   value: string | boolean,
-  type: keyof typeof ZodFirstPartyTypeKind
+  type: string
 ): any => {
-  if (type === ZodFirstPartyTypeKind.ZodNumber) {
+  if (type === ZodTypeKind.ZodNumber) {
     if (value === '') {
       return 0;
     }
@@ -40,7 +50,7 @@ const renderer = {
 
 export const SettingsFieldWrapper: React.FC<{
   settingsConfig: SettingsConfig;
-  typeName: keyof typeof ZodFirstPartyTypeKind;
+  typeName: ZodTypeKindValue;
   renderItem: Function;
   disabled?: boolean;
 }> = ({ settingsConfig, typeName, renderItem, disabled }) => {
@@ -50,12 +60,12 @@ export const SettingsFieldWrapper: React.FC<{
   const fieldKey = `configuredSetting-${settingsConfig.name}`;
   const defaultValue: number =
     settingsConfig.schema instanceof z.ZodDefault
-      ? settingsConfig.schema._def.defaultValue()
+      ? (settingsConfig.schema._def as any).defaultValue()
       : undefined;
   const coercedSchema = settingsConfig.schema as z.ZodString;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = typeName === ZodFirstPartyTypeKind.ZodBoolean ? e.target.checked : e.target.value;
+    const value = typeName === ZodTypeKind.ZodBoolean ? e.target.checked : e.target.value;
     const newValue = convertValue(value, typeName);
     const validationError = validateSchema(coercedSchema, newValue);
 
@@ -104,14 +114,17 @@ export const SettingsFieldWrapper: React.FC<{
   );
 };
 
-export const getInnerType = (schema: z.ZodType<any, any>) => {
-  if (schema._def.innerType) {
-    return schema._def.innerType._def.typeName === 'ZodEffects'
-      ? schema._def.innerType._def.schema._def.typeName
-      : schema._def.innerType._def.typeName;
+export const getInnerType = (schema: z.ZodType): string => {
+  const def = schema._def as Record<string, any>;
+  if (def.innerType) {
+    const innerDef = (def.innerType as z.ZodType)._def as Record<string, any>;
+    // In v4, .transform() creates a ZodPipe (was ZodEffects in v3)
+    return innerDef.type === 'pipe'
+      ? ((innerDef.in as z.ZodType)._def as Record<string, any>).type
+      : innerDef.type;
   }
-  if (schema._def.typeName === 'ZodEffects') {
-    return schema._def.schema._def.typeName;
+  if (def.type === 'pipe') {
+    return ((def.in as z.ZodType)._def as Record<string, any>).type;
   }
-  return schema._def.typeName;
+  return def.type;
 };

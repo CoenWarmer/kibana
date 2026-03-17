@@ -5,7 +5,6 @@
  * 2.0.
  */
 
-import { ZodFirstPartyTypeKind } from '@kbn/zod/v4';
 import React from 'react';
 import { EuiCheckbox, EuiFieldNumber, EuiFieldText, EuiSelect } from '@elastic/eui';
 
@@ -15,22 +14,22 @@ import type { SettingsConfig } from '../../../../../common/settings/types';
 import { YamlCodeEditorWithPlaceholder } from '../../sections/settings/components/edit_output_flyout/yaml_code_editor_with_placeholder';
 
 import { SettingsFieldGroup } from './settings_field_group';
-import { getInnerType, SettingsFieldWrapper } from './settings_field_wrapper';
+import { getInnerType, SettingsFieldWrapper, ZodTypeKind } from './settings_field_wrapper';
 
 export const settingComponentRegistry = new Map<
   string,
   (settingsconfig: SettingsConfig & { disabled?: boolean }) => React.ReactElement
 >();
 
-settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodObject, ({ disabled, ...settingsConfig }) => (
+settingComponentRegistry.set(ZodTypeKind.ZodObject, ({ disabled, ...settingsConfig }) => (
   <SettingsFieldGroup settingsConfig={settingsConfig} disabled={disabled} />
 ));
 
-settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodNumber, ({ disabled, ...settingsConfig }) => {
+settingComponentRegistry.set(ZodTypeKind.ZodNumber, ({ disabled, ...settingsConfig }) => {
   return (
     <SettingsFieldWrapper
       settingsConfig={settingsConfig}
-      typeName={ZodFirstPartyTypeKind.ZodNumber}
+      typeName={ZodTypeKind.ZodNumber}
       renderItem={({ fieldKey, fieldValue, handleChange, isInvalid, coercedSchema }: any) => (
         <EuiFieldNumber
           fullWidth
@@ -47,12 +46,12 @@ settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodNumber, ({ disabled, ...se
   );
 });
 
-settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodString, ({ disabled, ...settingsConfig }) => {
+settingComponentRegistry.set(ZodTypeKind.ZodString, ({ disabled, ...settingsConfig }) => {
   if (settingsConfig.type === 'yaml') {
     return (
       <SettingsFieldWrapper
         settingsConfig={settingsConfig}
-        typeName={ZodFirstPartyTypeKind.ZodString}
+        typeName={ZodTypeKind.ZodString}
         renderItem={({ fieldKey, fieldValue, handleChange, isInvalid, coercedSchema }: any) => (
           <YamlCodeEditorWithPlaceholder
             value={fieldValue}
@@ -73,7 +72,7 @@ settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodString, ({ disabled, ...se
   return (
     <SettingsFieldWrapper
       settingsConfig={settingsConfig}
-      typeName={ZodFirstPartyTypeKind.ZodString}
+      typeName={ZodTypeKind.ZodString}
       renderItem={({ fieldKey, fieldValue, handleChange, isInvalid }: any) => (
         <EuiFieldText
           fullWidth
@@ -88,12 +87,12 @@ settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodString, ({ disabled, ...se
   );
 });
 
-settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodEnum, ({ disabled, ...settingsConfig }) => {
+settingComponentRegistry.set(ZodTypeKind.ZodEnum, ({ disabled, ...settingsConfig }) => {
   return (
     <SettingsFieldWrapper
       disabled={disabled}
       settingsConfig={settingsConfig}
-      typeName={ZodFirstPartyTypeKind.ZodEnum}
+      typeName={ZodTypeKind.ZodEnum}
       renderItem={({ fieldKey, fieldValue, handleChange }: any) => (
         <EuiSelect
           data-test-subj={fieldKey}
@@ -108,12 +107,17 @@ settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodEnum, ({ disabled, ...sett
             })
           }
           options={
-            settingsConfig.options
-              ? settingsConfig.options
-              : settingsConfig.schema._def.innerType._def.values.map((value: string) => ({
-                  text: value,
-                  value,
-                }))
+              settingsConfig.options
+                ? settingsConfig.options
+                : Object.values(
+                    (settingsConfig.schema._def as any).innerType._def.entries as Record<
+                      string,
+                      string
+                    >
+                  ).map((value) => ({
+                    text: value,
+                    value,
+                  }))
           }
         />
       )}
@@ -122,13 +126,13 @@ settingComponentRegistry.set(ZodFirstPartyTypeKind.ZodEnum, ({ disabled, ...sett
 });
 
 settingComponentRegistry.set(
-  ZodFirstPartyTypeKind.ZodBoolean,
+  ZodTypeKind.ZodBoolean,
   ({ disabled, ...settingsConfig }) => {
     return (
       <SettingsFieldWrapper
         disabled={disabled}
         settingsConfig={settingsConfig}
-        typeName={ZodFirstPartyTypeKind.ZodBoolean}
+        typeName={ZodTypeKind.ZodBoolean}
         renderItem={({ fieldKey, fieldValue, handleChange }: any) => (
           <EuiCheckbox
             data-test-subj={fieldKey}
