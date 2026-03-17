@@ -11,5 +11,3 @@ export {
   generateOpenApiDocument,
   type GenerateOpenApiDocumentOptionsFilters,
 } from './src/generate_oas';
-
-export { registerZodV4Component } from './src/oas_converter/zod/lib';
