@@ -24,7 +24,7 @@ import {
   getInnerType,
   SettingsFieldWrapper,
   validateSchema,
-  ZodTypeKind,
+  ZodSchemaType,
 } from './settings_field_wrapper';
 
 export const SettingsFieldGroup: React.FC<{
@@ -33,19 +33,19 @@ export const SettingsFieldGroup: React.FC<{
 }> = ({ settingsConfig, disabled }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const agentPolicyFormContext = useAgentPolicyFormContext();
-  const shape = (settingsConfig.schema._def as any).innerType._def.shape();
+  const shape = (settingsConfig.schema as any)._def.innerType._def.shape();
 
   return (
     <SettingsFieldWrapper
       settingsConfig={settingsConfig}
-      typeName={ZodTypeKind.ZodString}
+      typeName={ZodSchemaType.string}
       renderItem={({}: any) => (
         <EuiFlexGroup direction="column">
           {Object.keys(shape).map((key) => {
             const field = shape[key];
             const fieldKey = `configuredSetting-${settingsConfig.name}-${key}`;
             const defaultValue: number =
-              field instanceof z.ZodDefault ? (field._def as any).defaultValue() : undefined;
+              field instanceof z.ZodDefault ? (field as any)._def.defaultValue() : undefined;
             const coercedSchema = field as z.ZodString;
             const fieldValue =
               agentPolicyFormContext?.agentPolicy.advanced_settings?.[
@@ -56,7 +56,7 @@ export const SettingsFieldGroup: React.FC<{
             const description = field._def.description ?? key;
 
             const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-              const newValue = convertValue(e.target.value, type);
+              const newValue = convertValue(e.target.value, type as keyof typeof ZodSchemaType);
               updateFieldValue(newValue);
             };
 
@@ -88,7 +88,7 @@ export const SettingsFieldGroup: React.FC<{
 
             const getFormField = () => {
               switch (type) {
-                case ZodTypeKind.ZodNumber:
+                case ZodSchemaType.number:
                   return (
                     <EuiFieldNumber
                       fullWidth
@@ -101,7 +101,7 @@ export const SettingsFieldGroup: React.FC<{
                       max={(field as z.ZodNumber).maxValue ?? undefined}
                     />
                   );
-                case ZodTypeKind.ZodString:
+                case ZodSchemaType.string:
                   return (
                     <EuiFieldText
                       fullWidth
@@ -112,7 +112,7 @@ export const SettingsFieldGroup: React.FC<{
                       isInvalid={!!errors[key]}
                     />
                   );
-                case ZodTypeKind.ZodBoolean:
+                case ZodSchemaType.boolean:
                   return (
                     <EuiSwitch
                       label={''}
