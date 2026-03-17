@@ -6,7 +6,7 @@
  */
 
 import { z as z4 } from '@kbn/zod/v4';
-import type { ZodType as ZodV3Type } from '@kbn/zod';
+import type { ZodType as ZodV3Type } from '@kbn/zod/v4';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import type { TestElasticsearchUtils, TestKibanaUtils } from '@kbn/core-test-helpers-kbn-server';
 import type { ActionTypeRegistry } from '../action_type_registry';

@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { ZodIssue } from '@kbn/zod';
-import { ZodError } from '@kbn/zod';
+import type { ZodIssue } from '@kbn/zod/v4';
+import { ZodError } from '@kbn/zod/v4';
 import { formatZodV3Error } from './format_zod_v3_error';
 
 describe('formatZodV3Error', () => {

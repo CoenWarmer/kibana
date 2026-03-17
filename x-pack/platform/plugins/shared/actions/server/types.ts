@@ -18,7 +18,7 @@ import type {
 import type { AxiosHeaderValue } from 'axios';
 import type { LicenseType } from '@kbn/licensing-types';
 import type { PublicMethodsOf } from '@kbn/utility-types';
-import type * as z3 from '@kbn/zod';
+import type * as z3 from '@kbn/zod/v4';
 import type * as z4 from '@kbn/zod/v4';
 import type { ActionTypeExecutorResult, SubFeature, ActionTypeSource } from '../common';
 import type { ActionTypeRegistry } from './action_type_registry';

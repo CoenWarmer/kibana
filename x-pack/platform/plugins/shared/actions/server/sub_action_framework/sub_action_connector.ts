@@ -24,7 +24,7 @@ import type { IncomingMessage } from 'http';
 import { PassThrough } from 'stream';
 import type { KibanaRequest } from '@kbn/core-http-server';
 import { inspect } from 'util';
-import type { z as z3 } from '@kbn/zod';
+import type { z as z3 } from '@kbn/zod/v4';
 import type { z as z4 } from '@kbn/zod/v4';
 import type { ConnectorUsageCollector } from '../usage';
 import { assertURL } from './helpers/validators';

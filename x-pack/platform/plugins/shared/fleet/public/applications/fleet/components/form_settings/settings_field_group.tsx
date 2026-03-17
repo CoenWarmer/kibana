@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { z, ZodFirstPartyTypeKind } from '@kbn/zod';
+import { z, ZodFirstPartyTypeKind } from '@kbn/zod/v4';
 import React, { useState } from 'react';
 import {
   EuiFieldNumber,

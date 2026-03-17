@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { SafeParseError, SafeParseReturnType } from '@kbn/zod';
+import type { SafeParseError, SafeParseReturnType } from '@kbn/zod/v4';
 
 export function expectParseError<Input, Output>(
   result: SafeParseReturnType<Input, Output>

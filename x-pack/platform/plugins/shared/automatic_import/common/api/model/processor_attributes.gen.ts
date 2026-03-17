@@ -14,8 +14,8 @@
  *   version: not applicable
  */
 
-import type { ZodTypeDef } from '@kbn/zod';
-import { z } from '@kbn/zod';
+import type { ZodTypeDef } from '@kbn/zod/v4';
+import { z } from '@kbn/zod/v4';
 
 /**
  * Processor options for the Elasticsearch processor.

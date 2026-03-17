@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { ZodFirstPartyTypeKind } from '@kbn/zod';
+import { ZodFirstPartyTypeKind } from '@kbn/zod/v4';
 import React from 'react';
 import { EuiCheckbox, EuiFieldNumber, EuiFieldText, EuiSelect } from '@elastic/eui';
 

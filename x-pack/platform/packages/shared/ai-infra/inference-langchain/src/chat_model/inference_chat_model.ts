@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ZodSchema } from '@kbn/zod';
+import type { ZodSchema } from '@kbn/zod/v4';
 import { z as z4 } from '@kbn/zod/v4';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import {
