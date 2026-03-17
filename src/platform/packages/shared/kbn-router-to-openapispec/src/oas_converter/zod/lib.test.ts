@@ -586,13 +586,15 @@ describe('zod v4', () => {
     beforeEach(() => resetDefsCounter());
 
     test('recursive schema: stable name used in $defs and $ref', () => {
-      const condition: z4.ZodType = z4.lazy(() =>
-        z4.union([
-          z4.object({ field: z4.string(), eq: z4.string() }),
-          z4.object({ and: z4.array(condition) }),
-          z4.object({ or: z4.array(condition) }),
-        ])
-      ).meta({ id: 'Condition' });
+      const condition: z4.ZodType = z4
+        .lazy(() =>
+          z4.union([
+            z4.object({ field: z4.string(), eq: z4.string() }),
+            z4.object({ and: z4.array(condition) }),
+            z4.object({ or: z4.array(condition) }),
+          ])
+        )
+        .meta({ id: 'Condition' });
 
       const body = z4.object({ condition, name: z4.string() });
       const result = convert(body as any);
@@ -657,20 +659,18 @@ describe('zod v4', () => {
     test('.meta({ openapi }) extensions are merged into the component schema', () => {
       const wired = z4.object({ type: z4.literal('wired') }).meta({ id: 'WiredDef' });
       const classic = z4.object({ type: z4.literal('classic') }).meta({ id: 'ClassicDef' });
-      const streamDef = z4
-        .union([wired, classic])
-        .meta({
-          id: 'StreamDefinition',
-          openapi: {
-            discriminator: {
-              propertyName: 'type',
-              mapping: {
-                wired: '#/components/schemas/WiredDef',
-                classic: '#/components/schemas/ClassicDef',
-              },
+      const streamDef = z4.union([wired, classic]).meta({
+        id: 'StreamDefinition',
+        openapi: {
+          discriminator: {
+            propertyName: 'type',
+            mapping: {
+              wired: '#/components/schemas/WiredDef',
+              classic: '#/components/schemas/ClassicDef',
             },
           },
-        });
+        },
+      });
 
       const body = z4.object({ stream: streamDef });
       const result = convert(body as any);
