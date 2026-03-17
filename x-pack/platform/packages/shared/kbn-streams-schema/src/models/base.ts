@@ -75,3 +75,8 @@ export const baseStreamUpsertRequestSchema = z.object({
   rules: z.array(z.string()),
   queries: z.array(streamQuerySchema),
 });
+
+export const baseStreamUpsertDefinitionSchema = baseStreamDefinitionSchema.omit({
+  name: true,
+  updated_at: true,
+});

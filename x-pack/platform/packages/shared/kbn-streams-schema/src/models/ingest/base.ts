@@ -12,6 +12,7 @@ import { ingestStreamLifecycleSchema } from './lifecycle';
 import {
   baseStreamDefinitionSchema,
   baseStreamGetResponseSchema,
+  baseStreamUpsertDefinitionSchema,
   baseStreamUpsertRequestSchema,
 } from '../base';
 import type { BaseStream } from '../base';
@@ -63,14 +64,23 @@ export interface IngestBase {
   failure_store: FailureStore;
 }
 
+export const ingestBaseSchemaFields = {
+  lifecycle: ingestStreamLifecycleSchema,
+  processing: ingestStreamProcessingSchema,
+  settings: ingestStreamSettingsSchema,
+  failure_store: failureStoreSchema,
+};
+
+export const ingestBaseUpsertSchemaFields = {
+  ...ingestBaseSchemaFields,
+  processing: ingestStreamProcessingSchema.merge(
+    z.object({ updated_at: z.undefined().optional() })
+  ),
+};
+
 export const IngestBase: Validation<unknown, IngestBase> = validation(
   z.unknown(),
-  z.object({
-    lifecycle: ingestStreamLifecycleSchema,
-    processing: ingestStreamProcessingSchema,
-    settings: ingestStreamSettingsSchema,
-    failure_store: failureStoreSchema,
-  })
+  z.object(ingestBaseSchemaFields)
 );
 
 type OmitIngestBaseUpsertProps<
@@ -85,16 +95,7 @@ export type IngestBaseUpsertRequest = OmitIngestBaseUpsertProps<IngestBase>;
 
 export const IngestBaseUpsertRequest: Validation<unknown, IngestBaseUpsertRequest> = validation(
   z.unknown(),
-  z.object({
-    lifecycle: ingestStreamLifecycleSchema,
-    processing: ingestStreamProcessingSchema.merge(
-      z.object({
-        updated_at: z.undefined().optional(),
-      })
-    ),
-    settings: ingestStreamSettingsSchema,
-    failure_store: failureStoreSchema,
-  })
+  z.object(ingestBaseUpsertSchemaFields)
 );
 
 export type IngestStreamIndexMode = 'standard' | 'time_series' | 'logsdb' | 'lookup';
@@ -157,8 +158,10 @@ export const ingestBaseStreamGetResponseSchema = baseStreamGetResponseSchema.ext
   index_mode: z.optional(ingestStreamIndexModeSchema),
 });
 
+export const ingestBaseStreamUpsertDefinitionSchema = baseStreamUpsertDefinitionSchema.extend({
+  ingest: IngestBaseUpsertRequest.right,
+});
+
 export const ingestBaseStreamUpsertRequestSchema = baseStreamUpsertRequestSchema.extend({
-  stream: baseStreamDefinitionSchema
-    .omit({ name: true, updated_at: true })
-    .extend({ ingest: IngestBaseUpsertRequest.right }),
+  stream: ingestBaseStreamUpsertDefinitionSchema,
 });

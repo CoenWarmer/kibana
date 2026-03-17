@@ -9,27 +9,26 @@ import type { IngestBaseStream } from './base';
 import {
   IngestBase,
   IngestBaseUpsertRequest,
+  ingestBaseSchemaFields,
+  ingestBaseUpsertSchemaFields,
   ingestBaseStreamDefinitionSchema,
   ingestBaseStreamGetResponseSchema,
+  ingestBaseStreamUpsertDefinitionSchema,
   ingestBaseStreamUpsertRequestSchema,
 } from './base';
 import type { RoutingDefinition } from './routing';
 import { routingDefinitionListSchema } from './routing';
 import type { WiredIngestStreamEffectiveLifecycle } from './lifecycle';
-import {
-  ingestStreamLifecycleSchema,
-  wiredIngestStreamEffectiveLifecycleSchema,
-} from './lifecycle';
+import { wiredIngestStreamEffectiveLifecycleSchema } from './lifecycle';
 import type { FieldDefinition, InheritedFieldDefinition } from '../../fields';
 import { fieldDefinitionSchema, inheritedFieldDefinitionSchema } from '../../fields';
 import type { Validation } from '../validation/validation';
 import { validation } from '../validation/validation';
 import type { BaseStream } from '../base';
 import type { WiredIngestStreamEffectiveSettings } from './settings';
-import { ingestStreamSettingsSchema, wiredIngestStreamEffectiveSettingsSchema } from './settings';
+import { wiredIngestStreamEffectiveSettingsSchema } from './settings';
 import type { WiredIngestStreamEffectiveFailureStore } from './failure_store';
-import { failureStoreSchema, wiredIngestStreamEffectiveFailureStoreSchema } from './failure_store';
-import { ingestStreamProcessingSchema } from './processing';
+import { wiredIngestStreamEffectiveFailureStoreSchema } from './failure_store';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
@@ -50,10 +49,7 @@ const ingestWiredShape = {
 export type WiredIngest = IngestBase & IngestWired;
 
 const wiredIngestSchemaObject = z.object({
-  lifecycle: ingestStreamLifecycleSchema,
-  processing: ingestStreamProcessingSchema,
-  settings: ingestStreamSettingsSchema,
-  failure_store: failureStoreSchema,
+  ...ingestBaseSchemaFields,
   ...ingestWiredShape,
 });
 
@@ -65,12 +61,7 @@ export const WiredIngest: Validation<IngestBase, WiredIngest> = validation(
 export type WiredIngestUpsertRequest = IngestBaseUpsertRequest & IngestWired;
 
 const wiredIngestUpsertSchemaObject = z.object({
-  lifecycle: ingestStreamLifecycleSchema,
-  processing: ingestStreamProcessingSchema.merge(
-    z.object({ updated_at: z.undefined().optional() })
-  ),
-  settings: ingestStreamSettingsSchema,
-  failure_store: failureStoreSchema,
+  ...ingestBaseUpsertSchemaFields,
   ...ingestWiredShape,
 });
 
@@ -138,9 +129,7 @@ const wiredStreamGetResponseSchema = ingestBaseStreamGetResponseSchema.extend({
 });
 
 const wiredStreamUpsertRequestSchema = ingestBaseStreamUpsertRequestSchema.extend({
-  stream: ingestBaseStreamDefinitionSchema
-    .omit({ name: true, updated_at: true })
-    .extend({ ingest: wiredIngestUpsertSchemaObject }),
+  stream: ingestBaseStreamUpsertDefinitionSchema.extend({ ingest: wiredIngestUpsertSchemaObject }),
 });
 
 export const WiredStream: {

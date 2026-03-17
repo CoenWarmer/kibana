@@ -9,6 +9,7 @@ import type { BaseStream } from '../base';
 import {
   baseStreamDefinitionSchema,
   baseStreamGetResponseSchema,
+  baseStreamUpsertDefinitionSchema,
   baseStreamUpsertRequestSchema,
 } from '../base';
 import type { Validation } from '../validation/validation';
@@ -80,9 +81,7 @@ const queryStreamGetResponseSchema = baseStreamGetResponseSchema.extend({
 });
 
 const queryStreamUpsertRequestSchema = baseStreamUpsertRequestSchema.extend({
-  stream: baseStreamDefinitionSchema
-    .omit({ name: true, updated_at: true })
-    .extend({ query: QueryWithEsql.right }),
+  stream: baseStreamUpsertDefinitionSchema.extend({ query: QueryWithEsql.right }),
 });
 
 export const QueryStream: {

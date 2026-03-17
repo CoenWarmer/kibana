@@ -9,15 +9,15 @@ import type { IngestBaseStream } from './base';
 import {
   IngestBase,
   IngestBaseUpsertRequest,
+  ingestBaseSchemaFields,
+  ingestBaseUpsertSchemaFields,
   ingestBaseStreamDefinitionSchema,
   ingestBaseStreamGetResponseSchema,
+  ingestBaseStreamUpsertDefinitionSchema,
   ingestBaseStreamUpsertRequestSchema,
 } from './base';
 import type { ClassicIngestStreamEffectiveLifecycle } from './lifecycle';
-import {
-  ingestStreamLifecycleSchema,
-  classicIngestStreamEffectiveLifecycleSchema,
-} from './lifecycle';
+import { classicIngestStreamEffectiveLifecycleSchema } from './lifecycle';
 import type { ElasticsearchAssets } from './common';
 import { elasticsearchAssetsSchema } from './common';
 import type { Validation } from '../validation/validation';
@@ -28,8 +28,7 @@ import { ingestStreamSettingsSchema } from './settings';
 import type { ClassicFieldDefinition } from '../../fields';
 import { classicFieldDefinitionSchema } from '../../fields';
 import type { EffectiveFailureStore } from './failure_store';
-import { effectiveFailureStoreSchema, failureStoreSchema } from './failure_store';
-import { ingestStreamProcessingSchema } from './processing';
+import { effectiveFailureStoreSchema } from './failure_store';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
@@ -48,10 +47,7 @@ const ingestClassicShape = {
 export type ClassicIngest = IngestBase & IngestClassic;
 
 const classicIngestSchemaObject = z.object({
-  lifecycle: ingestStreamLifecycleSchema,
-  processing: ingestStreamProcessingSchema,
-  settings: ingestStreamSettingsSchema,
-  failure_store: failureStoreSchema,
+  ...ingestBaseSchemaFields,
   ...ingestClassicShape,
 });
 
@@ -63,12 +59,7 @@ export const ClassicIngest: Validation<IngestBase, ClassicIngest> = validation(
 export type ClassicIngestUpsertRequest = IngestBaseUpsertRequest & IngestClassic;
 
 const classicIngestUpsertSchemaObject = z.object({
-  lifecycle: ingestStreamLifecycleSchema,
-  processing: ingestStreamProcessingSchema.merge(
-    z.object({ updated_at: z.undefined().optional() })
-  ),
-  settings: ingestStreamSettingsSchema,
-  failure_store: failureStoreSchema,
+  ...ingestBaseUpsertSchemaFields,
   ...ingestClassicShape,
 });
 
@@ -130,9 +121,9 @@ const classicStreamGetResponseSchema = ingestBaseStreamGetResponseSchema.extend(
 });
 
 const classicStreamUpsertRequestSchema = ingestBaseStreamUpsertRequestSchema.extend({
-  stream: ingestBaseStreamDefinitionSchema
-    .omit({ name: true, updated_at: true })
-    .extend({ ingest: classicIngestUpsertSchemaObject }),
+  stream: ingestBaseStreamUpsertDefinitionSchema.extend({
+    ingest: classicIngestUpsertSchemaObject,
+  }),
 });
 
 export const ClassicStream: {
