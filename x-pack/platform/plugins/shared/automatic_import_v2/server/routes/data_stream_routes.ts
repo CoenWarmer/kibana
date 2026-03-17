@@ -48,7 +48,7 @@ export const registerDataStreamRoutes = (
 
 const UpdateDataStreamPipelineRequestBody = z
   .object({
-    ingest_pipeline: z.union([z.string(), z.record(z.unknown())]),
+    ingest_pipeline: z.union([z.string(), z.record(z.any(), z.unknown())]),
   })
   .strict();
 

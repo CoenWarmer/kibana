@@ -24,8 +24,7 @@ import type { IncomingMessage } from 'http';
 import { PassThrough } from 'stream';
 import type { KibanaRequest } from '@kbn/core-http-server';
 import { inspect } from 'util';
-import type { z as z3 } from '@kbn/zod/v4';
-import type { z as z4 } from '@kbn/zod/v4';
+import type { z } from '@kbn/zod/v4';
 import type { ConnectorUsageCollector } from '../usage';
 import { assertURL } from './helpers/validators';
 import type { ActionsConfigurationUtilities } from '../actions_config';
@@ -105,7 +104,7 @@ export abstract class SubActionConnector<Config, Secrets> {
   }
 
   private validateResponse(
-    responseSchema: z3.ZodType<unknown> | z4.ZodType<unknown>,
+    responseSchema: z.ZodType<unknown>,
     data: unknown
   ) {
     try {

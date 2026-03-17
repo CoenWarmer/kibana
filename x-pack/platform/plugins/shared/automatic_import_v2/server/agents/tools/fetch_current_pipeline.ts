@@ -12,7 +12,7 @@ import { DynamicStructuredTool } from '@langchain/core/tools';
 import { Command, getCurrentTaskInput } from '@langchain/langgraph';
 import { z } from '@kbn/zod/v4';
 
-import type { AutomaticImportAgentState } from '../state';
+import type { AutomaticImportAgentStateType } from '../state';
 
 export function fetchCurrentPipelineTool(): DynamicStructuredTool {
   const schema = z.object({});
@@ -27,7 +27,7 @@ export function fetchCurrentPipelineTool(): DynamicStructuredTool {
       _runManager?: CallbackManagerForToolRun,
       config?: ToolRunnableConfig
     ) => {
-      const state = getCurrentTaskInput<z.infer<typeof AutomaticImportAgentState>>();
+      const state = getCurrentTaskInput<AutomaticImportAgentStateType>();
       const currentPipeline = state.current_pipeline ?? {};
       const hasPipeline = Object.keys(currentPipeline).length > 0;
 

@@ -14,7 +14,7 @@ import { z } from '@kbn/zod/v4';
 import type { estypes } from '@elastic/elasticsearch';
 import type { JsonObject, JsonValue } from '@kbn/utility-types';
 
-import type { AutomaticImportAgentState } from '../state';
+import type { AutomaticImportAgentStateType } from '../state';
 
 const collectKeysWithSamples = (
   value: JsonValue,
@@ -95,7 +95,7 @@ export function fetchUniqueKeysTool(): DynamicStructuredTool {
       _runManager?: CallbackManagerForToolRun,
       config?: ToolRunnableConfig
     ) => {
-      const state = getCurrentTaskInput<z.infer<typeof AutomaticImportAgentState>>();
+      const state = getCurrentTaskInput<AutomaticImportAgentStateType>();
       const docs = state.pipeline_generation_results;
 
       if (docs.length === 0) {

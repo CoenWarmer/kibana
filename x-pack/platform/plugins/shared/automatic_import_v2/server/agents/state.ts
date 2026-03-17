@@ -5,11 +5,14 @@
  * 2.0.
  */
 
-import { MessagesZodState } from '@langchain/langgraph';
+import type { BaseMessage } from '@langchain/core/messages';
+import { MessagesZodMeta } from '@langchain/langgraph';
+import { registry } from '@langchain/langgraph/zod';
 import { z } from '@kbn/zod/v4';
 import type { estypes } from '@elastic/elasticsearch';
 
-export const AutomaticImportAgentState = MessagesZodState.extend({
+export const AutomaticImportAgentState = z.object({
+  messages: z.custom<BaseMessage[]>().register(registry, MessagesZodMeta),
   current_pipeline: z
     .object({
       processors: z.array(z.any()).describe('The processors in the pipeline'),
@@ -47,3 +50,5 @@ export const AutomaticImportAgentState = MessagesZodState.extend({
       failure_details: [],
     }),
 });
+
+export type AutomaticImportAgentStateType = z.infer<typeof AutomaticImportAgentState>;
