@@ -110,9 +110,12 @@ export async function runTscFastPass({
     return computeEffectiveRebuildSet(new Set([absolutePath]), reverseDeps).size - 1;
   });
 
+  let dependentCount = 0;
+
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
   for (let i = 0; i < projectNames.length; i++) {
     const n = dependentCounts[i];
+    dependentCount += n;
     const suffix = n > 0 ? ` ==> ${n} dependent${n === 1 ? '' : 's'}` : ' ==> no dependents';
     log.info(`[TypeCheck]   - ${projectNames[i]}${suffix}`);
   }
@@ -120,9 +123,10 @@ export async function runTscFastPass({
   log.info(
     `[TypeCheck] [First pass] Checking ${affectedRefs.size} changed ${
       multi ? 'projects' : 'project'
-    } first (${projectNames.join(', ')}) with ${
-      multi ? 'their' : 'its'
-    } dependencies for fast feedback...`
+    } with ${multi ? 'their' : 'its'} upstream dependencies for fast feedback` +
+      ` (${dependentCount} downstream ${
+        dependentCount === 1 ? 'project' : 'projects'
+      } also affected)...`
   );
 
   const success = await runTsc({
@@ -192,11 +196,11 @@ async function runTscWithProgress({
     );
   } else if (result.exitCode === 0) {
     log.info(
-      `[${type}] Type checked ${totalProjects} projects successfully in ${elapsed} (${builtProjects} built, ${skippedProjects} up-to-date).`
+      `[TypeCheck] [${type}] Type checked ${totalProjects} projects successfully in ${elapsed} (${builtProjects} built, ${skippedProjects} up-to-date).`
     );
   } else {
     log.error(
-      `[${type}] Type check failed after ${elapsed} (${completedProjects}/${totalProjects} projects).`
+      `[TypeCheck] [${type}] Type check failed after ${elapsed} (${completedProjects}/${totalProjects} projects).`
     );
   }
 
