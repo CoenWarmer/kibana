@@ -14,6 +14,7 @@ import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { ProcRunner } from '@kbn/dev-proc-runner';
 import type { TsProject } from '@kbn/ts-projects';
 
+import { table, getBorderCharacters } from 'table';
 import { getChangedFiles, getAffectedProjectRefs } from './root_refs_config';
 import { TscProgressTracker } from './tsc_progress_tracker';
 import {
@@ -21,31 +22,6 @@ import {
   buildReverseDependencyMap,
   computeEffectiveRebuildSet,
 } from '../cache/restore_ts_build_artifacts';
-
-/**
- * Renders a simple Unicode box table. Returns one string per row (including
- * borders) so callers can pass each line to `log.info` independently —
- * the consistent logger prefix keeps the box borders in column.
- */
-function formatTable(headers: readonly string[], rows: readonly string[][]): string[] {
-  const colWidths = headers.map((h, i) =>
-    Math.max(h.length, ...rows.map((r) => (r[i] ?? '').length))
-  );
-
-  const border = (l: string, mid: string, r: string) =>
-    l + colWidths.map((w) => '─'.repeat(w + 2)).join(mid) + r;
-
-  const dataRow = (cells: readonly string[]) =>
-    '│ ' + cells.map((c, i) => c.padEnd(colWidths[i])).join(' │ ') + ' │';
-
-  return [
-    border('┌', '┬', '┐'),
-    dataRow(headers),
-    border('├', '┼', '┤'),
-    ...rows.map(dataRow),
-    border('└', '┴', '┘'),
-  ];
-}
 
 interface TscRunOptions {
   type?: 'Full pass' | 'First pass';
@@ -149,8 +125,13 @@ export async function runTscFastPass({
     dependentCount === 0 ? '—' : String(dependentCount),
   ]);
 
+  const tableOutput = table([['Project', 'Dependencies', 'Dependents'], ...tableRows], {
+    border: getBorderCharacters('norc'),
+    drawHorizontalLine: (i, rowCount) => i === 0 || i === 1 || i === rowCount,
+  });
+
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
-  for (const line of formatTable(['Project', 'Dependencies', 'Dependents'], tableRows)) {
+  for (const line of tableOutput.trimEnd().split('\n')) {
     log.info(`[TypeCheck] ${line}`);
   }
 
