@@ -653,5 +653,43 @@ describe('zod v4', () => {
       expect(result.shared).toHaveProperty('Tag');
       expect(result.schema).toEqual({ $ref: '#/components/schemas/Tag' });
     });
+
+    test('.meta({ openapi }) extensions are merged into the component schema', () => {
+      const wired = z4.object({ type: z4.literal('wired') }).meta({ id: 'WiredDef' });
+      const classic = z4.object({ type: z4.literal('classic') }).meta({ id: 'ClassicDef' });
+      const streamDef = z4
+        .union([wired, classic])
+        .meta({
+          id: 'StreamDefinition',
+          openapi: {
+            discriminator: {
+              propertyName: 'type',
+              mapping: {
+                wired: '#/components/schemas/WiredDef',
+                classic: '#/components/schemas/ClassicDef',
+              },
+            },
+          },
+        });
+
+      const body = z4.object({ stream: streamDef });
+      const result = convert(body as any);
+
+      expect(result.shared).toHaveProperty('StreamDefinition');
+      expect(result.shared.StreamDefinition).toMatchObject({
+        discriminator: {
+          propertyName: 'type',
+          mapping: {
+            wired: '#/components/schemas/WiredDef',
+            classic: '#/components/schemas/ClassicDef',
+          },
+        },
+      });
+
+      // no markers should leak into the output
+      const outputStr = JSON.stringify(result);
+      expect(outputStr).not.toContain('x-kbn-oas-component-id');
+      expect(outputStr).not.toContain('x-kbn-oas-extensions');
+    });
   });
 });
