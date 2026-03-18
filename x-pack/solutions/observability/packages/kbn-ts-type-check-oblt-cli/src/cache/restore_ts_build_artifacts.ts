@@ -118,7 +118,10 @@ async function archiveInvalidatedByNodeModulesChange(
   const changed = await getChangedInvalidationFiles(archiveSha);
   if (changed.length > 0) {
     log.warning(
-      `[Cache check] Cache-invalidation file(s) changed since archive ${archiveSha.slice(0, 12)}: ` +
+      `[Cache check] Cache-invalidation file(s) changed since archive ${archiveSha.slice(
+        0,
+        12
+      )}: ` +
         `${changed.join(', ')}. ` +
         `The archive was built against a different node_modules — skipping restore.`
     );
