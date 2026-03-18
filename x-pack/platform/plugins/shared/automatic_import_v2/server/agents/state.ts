@@ -6,49 +6,51 @@
  */
 
 import type { BaseMessage } from '@langchain/core/messages';
-import { MessagesZodMeta } from '@langchain/langgraph';
-import { registry } from '@langchain/langgraph/zod';
-import { z } from '@kbn/zod/v4';
+import { Annotation, messagesStateReducer } from '@langchain/langgraph';
 import type { estypes } from '@elastic/elasticsearch';
 
-export const AutomaticImportAgentState = z.object({
-  messages: z.custom<BaseMessage[]>().register(registry, MessagesZodMeta),
-  current_pipeline: z
-    .object({
-      processors: z.array(z.any()).describe('The processors in the pipeline'),
-      on_failure: z
-        .array(z.any())
-        .optional()
-        .describe('Optional failure handlers for the pipeline'),
-    })
-    .describe('The generated ingest pipeline to validate'),
-  pipeline_generation_results: z
-    .array(z.custom<estypes.IngestSimulateDocumentResult>())
-    .default([]),
-  failure_count: z.number().min(0).default(0),
-  pipeline_validation_results: z
-    .object({
-      success_rate: z.number().min(0).max(100).default(100),
-      successful_samples: z.number().min(0).default(0),
-      failed_samples: z.number().min(0).default(0),
-      total_samples: z.number().min(0).default(0),
-      failure_details: z
-        .array(
-          z.object({
-            error: z.string(),
-            sample: z.string(),
-          })
-        )
-        .max(100)
-        .default([]),
-    })
-    .default({
+export interface PipelineValidationFailureDetail {
+  error: string;
+  sample: string;
+}
+
+export interface PipelineValidationResults {
+  success_rate: number;
+  successful_samples: number;
+  failed_samples: number;
+  total_samples: number;
+  failure_details: PipelineValidationFailureDetail[];
+}
+
+const lastValueReducer = <T>(_: T, right: T): T => right;
+
+export const AutomaticImportAgentState = Annotation.Root({
+  messages: Annotation<BaseMessage[]>({
+    reducer: messagesStateReducer,
+    default: () => [],
+  }),
+  current_pipeline: Annotation<estypes.IngestPipeline>({
+    reducer: lastValueReducer,
+    default: () => ({}),
+  }),
+  pipeline_generation_results: Annotation<estypes.IngestSimulateDocumentResult[]>({
+    reducer: lastValueReducer,
+    default: () => [],
+  }),
+  failure_count: Annotation<number>({
+    reducer: lastValueReducer,
+    default: () => 0,
+  }),
+  pipeline_validation_results: Annotation<PipelineValidationResults>({
+    reducer: lastValueReducer,
+    default: () => ({
       success_rate: 100,
       successful_samples: 0,
       failed_samples: 0,
       total_samples: 0,
       failure_details: [],
     }),
+  }),
 });
 
-export type AutomaticImportAgentStateType = z.infer<typeof AutomaticImportAgentState>;
+export type AutomaticImportAgentStateType = typeof AutomaticImportAgentState.State;
