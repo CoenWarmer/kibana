@@ -14,6 +14,7 @@ jest.mock('./use_failure_store_default_retention', () => ({
 }));
 
 const createBaseDefinition = (name: string): Partial<Streams.ingest.all.GetResponse> => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stream: {
     name,
     description: '',
@@ -23,9 +24,8 @@ const createBaseDefinition = (name: string): Partial<Streams.ingest.all.GetRespo
       processing: { steps: [], updated_at: new Date().toISOString() },
       settings: {},
       failure_store: { inherit: {} },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
-  },
+    },
+  } as any,
 });
 
 const createClassicDefinition = (
@@ -35,6 +35,7 @@ const createClassicDefinition = (
   ...createBaseDefinition(name),
   stream: {
     ...createBaseDefinition(name).stream!,
+    type: 'classic',
     ingest: {
       ...createBaseDefinition(name).stream!.ingest,
       classic: {},
@@ -68,6 +69,7 @@ const createWiredDefinition = (
   ...createBaseDefinition(name),
   stream: {
     ...createBaseDefinition(name).stream!,
+    type: 'wired',
     ingest: {
       ...createBaseDefinition(name).stream!.ingest,
       wired: {

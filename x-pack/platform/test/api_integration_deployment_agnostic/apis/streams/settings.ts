@@ -34,9 +34,15 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
     definition: Streams.ingest.all.GetResponse,
     settings: IngestStreamSettings
   ) {
+    const streamType = Streams.WiredStream.GetResponse.is(definition)
+      ? 'wired'
+      : Streams.ClassicStream.GetResponse.is(definition)
+      ? 'classic'
+      : 'query';
     const request = {
       ...emptyAssets,
       stream: {
+        type: streamType,
         description: '',
         ingest: {
           ...definition.stream.ingest,
@@ -98,6 +104,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
         await putStream(apiClient, 'logs.otel.foo.bar', {
           ...emptyAssets,
           stream: {
+            type: 'wired',
             description: '',
             ingest: {
               settings: {},
@@ -127,6 +134,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
         await putStream(apiClient, 'logs.otel.override', {
           ...emptyAssets,
           stream: {
+            type: 'wired',
             description: '',
             ingest: {
               settings: {
@@ -157,23 +165,24 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
 
       if (!isServerless) {
         it('allows all settings', async () => {
-          await putStream(apiClient, 'logs.otel.allsettings', {
-            ...emptyAssets,
-            stream: {
-              description: '',
-              ingest: {
-                settings: {
-                  'index.refresh_interval': { value: '30s' },
-                  'index.number_of_shards': { value: 3 },
-                  'index.number_of_replicas': { value: 2 },
-                },
-                processing: { steps: [] },
-                lifecycle: { inherit: {} },
-                wired: { fields: {}, routing: [] },
-                failure_store: { inherit: {} },
+        await putStream(apiClient, 'logs.otel.allsettings', {
+          ...emptyAssets,
+          stream: {
+            type: 'wired',
+            description: '',
+            ingest: {
+              settings: {
+                'index.refresh_interval': { value: '30s' },
+                'index.number_of_shards': { value: 3 },
+                'index.number_of_replicas': { value: 2 },
               },
+              processing: { steps: [] },
+              lifecycle: { inherit: {} },
+              wired: { fields: {}, routing: [] },
+              failure_store: { inherit: {} },
             },
-          });
+          },
+        });
 
           await expectSettings(['logs.otel.allsettings'], {
             'index.refresh_interval': { value: '30s', from: 'logs.otel.allsettings' },
@@ -234,6 +243,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
         await putStream(apiClient, name, {
           ...emptyAssets,
           stream: {
+            type: 'classic',
             description: '',
             ingest: {
               settings,
@@ -343,6 +353,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
                 body: {
                   ...emptyAssets,
                   stream: {
+                    type: 'wired',
                     description: '',
                     ingest: {
                       ...(rootDefinition as Streams.WiredStream.GetResponse).stream.ingest,
@@ -370,6 +381,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
           await putStream(apiClient, 'logs.otel.validation_test', {
             ...emptyAssets,
             stream: {
+              type: 'wired',
               description: '',
               ingest: {
                 settings: {},
@@ -388,6 +400,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
                 body: {
                   ...emptyAssets,
                   stream: {
+                    type: 'wired',
                     description: '',
                     ingest: {
                       settings: {
@@ -419,21 +432,22 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
               .fetch('PUT /api/streams/{name} 2023-10-31', {
                 params: {
                   path: { name: 'logs.otel.creation_validation_test' },
-                  body: {
-                    ...emptyAssets,
-                    stream: {
-                      description: '',
-                      ingest: {
-                        settings: {
-                          'index.number_of_replicas': { value: 2 },
-                        },
-                        processing: { steps: [] },
-                        lifecycle: { inherit: {} },
-                        wired: { fields: {}, routing: [] },
-                        failure_store: { inherit: {} },
+                body: {
+                  ...emptyAssets,
+                  stream: {
+                    type: 'wired',
+                    description: '',
+                    ingest: {
+                      settings: {
+                        'index.number_of_replicas': { value: 2 },
                       },
+                      processing: { steps: [] },
+                      lifecycle: { inherit: {} },
+                      wired: { fields: {}, routing: [] },
+                      failure_store: { inherit: {} },
                     },
                   },
+                },
                 },
               })
               .expect(400);
@@ -447,6 +461,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
           const response = await putStream(apiClient, 'logs.otel.creation_valid_test', {
             ...emptyAssets,
             stream: {
+              type: 'wired',
               description: '',
               ingest: {
                 settings: {
@@ -494,6 +509,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
                 body: {
                   ...emptyAssets,
                   stream: {
+                    type: 'classic',
                     description: '',
                     ingest: {
                       settings: {
@@ -519,6 +535,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
           const response = await putStream(apiClient, classicStreamName, {
             ...emptyAssets,
             stream: {
+              type: 'classic',
               description: '',
               ingest: {
                 settings: {
