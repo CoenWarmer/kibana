@@ -4935,7 +4935,6 @@ Object {
       "type": "string",
     },
     "subActionParams": Object {
-      "additionalProperties": false,
       "properties": Object {
         "inputs": Object {},
         "spaceId": Object {
