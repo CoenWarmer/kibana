@@ -398,41 +398,88 @@ describe('resolveRestoreStrategy', () => {
   });
 
   describe('Phase 1.5 — cache-invalidation file detection', () => {
-    it('cleans artifacts and returns shouldRestore: false when invalidation files changed', async () => {
-      // Artifacts on disk with a known state SHA.
+    const mockedExeca = jest.requireMock('execa') as jest.Mock;
+
+    it('cleans artifacts and resets state when invalidation files changed', async () => {
       accessSpy.mockResolvedValue(undefined);
       readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
 
-      // Simulate yarn.lock having changed between known-sha and HEAD.
-      const mockedExeca = jest.requireMock('execa') as jest.Mock;
-      mockedExeca.mockResolvedValueOnce({ stdout: 'yarn.lock\n' });
+      // Phase 1.5: yarn.lock changed; Phase 1.5 GCS archive check: also changed.
+      mockedExeca
+        .mockResolvedValueOnce({ stdout: 'yarn.lock\n' })
+        .mockResolvedValueOnce({ stdout: 'yarn.lock\n' });
 
       const log = createLog();
-      const result = await resolveRestoreStrategy(log, []);
+      await resolveRestoreStrategy(log, []);
 
-      // Must wipe local artifacts so tsc does a full cold rebuild.
       expect(mockedCleanTypeCheckArtifacts).toHaveBeenCalledTimes(1);
-      // Must reset the state SHA so the next run starts fresh.
       expect(writeFileSpy).toHaveBeenCalledWith(
         expect.stringContaining('kbn-ts-type-check-oblt-artifacts.sha'),
         '',
         'utf8'
       );
+    });
+
+    it('restores from a compatible GCS archive when local artifacts were invalidated', async () => {
+      accessSpy.mockResolvedValue(undefined);
+      readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
+
+      // Phase 1.5: local state stale; GCS archive built after the change — clean.
+      mockedExeca
+        .mockResolvedValueOnce({ stdout: 'yarn.lock\n' })
+        .mockResolvedValueOnce({ stdout: '' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
+      expect(mockedCleanTypeCheckArtifacts).toHaveBeenCalledTimes(1);
+      expect(result.shouldRestore).toBe(true);
+      expect(result.bestSha).toBe('ancestor-sha');
+    });
+
+    it('falls back to cold rebuild when GCS archive also predates the invalidating change', async () => {
+      accessSpy.mockResolvedValue(undefined);
+      readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
+
+      // Both local state and GCS archive predate the yarn.lock change.
+      mockedExeca
+        .mockResolvedValueOnce({ stdout: 'yarn.lock\n' })
+        .mockResolvedValueOnce({ stdout: 'yarn.lock\n' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
       expect(result.shouldRestore).toBe(false);
+      expect(result.bestSha).toBeUndefined();
+    });
+
+    it('falls back to cold rebuild when GCS has no archive after local invalidation', async () => {
+      accessSpy.mockResolvedValue(undefined);
+      readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
+      gcsListMock.mockResolvedValue({ shas: new Set(), elapsedMs: 0 });
+
+      mockedExeca.mockResolvedValueOnce({ stdout: '.nvmrc\n' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
+      expect(result.shouldRestore).toBe(false);
+      expect(result.bestSha).toBeUndefined();
     });
 
     it('does not reach Phase 2 (detectStaleArtifacts) when invalidation files changed', async () => {
       accessSpy.mockResolvedValue(undefined);
       readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
 
-      const mockedExeca = jest.requireMock('execa') as jest.Mock;
-      mockedExeca.mockResolvedValueOnce({ stdout: '.nvmrc\n' });
+      // Phase 1.5: stale; GCS archive also stale → cold rebuild, no Phase 2.
+      mockedExeca
+        .mockResolvedValueOnce({ stdout: '.nvmrc\n' })
+        .mockResolvedValueOnce({ stdout: '.nvmrc\n' });
 
       const log = createLog();
       await resolveRestoreStrategy(log, []);
 
       expect(detectStaleArtifacts).not.toHaveBeenCalled();
-      expect(gcsListMock).not.toHaveBeenCalled();
     });
 
     it('proceeds to Phase 2 when no invalidation files changed', async () => {
@@ -444,7 +491,6 @@ describe('resolveRestoreStrategy', () => {
       await resolveRestoreStrategy(log, []);
 
       expect(mockedCleanTypeCheckArtifacts).not.toHaveBeenCalled();
-      // Phase 2 ran — detectStaleArtifacts was called.
       expect(detectStaleArtifacts).toHaveBeenCalled();
     });
   });
@@ -517,6 +563,65 @@ describe('resolveRestoreStrategy', () => {
       await resolveRestoreStrategy(log, []);
 
       expect(unlinkSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('GCS archive node_modules safety check', () => {
+    const mockedExeca = jest.requireMock('execa') as jest.Mock;
+
+    it('skips restore when no local artifacts exist but archive has a node_modules change', async () => {
+      // Default beforeEach: no local artifacts, GCS has 'ancestor-sha'.
+      // Simulate yarn.lock changing between ancestor-sha and HEAD.
+      mockedExeca.mockResolvedValueOnce({ stdout: 'yarn.lock\n' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
+      expect(result.shouldRestore).toBe(false);
+      expect(result.bestSha).toBeUndefined();
+      expect(log.warning).toHaveBeenCalledWith(expect.stringContaining('ancestor-sha'));
+    });
+
+    it('skips restore when local state is unknown but archive has a node_modules change', async () => {
+      // Artifacts exist on disk, but no state SHA.
+      accessSpy.mockResolvedValue(undefined);
+      readFileSpy.mockImplementation(makeReadFileMock(null, ['some/tsconfig.json']));
+
+      // Simulate .nvmrc changing between ancestor-sha and HEAD.
+      mockedExeca.mockResolvedValueOnce({ stdout: '.nvmrc\n' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
+      expect(result.shouldRestore).toBe(false);
+      expect(result.bestSha).toBeUndefined();
+      expect(log.warning).toHaveBeenCalledWith(expect.stringContaining('ancestor-sha'));
+    });
+
+    it('skips restore in Phase 3 when GCS archive reduces count but has a node_modules change', async () => {
+      accessSpy.mockResolvedValue(undefined);
+      readFileSpy.mockImplementation(makeReadFileMock('known-sha', ['some/tsconfig.json']));
+
+      // Local: 11 stale projects (above threshold), GCS: 2 stale → GCS would help.
+      detectStaleArtifacts
+        .mockResolvedValueOnce(
+          new Set(Array.from({ length: 11 }, (_, i) => `/repo/p${i}/tsconfig.type_check.json`))
+        )
+        .mockResolvedValueOnce(
+          new Set([`/repo/p0/tsconfig.type_check.json`, `/repo/p1/tsconfig.type_check.json`])
+        );
+
+      // Phase 1.5 git diff (localStateSha → HEAD): clean.
+      mockedExeca.mockResolvedValueOnce({ stdout: '' });
+      // Phase 3 archive validity check (ancestor-sha → HEAD): yarn.lock changed.
+      mockedExeca.mockResolvedValueOnce({ stdout: 'yarn.lock\n' });
+
+      const log = createLog();
+      const result = await resolveRestoreStrategy(log, []);
+
+      expect(result.shouldRestore).toBe(false);
+      expect(result.bestSha).toBeUndefined();
+      expect(log.warning).toHaveBeenCalledWith(expect.stringContaining('ancestor-sha'));
     });
   });
 

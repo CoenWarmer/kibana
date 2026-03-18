@@ -106,6 +106,28 @@ async function getChangedInvalidationFiles(fromSha: string): Promise<string[]> {
 }
 
 /**
+ * Returns true if any cache-invalidation file changed between the given commit
+ * SHA and HEAD, meaning the GCS archive at that SHA was built against a
+ * different node_modules and cannot be safely used as incremental tsc input.
+ * Logs a warning when the check fires so the reason is visible to the user.
+ */
+async function archiveInvalidatedByNodeModulesChange(
+  archiveSha: string,
+  log: SomeDevLog
+): Promise<boolean> {
+  const changed = await getChangedInvalidationFiles(archiveSha);
+  if (changed.length > 0) {
+    log.warning(
+      `[Cache check] Cache-invalidation file(s) changed since archive ${archiveSha.slice(0, 12)}: ` +
+        `${changed.join(', ')}. ` +
+        `The archive was built against a different node_modules — skipping restore.`
+    );
+    return true;
+  }
+  return false;
+}
+
+/**
  * Writes the given commit SHA to the per-clone state file, recording what
  * commit the local TypeScript build artifacts currently correspond to.
  * Called after a GCS restore and after each successful tsc run.
@@ -254,7 +276,10 @@ export async function resolveRestoreStrategy(
 
     if (!bestSha) {
       log.info('[Cache check] No GCS archive available — tsc will build from scratch.');
+      return { shouldRestore: false };
+    }
 
+    if (await archiveInvalidatedByNodeModulesChange(bestSha, log)) {
       return { shouldRestore: false };
     }
 
@@ -271,7 +296,10 @@ export async function resolveRestoreStrategy(
 
     if (!bestSha) {
       log.info('[Cache check] No GCS archive available — tsc will handle staleness incrementally.');
+      return { shouldRestore: false };
+    }
 
+    if (await archiveInvalidatedByNodeModulesChange(bestSha, log)) {
       return { shouldRestore: false };
     }
 
@@ -285,18 +313,35 @@ export async function resolveRestoreStrategy(
   // those outputs are still from the old node_modules version, tsc considers
   // downstream projects "up-to-date" without rechecking them, silently masking
   // type errors (e.g. Zod v3 → v4 API incompatibilities).
-  // When invalidation files changed, wipe the local artifacts so tsc is forced
-  // to perform a full rebuild from scratch.
+  // When invalidation files changed, wipe the local artifacts, then check if GCS
+  // has an archive built *after* the invalidating change (which would be safe to
+  // restore). If not, tsc rebuilds everything from scratch.
   const changedInvalidationFiles = await getChangedInvalidationFiles(localStateSha);
   if (changedInvalidationFiles.length > 0) {
     log.warning(
       `[Cache check] Cache-invalidation file(s) changed since ${localStateSha.slice(0, 12)}: ` +
         `${changedInvalidationFiles.join(', ')}. ` +
-        `Local artifacts may be stale — cleaning them so tsc performs a full rebuild.`
+        `Local artifacts may be stale — cleaning them.`
     );
     await cleanTypeCheckArtifacts(log);
     await writeArtifactsState('');
-    return { shouldRestore: false };
+
+    const bestSha = await resolveBestGcsSha(log, gcsFs);
+
+    if (!bestSha) {
+      log.info('[Cache check] No GCS archive available — tsc will build from scratch.');
+      return { shouldRestore: false };
+    }
+
+    if (await archiveInvalidatedByNodeModulesChange(bestSha, log)) {
+      log.info('[Cache check] GCS archive also predates the change — tsc will build from scratch.');
+      return { shouldRestore: false };
+    }
+
+    log.info(
+      `[Cache check] Found compatible GCS archive at ${bestSha.slice(0, 12)} — will restore.`
+    );
+    return { shouldRestore: true, bestSha, staleProjects: [] };
   }
 
   // Phase 2: staleness check — git diff, no network I/O.
@@ -377,6 +422,11 @@ export async function resolveRestoreStrategy(
   }
 
   if (gcsEffectiveCount < effectiveRebuildSet.size) {
+    if (await archiveInvalidatedByNodeModulesChange(bestGcsSha, log)) {
+      log.info('[Cache check] Skipping restore — tsc will rebuild locally with current artifacts.');
+      return { shouldRestore: false };
+    }
+
     log.info(
       `[Cache check] Having archive for ${bestGcsSha.slice(0, 12)} would reduce rebuild count ` +
         `from ${effectiveRebuildSet.size} to ${gcsEffectiveCount} — will restore.`
