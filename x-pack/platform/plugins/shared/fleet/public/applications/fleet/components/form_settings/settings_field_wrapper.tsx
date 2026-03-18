@@ -55,9 +55,9 @@ export const SettingsFieldWrapper: React.FC<{
   const agentPolicyFormContext = useAgentPolicyFormContext();
 
   const fieldKey = `configuredSetting-${settingsConfig.name}`;
-  const defaultValue: number =
+  const defaultValue =
     settingsConfig.schema instanceof z.ZodDefault
-      ? (settingsConfig.schema as any)._def.defaultValue()
+      ? settingsConfig.schema.parse(undefined)
       : undefined;
   const coercedSchema = settingsConfig.schema as z.ZodString;
 
