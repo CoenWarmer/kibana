@@ -72,6 +72,8 @@ run(
         if (strategy.shouldRestore && strategy.bestSha) {
           await restoreTSBuildArtifacts(log, strategy.bestSha, {
             staleProjects: strategy.staleProjects,
+            prNumber: strategy.prNumber,
+            prTipSha: strategy.prTipSha,
           });
           didRestore = true;
         }

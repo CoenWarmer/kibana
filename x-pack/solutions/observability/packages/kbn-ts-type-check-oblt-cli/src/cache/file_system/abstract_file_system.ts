@@ -58,6 +58,17 @@ export abstract class AbstractFileSystem {
    * without extracting anything. Use this to determine artifact state cheaply
    * (e.g. when artifacts already exist on disk and a full restore can be skipped).
    */
+  /**
+   * Reads prs/<prNumber>/metadata.json and returns the PR branch tip SHA that
+   * was type-checked and archived, or undefined if no archive exists for that PR.
+   */
+  public async getPrArchiveTipSha(prNumber: string): Promise<string | undefined> {
+    const metadata = await this.readMetadata(
+      this.getMetadataPath(join(PULL_REQUESTS_PATH, prNumber))
+    );
+    return metadata?.commitSha;
+  }
+
   public async findBestSha(shas: string[]): Promise<string | undefined> {
     for (const sha of shas) {
       const archivePath = this.getArchivePath(join(COMMITS_PATH, sha));
