@@ -165,24 +165,24 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
 
       if (!isServerless) {
         it('allows all settings', async () => {
-        await putStream(apiClient, 'logs.otel.allsettings', {
-          ...emptyAssets,
-          stream: {
-            type: 'wired',
-            description: '',
-            ingest: {
-              settings: {
-                'index.refresh_interval': { value: '30s' },
-                'index.number_of_shards': { value: 3 },
-                'index.number_of_replicas': { value: 2 },
+          await putStream(apiClient, 'logs.otel.allsettings', {
+            ...emptyAssets,
+            stream: {
+              type: 'wired',
+              description: '',
+              ingest: {
+                settings: {
+                  'index.refresh_interval': { value: '30s' },
+                  'index.number_of_shards': { value: 3 },
+                  'index.number_of_replicas': { value: 2 },
+                },
+                processing: { steps: [] },
+                lifecycle: { inherit: {} },
+                wired: { fields: {}, routing: [] },
+                failure_store: { inherit: {} },
               },
-              processing: { steps: [] },
-              lifecycle: { inherit: {} },
-              wired: { fields: {}, routing: [] },
-              failure_store: { inherit: {} },
             },
-          },
-        });
+          });
 
           await expectSettings(['logs.otel.allsettings'], {
             'index.refresh_interval': { value: '30s', from: 'logs.otel.allsettings' },
@@ -432,22 +432,22 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
               .fetch('PUT /api/streams/{name} 2023-10-31', {
                 params: {
                   path: { name: 'logs.otel.creation_validation_test' },
-                body: {
-                  ...emptyAssets,
-                  stream: {
-                    type: 'wired',
-                    description: '',
-                    ingest: {
-                      settings: {
-                        'index.number_of_replicas': { value: 2 },
+                  body: {
+                    ...emptyAssets,
+                    stream: {
+                      type: 'wired',
+                      description: '',
+                      ingest: {
+                        settings: {
+                          'index.number_of_replicas': { value: 2 },
+                        },
+                        processing: { steps: [] },
+                        lifecycle: { inherit: {} },
+                        wired: { fields: {}, routing: [] },
+                        failure_store: { inherit: {} },
                       },
-                      processing: { steps: [] },
-                      lifecycle: { inherit: {} },
-                      wired: { fields: {}, routing: [] },
-                      failure_store: { inherit: {} },
                     },
                   },
-                },
                 },
               })
               .expect(400);

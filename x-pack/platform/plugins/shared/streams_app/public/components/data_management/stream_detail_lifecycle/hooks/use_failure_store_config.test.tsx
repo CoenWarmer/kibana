@@ -14,7 +14,6 @@ jest.mock('./use_failure_store_default_retention', () => ({
 }));
 
 const createBaseDefinition = (name: string): Partial<Streams.ingest.all.GetResponse> => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stream: {
     name,
     description: '',

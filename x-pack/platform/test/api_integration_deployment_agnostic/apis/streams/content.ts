@@ -592,23 +592,23 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
               {
                 type: 'stream',
                 name: ROOT_STREAM_ID,
-              request: {
-                stream: {
-                  type: 'wired',
-                  description: '',
-                  ingest: {
-                    processing: { steps: [] },
-                    settings: {},
-                    wired: {
-                      fields,
-                      routing: [],
+                request: {
+                  stream: {
+                    type: 'wired',
+                    description: '',
+                    ingest: {
+                      processing: { steps: [] },
+                      settings: {},
+                      wired: {
+                        fields,
+                        routing: [],
+                      },
+                      lifecycle: { inherit: {} },
+                      failure_store: { inherit: {} },
                     },
-                    lifecycle: { inherit: {} },
-                    failure_store: { inherit: {} },
                   },
+                  ...emptyAssets,
                 },
-                ...emptyAssets,
-              },
               },
             ]
           );
