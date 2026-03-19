@@ -126,9 +126,9 @@ Kibana has multiple pipelines. Common slugs:
 
 | Pipeline | Slug |
 |---|---|
-| Main / PR | `kibana` |
+| PR | `kibana-pull-request` |
+| On-merge | `kibana-on-merge` |
 | Flaky test runner | `kibana-flaky-test-suite-runner` |
 | Artifacts | `kibana-artifacts` |
-| On-merge | `kibana-on-merge` |
 
 Substitute the `PIPELINE` variable as needed.
