@@ -13,7 +13,7 @@ jest.mock('./use_failure_store_default_retention', () => ({
   useFailureStoreDefaultRetention: jest.fn(() => ({ value: undefined })),
 }));
 
-const createBaseDefinition = (name: string): Partial<Streams.ingest.all.GetResponse> => ({
+const createBaseDefinition = (name: string) => ({
   stream: {
     name,
     description: '',
