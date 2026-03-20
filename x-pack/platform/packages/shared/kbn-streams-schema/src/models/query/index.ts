@@ -72,10 +72,12 @@ export namespace QueryStream {
   }
 }
 
-const queryStreamDefinitionSchema = baseStreamDefinitionSchema.extend({
-  type: z.literal('query'),
-  query: QueryWithEsql.right,
-});
+const queryStreamDefinitionSchema = baseStreamDefinitionSchema
+  .extend({
+    type: z.literal('query'),
+    query: QueryWithEsql.right,
+  })
+  .meta({ id: 'QueryStreamDefinition' });
 
 const queryStreamGetResponseSchema = baseStreamGetResponseSchema.extend({
   stream: queryStreamDefinitionSchema,

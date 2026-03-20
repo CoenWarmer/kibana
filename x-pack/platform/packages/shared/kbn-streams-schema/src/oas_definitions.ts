@@ -6,13 +6,10 @@
  */
 
 /**
- * Registry of kbn-streams-schema Zod v4 schemas that should be emitted as
- * named OAS components (`$ref: '#/components/schemas/<key>'`) rather than
- * inlined at every use site.
- *
- * Pass this object to the OAS integration layer (e.g. call
- * `registerZodV4Component` from `@kbn/router-to-openapispec` for each entry)
- * to activate named references in the generated spec.
+ * Registry of kbn-streams-schema Zod v4 schemas emitted as named OAS components
+ * (`$ref: '#/components/schemas/<key>'`). Each schema carries `.meta({ id })`
+ * at its definition site, so the OAS generator picks it up automatically via
+ * the Zod v4 global registry — no separate registration step required.
  */
 
 import { WiredStream } from './models/ingest/wired';

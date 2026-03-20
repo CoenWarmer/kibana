@@ -53,7 +53,6 @@ import { registerStreamsSavedObjects } from './lib/saved_objects/register_saved_
 import { ModelSettingsConfigService } from './lib/saved_objects/significant_events/model_settings_config_service';
 import { TaskService } from './lib/tasks/task_service';
 import { InsightService } from './lib/significant_events/insights/client/insight_service';
-import { registerStreamsOasComponents } from './register_oas_components';
 import { baseFields } from './lib/streams/component_templates/logs_layer';
 import { ecsBaseFields } from './lib/streams/component_templates/logs_ecs_layer';
 import { registerStreamsAgentBuilder } from './agent_builder/register';
@@ -100,8 +99,6 @@ export class StreamsPlugin
       config: this.config,
       logger: this.logger,
     } as StreamsServer;
-
-    registerStreamsOasComponents();
 
     this.ebtTelemetryService.setup(core.analytics);
     this.statsTelemetryService.setup(

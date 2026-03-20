@@ -116,10 +116,12 @@ export namespace WiredStream {
   >;
 }
 
-const wiredStreamDefinitionSchema = ingestBaseStreamDefinitionSchema.extend({
-  type: z.literal('wired'),
-  ingest: wiredIngestSchemaObject,
-});
+const wiredStreamDefinitionSchema = ingestBaseStreamDefinitionSchema
+  .extend({
+    type: z.literal('wired'),
+    ingest: wiredIngestSchemaObject,
+  })
+  .meta({ id: 'WiredStreamDefinition' });
 
 const wiredStreamGetResponseSchema = ingestBaseStreamGetResponseSchema.extend({
   stream: wiredStreamDefinitionSchema,

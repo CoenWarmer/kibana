@@ -108,10 +108,12 @@ export namespace ClassicStream {
   }
 }
 
-const classicStreamDefinitionSchema = ingestBaseStreamDefinitionSchema.extend({
-  type: z.literal('classic'),
-  ingest: classicIngestSchemaObject,
-});
+const classicStreamDefinitionSchema = ingestBaseStreamDefinitionSchema
+  .extend({
+    type: z.literal('classic'),
+    ingest: classicIngestSchemaObject,
+  })
+  .meta({ id: 'ClassicStreamDefinition' });
 
 const classicStreamGetResponseSchema = ingestBaseStreamGetResponseSchema.extend({
   stream: classicStreamDefinitionSchema,
