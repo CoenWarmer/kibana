@@ -24,7 +24,7 @@ const createBaseDefinition = (name: string): Partial<Streams.ingest.all.GetRespo
       settings: {},
       failure_store: { inherit: {} },
     },
-  } as any,
+  },
 });
 
 const createClassicDefinition = (
