@@ -747,7 +747,9 @@ describe('zod v4', () => {
       });
 
       test('explicit .meta({ openapi }) takes precedence over auto-detection', () => {
-        const wired = z4.object({ type: z4.literal('wired') }).meta({ id: 'AutoDiscExplicit_Wired' });
+        const wired = z4
+          .object({ type: z4.literal('wired') })
+          .meta({ id: 'AutoDiscExplicit_Wired' });
         const classic = z4.object({ type: z4.literal('classic') }).meta({
           id: 'AutoDiscExplicit_Classic',
         });
