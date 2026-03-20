@@ -89,7 +89,11 @@ Streams.QueryStream = nQueryStream;
  * sealed-class / tagged-union structs.
  */
 export const streamDefinitionSchema = z
-  .union([nWiredStream.Definition.right, nClassicStream.Definition.right, nQueryStream.Definition.right])
+  .union([
+    nWiredStream.Definition.right,
+    nClassicStream.Definition.right,
+    nQueryStream.Definition.right,
+  ])
   .meta({
     id: 'StreamDefinition',
     openapi: {

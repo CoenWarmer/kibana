@@ -70,8 +70,12 @@ export const streamlangOasDefinitions = {
   SplitProcessor: splitProcessorSchema.meta({ id: 'SplitProcessor' }),
   SortProcessor: sortProcessorSchema.meta({ id: 'SortProcessor' }),
   ConcatProcessor: concatProcessorSchema.meta({ id: 'ConcatProcessor' }),
-  NetworkDirectionProcessor: networkDirectionProcessorSchema.meta({ id: 'NetworkDirectionProcessor' }),
-  ManualIngestPipelineProcessor: manualIngestPipelineProcessorSchema.meta({ id: 'ManualIngestPipelineProcessor' }),
+  NetworkDirectionProcessor: networkDirectionProcessorSchema.meta({
+    id: 'NetworkDirectionProcessor',
+  }),
+  ManualIngestPipelineProcessor: manualIngestPipelineProcessorSchema.meta({
+    id: 'ManualIngestPipelineProcessor',
+  }),
 } as const;
 
 export type StreamlangOasDefinitions = typeof streamlangOasDefinitions;
