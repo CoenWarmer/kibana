@@ -9,7 +9,7 @@
 
 import { z, isZod } from '@kbn/zod';
 import { z as z4 } from '@kbn/zod/v4';
-import { isPassThroughAny } from '@kbn/zod-helpers';
+import { isPassThroughAny } from '@kbn/zod-helpers/v4';
 import zodToJsonSchema, { jsonDescription } from 'zod-to-json-schema';
 import type { OpenAPIV3 } from 'openapi-types';
 
@@ -657,6 +657,48 @@ function getZodV4OasExtensions(schema: z4.core.$ZodType): OasMetaExtensions | un
 }
 
 /**
+ * Auto-detects `z4.discriminatedUnion()` schemas and builds an OAS
+ * `DiscriminatorObject` from the union's discriminator key and each variant's
+ * `meta({ id })`.
+ *
+ * `z4.toJSONSchema()` produces an identical `anyOf` for both plain unions and
+ * discriminated unions — the discriminator information is lost in the JSON
+ * Schema output. This function reads it directly from the Zod type's internal
+ * `_zod.def.discriminator` field, which is only set on discriminated unions.
+ *
+ * The `mapping` is only included when every variant has a `meta({ id })` name
+ * and a resolvable literal discriminator value. When some variants lack IDs,
+ * only `propertyName` is emitted (valid per OAS 3.0 — mapping is optional).
+ */
+function getZodV4AutoDiscriminator(
+  schema: z4.core.$ZodType
+): OpenAPIV3.DiscriminatorObject | undefined {
+  const def = (schema as any)._zod?.def;
+  if (typeof def?.discriminator !== 'string') return undefined;
+
+  const discriminatorKey: string = def.discriminator;
+  const options: z4.ZodType[] = def.options ?? [];
+
+  const mapping: Record<string, string> = {};
+  let mappingComplete = true;
+
+  for (const opt of options) {
+    const id = getZodV4ComponentId(opt);
+    const literalValue = (opt as any)._zod?.def?.shape?.[discriminatorKey]?._zod?.def?.values?.[0];
+    if (id !== undefined && literalValue !== undefined) {
+      mapping[String(literalValue)] = `#/components/schemas/${id}`;
+    } else {
+      mappingComplete = false;
+    }
+  }
+
+  return {
+    propertyName: discriminatorKey,
+    ...(mappingComplete ? { mapping } : {}),
+  };
+}
+
+/**
  * Recursively rewrite every `$ref` value that starts with `#/$defs/`
  * to point to `#/components/schemas/<uniqueKey>` instead.
  */
@@ -911,6 +953,13 @@ export const convert = (schema: z.ZodTypeAny) => {
 
         if (oasExtensions) {
           (js as any)[OAS_EXTENSIONS_MARKER] = oasExtensions;
+        } else {
+          // Auto-detect ZodDiscriminatedUnion and inject a discriminator when
+          // the user hasn't supplied one explicitly via .meta({ openapi: { ... } }).
+          const autoDiscriminator = getZodV4AutoDiscriminator(zodSchema);
+          if (autoDiscriminator) {
+            (js as any)[OAS_EXTENSIONS_MARKER] = { discriminator: autoDiscriminator };
+          }
         }
       },
     }) as Record<string, any>;
