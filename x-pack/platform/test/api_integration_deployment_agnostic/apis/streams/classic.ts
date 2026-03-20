@@ -91,6 +91,7 @@ export default function ({ getService }: DeploymentAgnosticFtrProviderContext) {
             body: {
               ...emptyAssets,
               stream: {
+                type: 'classic',
                 description: '',
                 query_streams: [],
                 ingest: {
