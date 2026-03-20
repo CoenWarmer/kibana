@@ -643,7 +643,7 @@ export interface OasMetaExtensions {
  * The name must be unique across all schemas in the document and follow OpenAPI
  * component naming rules: `[a-zA-Z0-9._-]+`.
  */
-function getZodV4ComponentId(schema: z4.core.$ZodType): string | undefined {
+function getZodV4ComponentId(schema: z4.ZodType): string | undefined {
   const meta = z4.globalRegistry.get(schema);
   return typeof meta?.id === 'string' ? meta.id : undefined;
 }
@@ -651,7 +651,7 @@ function getZodV4ComponentId(schema: z4.core.$ZodType): string | undefined {
 /**
  * Reads OAS-native extensions declared via `.meta({ openapi: { ... } })`.
  */
-function getZodV4OasExtensions(schema: z4.core.$ZodType): OasMetaExtensions | undefined {
+function getZodV4OasExtensions(schema: z4.ZodType): OasMetaExtensions | undefined {
   const meta = z4.globalRegistry.get(schema);
   return meta?.openapi as OasMetaExtensions | undefined;
 }
@@ -670,9 +670,7 @@ function getZodV4OasExtensions(schema: z4.core.$ZodType): OasMetaExtensions | un
  * and a resolvable literal discriminator value. When some variants lack IDs,
  * only `propertyName` is emitted (valid per OAS 3.0 — mapping is optional).
  */
-function getZodV4AutoDiscriminator(
-  schema: z4.core.$ZodType
-): OpenAPIV3.DiscriminatorObject | undefined {
+function getZodV4AutoDiscriminator(schema: z4.ZodType): OpenAPIV3.DiscriminatorObject | undefined {
   const def = (schema as any)._zod?.def;
   if (typeof def?.discriminator !== 'string') return undefined;
 
@@ -943,20 +941,20 @@ export const convert = (schema: z.ZodTypeAny) => {
         // schemas that declare .meta({ id }) / .meta({ openapi: { ... } }).
         // Picked up by extractDefsToShared (for $defs entries) and
         // hoistMarkedSchemas (for inline, single-use schemas).
-        const componentName = getZodV4ComponentId(zodSchema);
+        const componentName = getZodV4ComponentId(zodSchema as unknown as z4.ZodType);
 
         if (componentName) {
           (js as any)[COMPONENT_ID_MARKER] = componentName;
         }
 
-        const oasExtensions = getZodV4OasExtensions(zodSchema);
+        const oasExtensions = getZodV4OasExtensions(zodSchema as unknown as z4.ZodType);
 
         if (oasExtensions) {
           (js as any)[OAS_EXTENSIONS_MARKER] = oasExtensions;
         } else {
           // Auto-detect ZodDiscriminatedUnion and inject a discriminator when
           // the user hasn't supplied one explicitly via .meta({ openapi: { ... } }).
-          const autoDiscriminator = getZodV4AutoDiscriminator(zodSchema);
+          const autoDiscriminator = getZodV4AutoDiscriminator(zodSchema as unknown as z4.ZodType);
           if (autoDiscriminator) {
             (js as any)[OAS_EXTENSIONS_MARKER] = { discriminator: autoDiscriminator };
           }
