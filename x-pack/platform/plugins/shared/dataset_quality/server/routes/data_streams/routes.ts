@@ -414,10 +414,6 @@ const dataStreamSettingsRoute = createDatasetQualityServerRoute({
       dataStream,
     });
 
-    if (!dataStreamSettings.lastBackingIndexName) {
-      throw new Error(`index_not_found_exception: no such data stream [${dataStream}]`);
-    }
-
     return dataStreamSettings;
   },
 });
