@@ -199,8 +199,12 @@ export function migrateOnRead(definition: Record<string, unknown>): Streams.all.
       streamType = 'wired';
     } else if (isObject(migratedDefinition.ingest) && 'classic' in migratedDefinition.ingest) {
       streamType = 'classic';
-    } else {
+    } else if (!('ingest' in migratedDefinition)) {
       streamType = 'query';
+    } else {
+      throw new Error(
+        `Cannot determine stream type: document has an 'ingest' key but it does not contain 'wired' or 'classic'. This may indicate a corrupted stream definition.`
+      );
     }
     migratedDefinition = { ...migratedDefinition, type: streamType };
     hasBeenMigrated = true;
