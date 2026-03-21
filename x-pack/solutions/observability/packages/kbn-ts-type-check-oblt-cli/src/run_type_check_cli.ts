@@ -11,11 +11,8 @@ import { run } from '@kbn/dev-cli-runner';
 import { createFailError } from '@kbn/dev-cli-errors';
 import { REPO_ROOT } from '@kbn/repo-info';
 
-import {
-  resolveRestoreStrategy,
-  restoreTSBuildArtifacts,
-  writeArtifactsState,
-} from './cache/restore_ts_build_artifacts';
+import { resolveRestoreStrategy, restoreTSBuildArtifacts } from './cache/restore_ts_build_artifacts';
+import { writeArtifactsState } from './cache/artifacts_state';
 import { isCiEnvironment, resolveCurrentCommitSha } from './cache/utils';
 import { createTypeCheckConfigs } from './tsc/create_type_check_configs';
 import { runTsc, runTscFastPass } from './tsc/run_tsc';
@@ -74,6 +71,7 @@ run(
             staleProjects: strategy.staleProjects,
             prNumber: strategy.prNumber,
             prTipSha: strategy.prTipSha,
+            skipCacheServer: !strategy.cacheServerAvailable,
           });
           didRestore = true;
         }

@@ -21,6 +21,8 @@ jest.mock('@kbn/std', () => ({
 jest.mock('./cache/restore_ts_build_artifacts', () => ({
   restoreTSBuildArtifacts: jest.fn(),
   resolveRestoreStrategy: jest.fn().mockResolvedValue({ shouldRestore: false, bestSha: undefined }),
+}));
+jest.mock('./cache/artifacts_state', () => ({
   writeArtifactsState: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('./cache/utils', () => ({
@@ -84,7 +86,7 @@ const { isCiEnvironment, resolveCurrentCommitSha } = jest.requireMock('./cache/u
   isCiEnvironment: jest.MockedFunction<() => boolean>;
   resolveCurrentCommitSha: jest.MockedFunction<() => Promise<string | undefined>>;
 };
-const { restoreTSBuildArtifacts, resolveRestoreStrategy, writeArtifactsState } = jest.requireMock(
+const { restoreTSBuildArtifacts, resolveRestoreStrategy } = jest.requireMock(
   './cache/restore_ts_build_artifacts'
 ) as {
   restoreTSBuildArtifacts: jest.MockedFunction<
@@ -100,6 +102,8 @@ const { restoreTSBuildArtifacts, resolveRestoreStrategy, writeArtifactsState } =
       projects: TsProject[]
     ) => Promise<{ shouldRestore: boolean; bestSha: string | undefined }>
   >;
+};
+const { writeArtifactsState } = jest.requireMock('./cache/artifacts_state') as {
   writeArtifactsState: jest.MockedFunction<(sha: string) => Promise<void>>;
 };
 const { runTsc, runTscFastPass } = jest.requireMock('./tsc/run_tsc') as {
@@ -202,6 +206,8 @@ describe('type_check orchestration', () => {
       resolveRestoreStrategy.mockResolvedValueOnce({
         shouldRestore: true,
         bestSha: 'abc123def456',
+        staleProjects: [],
+        cacheServerAvailable: true,
       });
 
       const log = createLog();
@@ -212,7 +218,10 @@ describe('type_check orchestration', () => {
 
       expect(resolveRestoreStrategy).toHaveBeenCalledWith(log, expect.any(Array));
       expect(restoreTSBuildArtifacts).toHaveBeenCalledWith(log, 'abc123def456', {
-        staleProjects: undefined,
+        staleProjects: [],
+        prNumber: undefined,
+        prTipSha: undefined,
+        skipCacheServer: false,
       });
     });
 

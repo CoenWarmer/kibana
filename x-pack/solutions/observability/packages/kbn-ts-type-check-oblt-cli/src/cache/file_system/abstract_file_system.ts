@@ -108,7 +108,11 @@ export abstract class AbstractFileSystem {
 
     const totalShas = options.shas.length;
 
-    this.log.info(`[Cache] Searching ${totalShas} candidate commit(s) for cached artifacts...`);
+    // Only log the search banner when we're genuinely scanning multiple candidates.
+    // When skipExistenceCheck is set the SHA is already resolved by the caller.
+    if (!options.skipExistenceCheck) {
+      this.log.info(`[Cache] Searching ${totalShas} candidate commit(s) for cached artifacts...`);
+    }
 
     for (let i = 0; i < totalShas; i++) {
       const sha = options.shas[i];
@@ -141,7 +145,11 @@ export abstract class AbstractFileSystem {
           await cleanTypeCheckArtifacts(this.log);
         }
 
-        this.log.info(`[Cache] Found archive for ${shortSha}, extracting...`);
+        if (options.skipExistenceCheck) {
+          this.log.info(`[Cache] Restoring ${shortSha}...`);
+        } else {
+          this.log.info(`[Cache] Found archive for ${shortSha}, extracting...`);
+        }
 
         await this.extract(archivePath);
 

@@ -8,11 +8,8 @@
 import Fs from 'fs';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { TsProject } from '@kbn/ts-projects';
-import {
-  restoreTSBuildArtifacts,
-  resolveRestoreStrategy,
-  computeEffectiveRebuildSet,
-} from './restore_ts_build_artifacts';
+import { restoreTSBuildArtifacts, resolveRestoreStrategy } from './restore_ts_build_artifacts';
+import { computeEffectiveRebuildSet } from './dependency_graph';
 import { LocalFileSystem } from './file_system/local_file_system';
 import { GcsFileSystem } from './file_system/gcs_file_system';
 import {

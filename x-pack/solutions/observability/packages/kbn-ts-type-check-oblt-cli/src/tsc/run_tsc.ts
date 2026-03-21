@@ -21,7 +21,7 @@ import {
   buildForwardDependencyMap,
   buildReverseDependencyMap,
   computeEffectiveRebuildSet,
-} from '../cache/restore_ts_build_artifacts';
+} from '../cache/dependency_graph';
 
 interface TscRunOptions {
   type?: 'Full pass' | 'First pass';
@@ -183,7 +183,10 @@ async function runTscWithProgress({
     reject: false,
   });
 
-  const tracker = new TscProgressTracker();
+  const tracker = new TscProgressTracker({
+    logInfo: (msg) => log.info(msg),
+    passLabel: type,
+  });
 
   tracker.start();
 
