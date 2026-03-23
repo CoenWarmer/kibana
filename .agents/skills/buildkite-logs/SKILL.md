@@ -23,7 +23,7 @@ if [ -z "$BUILDKITE_API_TOKEN" ]; then
 fi
 BK_AUTH="Authorization: Bearer $BUILDKITE_API_TOKEN"
 ORG="elastic"
-PIPELINE="kibana"
+PIPELINE="kibana-pull-request"
 BASE="https://api.buildkite.com/v2"
 ```
 
@@ -42,7 +42,7 @@ curl -sf -H "$BK_AUTH" \
 ```
 
 To get a build number from a Buildkite URL like
-`https://buildkite.com/elastic/kibana/builds/123456`, extract `123456`.
+`https://buildkite.com/elastic/kibana-pull-request/builds/414685`, extract `414685`.
 
 ---
 
