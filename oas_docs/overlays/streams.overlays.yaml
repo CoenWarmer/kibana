@@ -1,0 +1,111 @@
+overlay: 1.0.0
+info:
+  title: Overlays for the Streams API
+  version: 0.0.1
+actions:
+  # ---------------------------------------------------------------------------
+  # Tag description
+  # ---------------------------------------------------------------------------
+  - target: '$.tags[?(@.name=="streams")]'
+    description: Add description, external docs link, and display name for the streams tag
+    update:
+      description: >
+        Streams provide a unified data management layer for ingestion, routing, and processing.
+        There are three stream types:
+
+        * **Wired** streams are managed by Kibana. They route documents to child streams based on
+          field conditions and support custom field mappings and processing steps.
+
+        * **Classic** streams map to existing Elasticsearch data streams. You can add processing
+          steps to classic streams without changing their underlying index template.
+
+        * **Query** streams are virtual aggregations backed by an ES|QL expression. They aggregate
+          data from multiple streams into a single logical view without duplicating documents.
+      externalDocs:
+        description: Streams documentation
+        url: https://www.elastic.co/docs/solutions/observability/streams
+      x-displayName: Streams
+
+  # ---------------------------------------------------------------------------
+  # PUT /api/streams/{name}  –  create or update a stream
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams/{name}']['put']"
+    description: Add request body examples for create/update stream
+    update:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              createWiredStream:
+                $ref: '../examples/streams/create_wired_stream_request.yaml'
+              updateClassicStream:
+                $ref: '../examples/streams/update_classic_stream_request.yaml'
+              createQueryStream:
+                $ref: '../examples/streams/create_query_stream_request.yaml'
+
+  # ---------------------------------------------------------------------------
+  # GET /api/streams/{name}  –  get a stream
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams/{name}']['get']"
+    description: Add response example for get stream
+    update:
+      responses:
+        200:
+          content:
+            application/json:
+              examples:
+                getWiredStream:
+                  $ref: '../examples/streams/get_wired_stream_response.yaml'
+
+  # ---------------------------------------------------------------------------
+  # GET /api/streams  –  list streams
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams']['get']"
+    description: Add response example for list streams
+    update:
+      responses:
+        200:
+          content:
+            application/json:
+              examples:
+                listStreams:
+                  $ref: '../examples/streams/list_streams_response.yaml'
+
+  # ---------------------------------------------------------------------------
+  # POST /api/streams/{name}/_fork  –  fork a stream
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams/{name}/_fork']['post']"
+    description: Add request body example for fork stream
+    update:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              forkStream:
+                $ref: '../examples/streams/fork_stream_request.yaml'
+
+  # ---------------------------------------------------------------------------
+  # PUT /api/streams/{name}/_ingest  –  update ingest settings
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams/{name}/_ingest']['put']"
+    description: Add request body example for update ingest settings
+    update:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertWiredIngest:
+                $ref: '../examples/streams/upsert_wired_ingest_request.yaml'
+
+  # ---------------------------------------------------------------------------
+  # PUT /api/streams/{name}/_query  –  update query stream settings
+  # ---------------------------------------------------------------------------
+  - target: "$.paths['/api/streams/{name}/_query']['put']"
+    description: Add request body example for update query stream settings
+    update:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              upsertQueryStream:
+                $ref: '../examples/streams/upsert_query_stream_request.yaml'

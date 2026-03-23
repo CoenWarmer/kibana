@@ -49,18 +49,24 @@ api-docs-lint-stateful: ## Run redocly API docs linter on kibana.yaml
 api-docs-lint-serverless: ## Run redocly API docs linter on kibana.serverless.yaml
 	@npx @redocly/cli lint "output/kibana.serverless.yaml" --config "linters/redocly.yaml" --format stylish --max-problems 500
 
+.PHONY: generate-examples
+generate-examples: ## Generate OAS example YAML files from typed TypeScript constants
+	@npx tsx scripts/generate_examples.ts
+
 .PHONY: api-docs-overlay
-api-docs-overlay: ## Apply all overlays
+api-docs-overlay: generate-examples ## Apply all overlays
 	@npx bump-cli overlay "output/kibana.serverless.yaml" "overlays/kibana.overlays.serverless.yaml" > "output/kibana.serverless.tmp1.yaml"
 	@npx bump-cli overlay "output/kibana.serverless.tmp1.yaml" "overlays/alerting.overlays.yaml" > "output/kibana.serverless.tmp2.yaml"
 	@npx bump-cli overlay "output/kibana.serverless.tmp2.yaml" "overlays/connectors.overlays.yaml" > "output/kibana.serverless.tmp3.yaml"
 	@npx bump-cli overlay "output/kibana.serverless.tmp3.yaml" "overlays/kibana.overlays.shared.yaml" > "output/kibana.serverless.tmp4.yaml"
+	@npx bump-cli overlay "output/kibana.serverless.tmp4.yaml" "overlays/streams.overlays.yaml" > "output/kibana.serverless.tmp5.yaml"
 	@npx bump-cli overlay "output/kibana.yaml" "overlays/kibana.overlays.yaml" > "output/kibana.tmp1.yaml"
 	@npx bump-cli overlay "output/kibana.tmp1.yaml" "overlays/alerting.overlays.yaml" > "output/kibana.tmp2.yaml"
 	@npx bump-cli overlay "output/kibana.tmp2.yaml" "overlays/connectors.overlays.yaml" > "output/kibana.tmp3.yaml"
 	@npx bump-cli overlay "output/kibana.tmp3.yaml" "overlays/kibana.overlays.shared.yaml" > "output/kibana.tmp4.yaml"
-	@npx @redocly/cli bundle output/kibana.serverless.tmp4.yaml --ext yaml -o output/kibana.serverless.yaml
-	@npx @redocly/cli bundle output/kibana.tmp4.yaml --ext yaml -o output/kibana.yaml
+	@npx bump-cli overlay "output/kibana.tmp4.yaml" "overlays/streams.overlays.yaml" > "output/kibana.tmp5.yaml"
+	@npx @redocly/cli bundle output/kibana.serverless.tmp5.yaml --ext yaml -o output/kibana.serverless.yaml
+	@npx @redocly/cli bundle output/kibana.tmp5.yaml --ext yaml -o output/kibana.yaml
 	rm output/kibana.tmp*.yaml
 	rm output/kibana.serverless.tmp*.yaml
 
