@@ -13,7 +13,7 @@
  * Generates YAML example files.
  *
  * Invoked by the api-docs-overlay makefile target. To run manually from the Kibana root:
- *   cd oas_docs && npx tsx scripts/generate_examples.ts
+ *   cd oas_docs && node scripts/generate_examples.js
  * or:
  *   make -C oas_docs generate-examples
  *
@@ -21,10 +21,13 @@
  * oas_docs/overlays/*.overlays.yaml via $ref.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
-import { oasExamples as streamsOasExamples } from '../../x-pack/platform/plugins/shared/streams/docs/oas_examples';
+require('@kbn/setup-node-env');
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+const {
+  oasExamples: streamsOasExamples,
+} = require('../../x-pack/platform/plugins/shared/streams/docs/oas_examples');
 
 const OUTPUT_DIR = path.resolve(__dirname, '../examples');
 

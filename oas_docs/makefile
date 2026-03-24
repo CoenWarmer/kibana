@@ -51,7 +51,7 @@ api-docs-lint-serverless: ## Run redocly API docs linter on kibana.serverless.ya
 
 .PHONY: generate-examples
 generate-examples: ## Generate OAS example YAML files from typed TypeScript constants
-	@npx tsx scripts/generate_examples.ts
+	@node scripts/generate_examples.js
 
 .PHONY: api-docs-overlay
 api-docs-overlay: generate-examples ## Apply all overlays
