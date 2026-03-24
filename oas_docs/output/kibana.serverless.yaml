@@ -68747,7 +68747,6 @@ components:
     Kibana_HTTP_APIs_ClassicFieldDefinition:
       additionalProperties:
         $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicFieldDefinitionConfig'
-      id: ClassicFieldDefinition
       type: object
     Kibana_HTTP_APIs_ClassicFieldDefinitionConfig:
       allOf:
@@ -68796,10 +68795,8 @@ components:
                   type: string
               required:
                 - type
-      id: ClassicFieldDefinitionConfig
     Kibana_HTTP_APIs_ClassicStreamUpsertRequest:
       additionalProperties: false
-      id: ClassicStreamUpsertRequest
       type: object
       properties:
         dashboards:
@@ -68991,7 +68988,6 @@ components:
           required:
             - always
       description: The root condition object. It can be a simple filter or a combination of other conditions.
-      id: Condition
     Kibana_HTTP_APIs_ConditionWithSteps:
       allOf:
         - $ref: '#/components/schemas/Kibana_HTTP_APIs_Condition'
@@ -69004,7 +69000,6 @@ components:
               type: array
           required:
             - steps
-      id: ConditionWithSteps
     Kibana_HTTP_APIs_core_status_redactedResponse:
       additionalProperties: false
       description: A minimal representation of Kibana's operational status.
@@ -69334,11 +69329,9 @@ components:
                 - disabled
           required:
             - lifecycle
-      id: FailureStore
     Kibana_HTTP_APIs_FieldDefinition:
       additionalProperties:
         $ref: '#/components/schemas/Kibana_HTTP_APIs_FieldDefinitionConfig'
-      id: FieldDefinition
       type: object
     Kibana_HTTP_APIs_FieldDefinitionConfig:
       allOf:
@@ -69398,7 +69391,6 @@ components:
                   type: string
               required:
                 - type
-      id: FieldDefinitionConfig
     Kibana_HTTP_APIs_FilterCondition:
       anyOf:
         - additionalProperties: false
@@ -69514,7 +69506,6 @@ components:
           required:
             - field
       description: A basic filter condition, either unary or binary.
-      id: FilterCondition
     Kibana_HTTP_APIs_IngestStreamLifecycle:
       anyOf:
         - additionalProperties: false
@@ -69570,10 +69561,8 @@ components:
               properties: {}
           required:
             - inherit
-      id: IngestStreamLifecycle
     Kibana_HTTP_APIs_QueryStreamUpsertRequest:
       additionalProperties: false
-      id: QueryStreamUpsertRequest
       type: object
       properties:
         dashboards:
@@ -69676,11 +69665,9 @@ components:
           - items: {}
             type: array
           - $ref: '#/components/schemas/Kibana_HTTP_APIs_RecursiveRecord'
-      id: RecursiveRecord
       type: object
     Kibana_HTTP_APIs_StreamlangConditionBlock:
       additionalProperties: false
-      id: StreamlangConditionBlock
       type: object
       properties:
         condition:
@@ -70552,16 +70539,13 @@ components:
                 - action
                 - processors
         - $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamlangConditionBlock'
-      id: StreamlangStep
     Kibana_HTTP_APIs_StreamUpsertRequest:
       anyOf:
         - $ref: '#/components/schemas/Kibana_HTTP_APIs_WiredStreamUpsertRequest'
         - $ref: '#/components/schemas/Kibana_HTTP_APIs_ClassicStreamUpsertRequest'
         - $ref: '#/components/schemas/Kibana_HTTP_APIs_QueryStreamUpsertRequest'
-      id: StreamUpsertRequest
     Kibana_HTTP_APIs_WiredStreamUpsertRequest:
       additionalProperties: false
-      id: WiredStreamUpsertRequest
       type: object
       properties:
         dashboards:
