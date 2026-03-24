@@ -295,8 +295,19 @@ tags:
       description: Space overview
   - name: streams
     description: |
-      Streams is a new and experimental way to manage your data in Kibana (currently experimental - expect changes).
+      Streams provide a unified data management layer for ingestion, routing, and processing. There are three stream types:
+      * **Wired** streams are managed by Kibana. They route documents to child streams based on
+        field conditions and support custom field mappings and processing steps.
+
+      * **Classic** streams map to existing Elasticsearch data streams. You can add processing
+        steps to classic streams without changing their underlying index template.
+
+      * **Query** streams are virtual aggregations backed by an ES|QL expression. They aggregate
+        data from multiple streams into a single logical view without duplicating documents.
     x-displayName: Streams
+    externalDocs:
+      description: Streams documentation
+      url: https://www.elastic.co/docs/solutions/observability/streams
   - name: system
     x-displayName: System
     description: |
@@ -62393,7 +62404,13 @@ paths:
                   properties: {}
                 - nullable: true
                 - {}
-      responses: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                listStreams:
+                  $ref: '#/components/examples/list_streams_response'
       summary: Get stream list
       tags:
         - streams
@@ -62580,7 +62597,13 @@ paths:
                   properties: {}
                 - nullable: true
                 - {}
-      responses: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                getWiredStream:
+                  $ref: '#/components/examples/get_wired_stream_response'
       summary: Get a stream
       tags:
         - streams
@@ -63303,6 +63326,13 @@ paths:
                     - rules
                     - queries
                     - stream
+            examples:
+              createWiredStream:
+                $ref: '#/components/examples/create_wired_stream_request'
+              updateClassicStream:
+                $ref: '#/components/examples/update_classic_stream_request'
+              createQueryStream:
+                $ref: '#/components/examples/create_query_stream_request'
       responses: {}
       summary: Create or update a stream
       tags:
@@ -63360,6 +63390,9 @@ paths:
               required:
                 - stream
                 - where
+            examples:
+              forkStream:
+                $ref: '#/components/examples/fork_stream_request'
       responses: {}
       summary: Fork a stream
       tags:
@@ -63895,6 +63928,9 @@ paths:
                         - classic
               required:
                 - ingest
+            examples:
+              upsertWiredIngest:
+                $ref: '#/components/examples/upsert_wired_ingest_request'
       responses: {}
       summary: Update ingest stream settings
       tags:
@@ -63978,6 +64014,9 @@ paths:
                     - esql
               required:
                 - query
+            examples:
+              upsertQueryStream:
+                $ref: '#/components/examples/upsert_query_stream_request'
       responses: {}
       summary: Upsert query stream settings
       tags:
@@ -68871,6 +68910,205 @@ components:
         initials: MK
         disabledFeatures: []
         imageUrl: ''
+    list_streams_response:
+      summary: List all streams
+      value:
+        streams:
+          - name: logs
+            description: Root logs stream
+            type: wired
+            updated_at: '2025-01-10T08:00:00.000Z'
+          - name: logs.nginx
+            description: Web server access logs, routed by severity
+            type: wired
+            updated_at: '2025-01-15T10:30:00.000Z'
+          - name: logs.nginx.errors
+            description: HTTP 5xx error logs from nginx
+            type: wired
+            updated_at: '2025-01-15T10:30:00.000Z'
+          - name: logs-myapp-default
+            description: Legacy application logs
+            type: classic
+            updated_at: '2024-12-01T09:00:00.000Z'
+          - name: logs.errors
+            description: All error-level logs across every stream
+            type: query
+            updated_at: '2025-01-20T14:00:00.000Z'
+    get_wired_stream_response:
+      summary: Get a wired stream
+      value:
+        stream:
+          name: logs.nginx
+          description: Web server access logs, routed by severity
+          type: wired
+          updated_at: '2025-01-15T10:30:00.000Z'
+          ingest:
+            lifecycle:
+              inherit: {}
+            processing:
+              steps: []
+              updated_at: '2025-01-15T10:30:00.000Z'
+            settings: {}
+            failure_store:
+              inherit: {}
+            wired:
+              fields:
+                host.name:
+                  type: keyword
+                http.response.status_code:
+                  type: long
+                message:
+                  type: match_only_text
+              routing:
+                - destination: logs.nginx.errors
+                  where:
+                    field: http.response.status_code
+                    gte: 500
+                  status: enabled
+        dashboards: []
+        rules: []
+        queries: []
+        data_stream_exists: true
+        inherited_fields:
+          '@timestamp':
+            type: date
+            from: logs
+          log.level:
+            type: keyword
+            from: logs
+        effective_lifecycle:
+          dsl:
+            data_retention: 7d
+          from: logs
+        effective_settings: {}
+        effective_failure_store:
+          disabled: {}
+          from: logs
+        privileges:
+          manage: true
+          monitor: true
+          view_index_metadata: true
+          lifecycle: true
+          simulate: true
+          text_structure: true
+          read_failure_store: true
+          manage_failure_store: true
+          create_snapshot_repository: false
+    create_wired_stream_request:
+      summary: Create a wired stream with field mappings and routing
+      value:
+        stream:
+          description: Web server access logs, routed by severity
+          type: wired
+          ingest:
+            lifecycle:
+              inherit: {}
+            processing:
+              steps: []
+            settings: {}
+            failure_store:
+              inherit: {}
+            wired:
+              fields:
+                host.name:
+                  type: keyword
+                http.response.status_code:
+                  type: long
+                message:
+                  type: match_only_text
+              routing:
+                - destination: logs.nginx.errors
+                  where:
+                    field: http.response.status_code
+                    gte: 500
+                  status: enabled
+        dashboards: []
+        rules: []
+        queries: []
+    update_classic_stream_request:
+      summary: Update a classic stream with grok processing and a 30-day retention policy
+      value:
+        stream:
+          description: Legacy application logs managed as a classic data stream
+          type: classic
+          ingest:
+            lifecycle:
+              dsl:
+                data_retention: 30d
+            processing:
+              steps:
+                - action: grok
+                  from: message
+                  patterns:
+                    - '%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:log.level} %{GREEDYDATA:message}'
+                  ignore_missing: true
+            settings: {}
+            failure_store:
+              disabled: {}
+            classic: {}
+        dashboards: []
+        rules: []
+        queries: []
+    create_query_stream_request:
+      summary: Create a query stream backed by an ES|QL expression
+      value:
+        stream:
+          description: All error-level logs across every stream
+          type: query
+          query:
+            view: logs.errors-view
+            esql: FROM logs* | WHERE log.level == "error"
+        dashboards: []
+        rules: []
+        queries: []
+    fork_stream_request:
+      summary: Fork a wired stream to create a child stream
+      value:
+        stream:
+          name: logs.nginx.errors
+        where:
+          field: http.response.status_code
+          eq: '500'
+        status: enabled
+    upsert_wired_ingest_request:
+      summary: Update a wired stream ingest configuration with grok processing
+      value:
+        ingest:
+          lifecycle:
+            inherit: {}
+          processing:
+            steps:
+              - action: grok
+                from: message
+                patterns:
+                  - '%{IPORHOST:client.ip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:@timestamp}\] "%{WORD:http.method} %{DATA:url.original} HTTP/%{NUMBER:http.version}" %{NUMBER:http.response.status_code:int} (?:%{NUMBER:http.response.body.bytes:int}|-)'
+                ignore_missing: false
+          settings: {}
+          failure_store:
+            inherit: {}
+          wired:
+            fields:
+              client.ip:
+                type: ip
+              http.method:
+                type: keyword
+              http.response.status_code:
+                type: long
+              http.response.body.bytes:
+                type: long
+              url.original:
+                type: wildcard
+            routing:
+              - destination: logs.nginx.errors
+                where:
+                  field: http.response.status_code
+                  eq: '500'
+                status: enabled
+    upsert_query_stream_request:
+      summary: Update the ES|QL query for a query stream
+      value:
+        query:
+          esql: FROM logs* | WHERE log.level == "error" | KEEP @timestamp, message, host.name, log.level
   parameters:
     APM_UI_elastic_api_version:
       description: The version of the API to use
