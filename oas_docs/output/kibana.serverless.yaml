@@ -59001,6 +59001,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Kibana_HTTP_APIs_StreamUpsertRequest'
+            examples:
+              createWiredStream:
+                $ref: '#/components/examples/create_wired_stream_request'
+              updateClassicStream:
+                $ref: '#/components/examples/update_classic_stream_request'
+              createQueryStream:
+                $ref: '#/components/examples/create_query_stream_request'
       responses: {}
       summary: Create or update a stream
       tags:
