@@ -17,7 +17,7 @@ import {
 } from '@elastic/eui';
 import type { FormHook } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { UseField } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from '../types';
 
 export interface ReadOnlyToggleFieldProps {
   form: FormHook<IlmPolicyPhases, IlmPhasesFlyoutFormInternal>;

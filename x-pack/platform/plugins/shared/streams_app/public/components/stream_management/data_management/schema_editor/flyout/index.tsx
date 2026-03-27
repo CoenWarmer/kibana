@@ -23,11 +23,11 @@ import { i18n } from '@kbn/i18n';
 import { Streams } from '@kbn/streams-schema';
 import useToggle from 'react-use/lib/useToggle';
 import { FormattedMessage } from '@kbn/i18n-react';
-import { SamplePreviewTable } from '../../../../../data_management/schema_editor/flyout/sample_preview_table';
-import { FieldSummary } from '../../../../../data_management/schema_editor/flyout/field_summary';
-import type { SchemaField } from '../../../../../data_management/schema_editor/types';
-import { getGeoPointSuggestion } from '../../../../../data_management/schema_editor/utils';
-import { AdvancedFieldMappingOptions } from '../../../../../data_management/schema_editor/flyout/advanced_field_mapping_options';
+import { SamplePreviewTable } from './sample_preview_table';
+import { FieldSummary } from './field_summary';
+import type { SchemaField } from '../types';
+import { getGeoPointSuggestion } from '../utils';
+import { AdvancedFieldMappingOptions } from './advanced_field_mapping_options';
 
 export interface SchemaEditorFlyoutProps {
   field: SchemaField;

@@ -13,26 +13,26 @@ import { i18n } from '@kbn/i18n';
 import useMount from 'react-use/lib/useMount';
 import type { StreamsAPIClientRequestParamsOf } from '@kbn/streams-plugin/public/api';
 import { STREAMS_TIERED_ML_FEATURE } from '@kbn/streams-plugin/common';
-import { getFormattedError } from '../../../../../../../../../util/errors';
-import { useKibana } from '../../../../../../../../../hooks/use_kibana';
-import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { getFormattedError } from '../../../../../../../../util/errors';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
+import { ProcessorFieldSelector } from '../processor_field_selector';
+import { FieldsAccordion } from '../optional_fields_accordion';
+import { ProcessorConditionEditor } from '../processor_condition_editor';
+import { IgnoreFailureToggle } from '../ignore_toggles';
 import {
   DateTargetField,
   DateOutputFormatField,
   DateTimezoneField,
   DateLocaleField,
-} from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/date/date_optional_fields';
-import { DateFormatsField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/date/date_formats_field';
+} from './date_optional_fields';
+import { DateFormatsField } from './date_formats_field';
 
-import { selectPreviewRecords } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { selectPreviewRecords } from '../../../../state_management/simulation_state_machine/selectors';
 import {
   useStreamEnrichmentSelector,
   useSimulatorSelector,
-} from '../../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import type { DateFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+} from '../../../../state_management/stream_enrichment_state_machine';
+import type { DateFormState } from '../../../../types';
 
 type DateSuggestionsRequestSamples =
   StreamsAPIClientRequestParamsOf<'POST /internal/streams/{name}/processing/_suggestions/date'>['params']['body']['dates'];

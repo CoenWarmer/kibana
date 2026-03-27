@@ -12,7 +12,7 @@ import type {
   IlmPolicyPhases,
 } from '@kbn/streams-schema';
 
-import { buildModifiedPhasesFromEdit } from '../../../../../data_management/stream_detail_lifecycle/hooks/ilm_policy_phase_helpers';
+import { buildModifiedPhasesFromEdit } from './ilm_policy_phase_helpers';
 
 describe('buildModifiedPhasesFromEdit', () => {
   it('clears rollover action when rollover sanitizes to an empty object', () => {

@@ -9,7 +9,7 @@ import { i18n } from '@kbn/i18n';
 import { JsonCodeEditor } from '@kbn/unified-doc-viewer-plugin/public';
 import type { DocView, DocViewRenderProps } from '@kbn/unified-doc-viewer/types';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { DEFAULT_MARGIN_BOTTOM, getTabContentAvailableHeight } from '../../../../data_management/stream_detail_enrichment/get_height';
+import { DEFAULT_MARGIN_BOTTOM, getTabContentAvailableHeight } from './get_height';
 
 export const DOC_VIEW_JSON_ID = 'doc_view_json';
 

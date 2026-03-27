@@ -24,10 +24,10 @@ import { i18n } from '@kbn/i18n';
 import { isDescendantOf, isRoutingEnabled } from '@kbn/streams-schema';
 import { css } from '@emotion/css';
 import { css as cssReact } from '@emotion/react';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { ConditionPanel, VerticalRule } from '../../../../data_management/shared';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../data_management/stream_detail_routing/types';
-import { DisabledBadge } from '../../../../data_management/shared';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
+import { ConditionPanel, VerticalRule } from '../shared';
+import type { RoutingDefinitionWithUIAttributes } from './types';
+import { DisabledBadge } from '../shared';
 
 export function IdleRoutingStreamEntry({
   availableStreams,

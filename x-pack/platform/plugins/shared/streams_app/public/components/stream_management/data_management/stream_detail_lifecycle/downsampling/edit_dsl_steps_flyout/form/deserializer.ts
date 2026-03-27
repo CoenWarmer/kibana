@@ -6,9 +6,9 @@
  */
 
 import type { IngestStreamLifecycleDSL } from '@kbn/streams-schema';
-import type { DslStepMetaFields, DslStepsFlyoutFormInternal, PreservedTimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/constants';
-import { parseInterval, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
+import type { DslStepMetaFields, DslStepsFlyoutFormInternal, PreservedTimeUnit } from './types';
+import { MAX_DOWNSAMPLE_STEPS } from './constants';
+import { parseInterval, toMilliseconds } from './utils';
 
 export const createDslStepsFlyoutDeserializer = () => {
   return (lifecycle: IngestStreamLifecycleDSL): DslStepsFlyoutFormInternal => {

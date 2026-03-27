@@ -31,12 +31,12 @@ import {
   useGeneratedHtmlId,
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
-import { ContentPackObjectsList } from '../../../../data_management/content/objects_list';
-import { importContent, previewContent } from '../../../../data_management/content/requests';
-import { getFormattedError } from '../../../../../util/errors';
-import { hasSelectedObjects, isEmptyContentPack } from '../../../../data_management/content/helpers';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { useStreamsPrivileges } from '../../../../hooks/use_streams_privileges';
+import { ContentPackObjectsList } from './objects_list';
+import { importContent, previewContent } from './requests';
+import { getFormattedError } from '../../../../util/errors';
+import { hasSelectedObjects, isEmptyContentPack } from './helpers';
 
 export function ImportContentPackFlyout({
   definition,

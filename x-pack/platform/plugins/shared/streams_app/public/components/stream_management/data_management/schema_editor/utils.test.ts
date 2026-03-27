@@ -9,8 +9,8 @@ import {
   getGeoPointSuggestion,
   buildSchemaSavePayload,
   convertToFieldDefinitionConfig,
-} from '../../../../data_management/schema_editor/utils';
-import type { MappedSchemaField, SchemaEditorField, SchemaField } from '../../../../data_management/schema_editor/types';
+} from './utils';
+import type { MappedSchemaField, SchemaEditorField, SchemaField } from './types';
 import type { Streams } from '@kbn/streams-schema';
 import { omit } from 'lodash';
 

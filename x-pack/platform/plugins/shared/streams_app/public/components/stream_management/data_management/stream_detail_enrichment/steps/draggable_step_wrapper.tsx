@@ -25,8 +25,8 @@ import {
   type Instruction,
 } from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-item';
 import { EuiIcon, useEuiTheme } from '@elastic/eui';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
+import { collectDescendantStepIds } from '../state_management/utils';
+import type { InteractiveModeContext } from '../state_management/interactive_mode_machine';
 
 interface DraggableStepWrapperProps {
   stepId: string;

@@ -27,8 +27,8 @@ import type {
   NetworkDirectionProcessor,
   JsonExtractProcessor,
 } from '@kbn/streamlang';
-import type { EnrichmentDataSource } from '../../../../../../common/url_schema';
-import type { ConfigDrivenProcessorFormState } from '../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
+import type { EnrichmentDataSource } from '../../../../../common/url_schema';
+import type { ConfigDrivenProcessorFormState } from './steps/blocks/action/config_driven/types';
 
 /**
  * Processors' types

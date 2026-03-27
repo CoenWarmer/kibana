@@ -12,7 +12,7 @@ import type {
   StreamlangConditionBlockWithUIAttributes,
 } from '@kbn/streamlang';
 import { isActionBlock } from '@kbn/streamlang';
-import type { StepContext, StepEvent, StepInput } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/types';
+import type { StepContext, StepEvent, StepInput } from './types';
 
 export type StepActorRef = ActorRefFrom<typeof stepMachine>;
 export type StepActorSnapshot = SnapshotFrom<typeof stepMachine>;

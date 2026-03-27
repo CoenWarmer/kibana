@@ -8,8 +8,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
-import { IngestionCard } from '../../../../../../data_management/stream_detail_lifecycle/general_data/cards/ingestion_card';
-import type { EnhancedDataStreamStats } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { IngestionCard } from './ingestion_card';
+import type { EnhancedDataStreamStats } from '../../hooks/use_data_stream_stats';
 
 const createMockStats = (
   bytesPerDay: number,

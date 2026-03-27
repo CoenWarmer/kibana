@@ -8,21 +8,21 @@ import React from 'react';
 import { i18n } from '@kbn/i18n';
 import type { Streams } from '@kbn/streams-schema';
 import { EuiBadgeGroup, EuiFlexGroup, EuiToolTip } from '@elastic/eui';
-import { useStreamsAppParams } from '../../../../../hooks/use_streams_app_params';
-import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
-import { RedirectTo } from '../../../../redirect_to';
-import type { ManagementTabs } from '../../../../data_management/stream_detail_management/wrapper';
-import { Wrapper } from '../../../../data_management/stream_detail_management/wrapper';
-import { MissingDataStreamCallout } from '../../../../data_management/stream_detail_management/missing_data_stream_callout';
-import { StreamDetailLifecycle } from '../../../../data_management/stream_detail_lifecycle';
-import { StreamsAppPageTemplate } from '../../../../streams_app_page_template';
-import { ClassicStreamBadge, LifecycleBadge } from '../../../../stream_badges';
-import { StreamOverview } from '../../../../stream_detail_overview';
-import { useStreamsDetailManagementTabs } from '../../../../data_management/stream_detail_management/use_streams_detail_management_tabs';
-import { StreamDetailDataQuality } from '../../../../stream_data_quality';
-import { StreamDetailSchemaEditor } from '../../../../data_management/stream_detail_schema_editor';
-import { StreamDetailAttachments } from '../../../../stream_detail_attachments';
-import { ClassicAdvancedView } from '../../../../data_management/stream_detail_management/advanced_view/classic_advanced_view';
+import { useStreamsAppParams } from '../../../../hooks/use_streams_app_params';
+import { useStreamsPrivileges } from '../../../../hooks/use_streams_privileges';
+import { RedirectTo } from '../../../redirect_to';
+import type { ManagementTabs } from './wrapper';
+import { Wrapper } from './wrapper';
+import { MissingDataStreamCallout } from './missing_data_stream_callout';
+import { StreamDetailLifecycle } from '../stream_detail_lifecycle';
+import { StreamsAppPageTemplate } from '../../../streams_app_page_template';
+import { ClassicStreamBadge, LifecycleBadge } from '../../../stream_badges';
+import { StreamOverview } from '../../../stream_detail_overview';
+import { useStreamsDetailManagementTabs } from './use_streams_detail_management_tabs';
+import { StreamDetailDataQuality } from '../../../stream_data_quality';
+import { StreamDetailSchemaEditor } from '../stream_detail_schema_editor';
+import { StreamDetailAttachments } from '../../../stream_detail_attachments';
+import { ClassicAdvancedView } from './advanced_view/classic_advanced_view';
 
 const classicStreamManagementSubTabs = [
   'overview',

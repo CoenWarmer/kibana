@@ -11,11 +11,11 @@ import { i18n } from '@kbn/i18n';
 import {
   useStreamEnrichmentSelector,
   useStreamEnrichmentEvents,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from './state_management/stream_enrichment_state_machine';
 import {
   selectIsInteractiveMode,
   selectHasAnyErrors,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from './state_management/stream_enrichment_state_machine/selectors';
 
 export const EditModeToggle = () => {
   const isInteractiveMode = useStreamEnrichmentSelector(selectIsInteractiveMode);

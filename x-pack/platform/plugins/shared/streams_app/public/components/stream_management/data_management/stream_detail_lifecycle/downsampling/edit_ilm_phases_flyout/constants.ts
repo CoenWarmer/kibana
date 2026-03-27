@@ -7,8 +7,8 @@
 
 import { i18n } from '@kbn/i18n';
 import type { PhaseName } from '@kbn/streams-schema';
-import type { TimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-export { TIME_UNIT_OPTIONS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+import type { TimeUnit } from './form';
+export { TIME_UNIT_OPTIONS } from '../shared';
 
 export const ILM_PHASE_ORDER: PhaseName[] = ['hot', 'warm', 'cold', 'frozen', 'delete'];
 

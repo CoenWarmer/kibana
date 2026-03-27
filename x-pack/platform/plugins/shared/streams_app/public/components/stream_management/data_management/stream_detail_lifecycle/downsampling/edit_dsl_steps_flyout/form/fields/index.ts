@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export { AfterField } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/fields/after_field';
-export { FixedIntervalField } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/fields/fixed_interval_field';
+export { AfterField } from './after_field';
+export { FixedIntervalField } from './fixed_interval_field';

@@ -8,8 +8,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
-import { RetentionCard } from '../../../../../../data_management/stream_detail_lifecycle/failure_store/cards/retention_card';
-import { useFailureStoreConfig } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
+import { RetentionCard } from './retention_card';
+import { useFailureStoreConfig } from '../../hooks/use_failure_store_config';
 
 // Mock discover link hook with a simpler implementation
 jest.mock('../../hooks/use_failure_store_redirect_link', () => ({

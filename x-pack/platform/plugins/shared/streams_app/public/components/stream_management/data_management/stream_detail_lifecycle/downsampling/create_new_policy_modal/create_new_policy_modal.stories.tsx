@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React, { useEffect } from 'react';
 import { EuiOverlayMask } from '@elastic/eui';
-import { CreatePolicyModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/create_new_policy_modal/create_new_policy_modal';
+import { CreatePolicyModal } from './create_new_policy_modal';
 
 const meta: Meta<typeof CreatePolicyModal> = {
   component: CreatePolicyModal,

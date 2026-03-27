@@ -9,9 +9,9 @@ import { EuiText, EuiCallOut, EuiSpacer } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/css';
 import React from 'react';
-import { GenerateSuggestionButton } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import type { AIFeatures } from '../../../../../../hooks/use_ai_features';
-import type { PartitionSuggestionReason } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+import { GenerateSuggestionButton } from './generate_suggestions_button';
+import type { AIFeatures } from '../../../../../hooks/use_ai_features';
+import type { PartitionSuggestionReason } from './use_review_suggestions_form';
 
 export function NoSuggestionsCallout({
   aiFeatures,

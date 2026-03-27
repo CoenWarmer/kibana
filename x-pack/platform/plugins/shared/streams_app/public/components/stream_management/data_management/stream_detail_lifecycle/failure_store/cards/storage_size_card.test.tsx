@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { StorageSizeCard } from '../../../../../../data_management/stream_detail_lifecycle/failure_store/cards/storage_size_card';
+import { StorageSizeCard } from './storage_size_card';
 
 describe('StorageSizeCard', () => {
   it('renders formatted size and documents when stats + privileges present', () => {

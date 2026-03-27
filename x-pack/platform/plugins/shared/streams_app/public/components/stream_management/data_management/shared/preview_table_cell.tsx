@@ -18,8 +18,8 @@ import React, { useContext, memo, useEffect } from 'react';
 import type { CoreStart } from '@kbn/core/public';
 import type { SharePluginStart } from '@kbn/share-plugin/public';
 import type { FieldFormatsStart } from '@kbn/field-formats-plugin/public';
-import { RowSelectionContext, SUMMARY_COLUMN_ID } from '../../../../data_management/shared/preview_table';
-import type { PreviewTableMode } from '../../../../data_management/shared/preview_table';
+import { RowSelectionContext, SUMMARY_COLUMN_ID } from './preview_table';
+import type { PreviewTableMode } from './preview_table';
 
 const emptyCell = <>&nbsp;</>;
 const EMPTY_IGNORED_FIELDS: IgnoredField[] = [];

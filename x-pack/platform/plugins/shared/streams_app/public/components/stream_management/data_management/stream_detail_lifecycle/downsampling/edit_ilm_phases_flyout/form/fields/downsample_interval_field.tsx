@@ -17,12 +17,12 @@ import {
 } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { EuiFieldNumber, EuiFlexGroup, EuiFlexItem, EuiFormRow, EuiSelect } from '@elastic/eui';
 
-import type { DownsamplePhase, PreservedTimeUnit, TimeUnit } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { DOWNSAMPLE_PHASES } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
-import { getRelativeBoundsInMs } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
-import { useOnFieldErrorsChange } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/error_tracking';
-import { getPhaseDurationMs } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/get_phase_duration_ms';
+import type { DownsamplePhase, PreservedTimeUnit, TimeUnit } from '../types';
+import { DOWNSAMPLE_PHASES } from '../types';
+import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../shared';
+import { getRelativeBoundsInMs } from '../utils';
+import { useOnFieldErrorsChange } from '../error_tracking';
+import { getPhaseDurationMs } from '../get_phase_duration_ms';
 
 export interface DownsampleIntervalFieldProps {
   phaseName: PhaseName;

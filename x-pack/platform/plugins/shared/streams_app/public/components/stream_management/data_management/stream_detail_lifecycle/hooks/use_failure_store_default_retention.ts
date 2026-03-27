@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
 
 export function useFailureStoreDefaultRetention(shouldFetch: boolean) {
   const {

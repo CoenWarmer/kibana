@@ -6,8 +6,8 @@
  */
 
 import type { FieldDefinition, Streams } from '@kbn/streams-schema';
-import { getUpsertFields } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import type { StreamEnrichmentContextType } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+import { getUpsertFields } from './utils';
+import type { StreamEnrichmentContextType } from './types';
 
 describe('stream_enrichment_state_machine/utils', () => {
   describe('getUpsertFields()', () => {

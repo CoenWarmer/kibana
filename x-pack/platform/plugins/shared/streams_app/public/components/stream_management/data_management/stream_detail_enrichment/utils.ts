@@ -45,13 +45,13 @@ import {
 import type { IngestUpsertRequest } from '@kbn/streams-schema';
 import { isEmpty, mapValues, omit } from 'lodash';
 import { PRIORITIZED_CONTENT_FIELDS, getDefaultTextField } from '@kbn/streams-plugin/common';
-import type { EnrichmentDataSource } from '../../../../../../common/url_schema';
-import type { StreamEnrichmentContextType } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
-import { configDrivenProcessors } from '../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven';
+import type { EnrichmentDataSource } from '../../../../../common/url_schema';
+import type { StreamEnrichmentContextType } from './state_management/stream_enrichment_state_machine/types';
+import { configDrivenProcessors } from './steps/blocks/action/config_driven';
 import type {
   ConfigDrivenProcessorType,
   ConfigDrivenProcessors,
-} from '../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
+} from './steps/blocks/action/config_driven/types';
 import type {
   ConcatFormState,
   ConditionBlockFormState,
@@ -75,7 +75,7 @@ import type {
   SortFormState,
   TrimFormState,
   UppercaseFormState,
-} from '../../../../data_management/stream_detail_enrichment/types';
+} from './types';
 
 /**
  * These are processor types with specialised UI. Other processor types are handled by a generic config-driven UI.

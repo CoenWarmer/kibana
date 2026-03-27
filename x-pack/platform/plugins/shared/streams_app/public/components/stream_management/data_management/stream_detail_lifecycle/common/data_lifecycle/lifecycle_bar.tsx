@@ -8,8 +8,8 @@
 import React from 'react';
 import { EuiFlexGrid, EuiFlexItem, EuiPanel, EuiSpacer, EuiText, useEuiTheme } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import type { LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import { LifecyclePhase as LifecyclePhaseComponent } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_phase';
+import type { LifecyclePhase } from './lifecycle_types';
+import { LifecyclePhase as LifecyclePhaseComponent } from './lifecycle_phase';
 
 export interface LifecycleBarProps {
   phases: LifecyclePhase[];

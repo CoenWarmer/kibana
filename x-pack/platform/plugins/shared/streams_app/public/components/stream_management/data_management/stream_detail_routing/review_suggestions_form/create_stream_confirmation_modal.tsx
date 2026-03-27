@@ -24,14 +24,14 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { ConditionPanel } from '../../../../../data_management/shared';
-import { buildRequestPreviewCodeContent } from '../../../../../data_management/shared/utils';
+import { ConditionPanel } from '../../shared';
+import { buildRequestPreviewCodeContent } from '../../shared/utils';
 import {
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { buildRoutingForkRequestPayload } from '../../../../../data_management/stream_detail_routing/utils';
-import { type PartitionSuggestion } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+} from '../state_management/stream_routing_state_machine';
+import { buildRoutingForkRequestPayload } from '../utils';
+import { type PartitionSuggestion } from './use_review_suggestions_form';
 
 export function CreateStreamConfirmationModal({
   partition,

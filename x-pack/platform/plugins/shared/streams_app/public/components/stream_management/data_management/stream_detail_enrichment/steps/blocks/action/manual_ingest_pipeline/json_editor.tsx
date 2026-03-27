@@ -17,8 +17,8 @@ import type { ElasticsearchProcessorType } from '@kbn/streams-schema';
 import { elasticsearchProcessorTypes } from '@kbn/streams-schema';
 import { FormattedMessage } from '@kbn/i18n-react';
 import type { ProcessorSuggestionsResponse } from '@kbn/streams-plugin/common';
-import { useKibana } from '../../../../../../../../../hooks/use_kibana';
-import type { ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
+import type { ProcessorFormState } from '../../../../types';
 import {
   serializeXJson,
   parseXJsonOrString,
@@ -28,7 +28,7 @@ import {
   shouldSuggestProcessorKey,
   fetchProcessorSuggestions,
   detectProcessorContext,
-} from '../../../../../../../../data_management/stream_detail_enrichment/helpers';
+} from '../../../../helpers';
 
 export const JsonEditor = () => {
   const { signal } = useAbortController();

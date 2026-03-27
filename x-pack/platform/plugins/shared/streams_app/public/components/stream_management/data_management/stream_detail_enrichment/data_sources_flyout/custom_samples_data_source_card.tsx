@@ -10,15 +10,15 @@ import { EuiSpacer, EuiFormRow } from '@elastic/eui';
 import { CodeEditor } from '@kbn/code-editor';
 import { isSchema } from '@kbn/streams-schema';
 import { useDebounceFn } from '@kbn/react-hooks';
-import { customSamplesDataSourceDocumentsSchema } from '../../../../../../../common/url_schema';
-import type { DataSourceActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { useDataSourceSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { CustomSamplesDataSourceWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/types';
-import { deserializeJson, serializeXJson } from '../../../../../data_management/stream_detail_enrichment/helpers';
-import { DataSourceCard } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
-import { NameField } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/name_field';
-import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
-import { dataSourceConverter } from '../../../../../data_management/stream_detail_enrichment/utils';
+import { customSamplesDataSourceDocumentsSchema } from '../../../../../../common/url_schema';
+import type { DataSourceActorRef } from '../state_management/data_source_state_machine';
+import { useDataSourceSelector } from '../state_management/data_source_state_machine';
+import type { CustomSamplesDataSourceWithUIAttributes } from '../types';
+import { deserializeJson, serializeXJson } from '../helpers';
+import { DataSourceCard } from './data_source_card';
+import { NameField } from './name_field';
+import { DATA_SOURCES_I18N } from './translations';
+import { dataSourceConverter } from '../utils';
 
 const debounceOptions = { wait: 500 };
 interface CustomSamplesDataSourceCardProps {

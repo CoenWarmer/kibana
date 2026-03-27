@@ -12,18 +12,18 @@ import type { Streams } from '@kbn/streams-schema';
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 import React, { useEffect } from 'react';
 import { usePerformanceContext } from '@kbn/ebt-tools';
-import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
-import { useKbnUrlStateStorageFromRouterContext } from '../../../../../util/kbn_url_state_context';
-import { StreamsAppContextProvider } from '../../../../streams_app_context_provider';
-import { ManagementBottomBar } from '../../../../data_management/management_bottom_bar';
-import { getDefinitionFields } from '../../../../data_management/schema_editor/hooks/use_schema_fields';
-import { SchemaChangesReviewModal, getChanges } from '../../../../data_management/schema_editor/schema_changes_review_modal';
-import type { SchemaEditorField } from '../../../../data_management/schema_editor/types';
-import { isFieldUncommitted } from '../../../../data_management/schema_editor/utils';
-import { EditModeToggle } from '../../../../data_management/stream_detail_enrichment/edit_mode_toggle';
-import { SimulationPlayground } from '../../../../data_management/stream_detail_enrichment/simulation_playground';
-import { stepUnderEditSelector } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
-import { selectFieldsInSamples } from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { getStreamTypeFromDefinition } from '../../../../util/get_stream_type_from_definition';
+import { useKbnUrlStateStorageFromRouterContext } from '../../../../util/kbn_url_state_context';
+import { StreamsAppContextProvider } from '../../../streams_app_context_provider';
+import { ManagementBottomBar } from '../management_bottom_bar';
+import { getDefinitionFields } from '../schema_editor/hooks/use_schema_fields';
+import { SchemaChangesReviewModal, getChanges } from '../schema_editor/schema_changes_review_modal';
+import type { SchemaEditorField } from '../schema_editor/types';
+import { isFieldUncommitted } from '../schema_editor/utils';
+import { EditModeToggle } from './edit_mode_toggle';
+import { SimulationPlayground } from './simulation_playground';
+import { stepUnderEditSelector } from './state_management/interactive_mode_machine/selectors';
+import { selectFieldsInSamples } from './state_management/simulation_state_machine/selectors';
 import {
   StreamEnrichmentContextProvider,
   useStreamEnrichmentSelector,
@@ -31,21 +31,21 @@ import {
   useStreamEnrichmentEvents,
   useSimulatorSelector,
   useOptionalInteractiveModeSelector,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from './state_management/stream_enrichment_state_machine';
 import {
   selectIsInteractiveMode,
   selectStreamType,
   selectHasAnyErrors,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { StepsEditor } from '../../../../data_management/stream_detail_enrichment/steps/steps_editor';
-import { RunSimulationButton } from '../../../../data_management/stream_detail_enrichment/yaml_mode/run_simulation_button';
-import { YamlEditorWrapper } from '../../../../data_management/stream_detail_enrichment/yaml_mode/yaml_editor_wrapper';
-import { useRequestPreviewFlyoutState } from '../../../../data_management/request_preview_flyout/use_request_preview_flyout_state';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { buildUpsertStreamRequestPayload } from '../../../../data_management/stream_detail_enrichment/utils';
-import { getUpsertFields } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { RequestPreviewFlyout } from '../../../../data_management/request_preview_flyout';
-import { installDevConsoleHelpers, cleanupDevConsoleHelpers } from '../../../../data_management/stream_detail_enrichment/dev_console_helpers';
+} from './state_management/stream_enrichment_state_machine/selectors';
+import { StepsEditor } from './steps/steps_editor';
+import { RunSimulationButton } from './yaml_mode/run_simulation_button';
+import { YamlEditorWrapper } from './yaml_mode/yaml_editor_wrapper';
+import { useRequestPreviewFlyoutState } from '../request_preview_flyout/use_request_preview_flyout_state';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { buildUpsertStreamRequestPayload } from './utils';
+import { getUpsertFields } from './state_management/stream_enrichment_state_machine/utils';
+import { RequestPreviewFlyout } from '../request_preview_flyout';
+import { installDevConsoleHelpers, cleanupDevConsoleHelpers } from './dev_console_helpers';
 
 const MemoSimulationPlayground = React.memo(SimulationPlayground);
 

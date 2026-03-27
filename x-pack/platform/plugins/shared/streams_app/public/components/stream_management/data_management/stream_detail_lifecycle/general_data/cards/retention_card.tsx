@@ -16,9 +16,9 @@ import {
 } from '@kbn/streams-schema';
 import React from 'react';
 import { EuiButton } from '@elastic/eui';
-import { BaseMetricCard } from '../../../../../../data_management/stream_detail_lifecycle/common/base_metric_card';
-import { getTimeSizeAndUnitLabel } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
-import { IlmLink } from '../../../../../../data_management/stream_detail_lifecycle/general_data/ilm_link';
+import { BaseMetricCard } from '../../common/base_metric_card';
+import { getTimeSizeAndUnitLabel } from '../../helpers/format_size_units';
+import { IlmLink } from '../ilm_link';
 
 export const RetentionCard = ({
   definition,

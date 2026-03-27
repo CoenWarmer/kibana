@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { PreservedTimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
+import type { PreservedTimeUnit } from './types';
+import { toMilliseconds } from './utils';
 
 interface FormWithFields {
   getFields: () => Record<string, { value: unknown } | undefined>;

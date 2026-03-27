@@ -6,8 +6,8 @@
  */
 
 import type { FormSchema } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { DOWNSAMPLE_PHASES, type DownsamplePhase } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from './types';
+import { DOWNSAMPLE_PHASES, type DownsamplePhase } from './types';
 import {
   downsampleIntervalMultipleOfPreviousOne,
   ifExistsNumberGreaterThanZero,
@@ -18,7 +18,7 @@ import {
   requiredDownsampleIntervalValue,
   requiredMinAgeValue,
   requiredSearchableSnapshotRepository,
-} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/validations';
+} from './validations';
 
 const getDownsampleFieldsToValidateOnChange = (
   phase: DownsamplePhase,

@@ -10,18 +10,18 @@ import { EuiFlexGroup, EuiFlexItem, EuiIcon, EuiIconTip, EuiTitle, EuiSpacer } f
 import { i18n } from '@kbn/i18n';
 import { withSuspense } from '@kbn/shared-ux-utility';
 import type { FailureStoreFormData } from '@kbn/failure-store-modal';
-import { NoFailureStorePanel } from '../../../../../data_management/stream_detail_lifecycle/failure_store/no_failure_store_panel';
-import { FailureStoreInfo } from '../../../../../data_management/stream_detail_lifecycle/failure_store/failure_store_info';
-import { useUpdateFailureStore } from '../../../../../../hooks/use_update_failure_store';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { NoPermissionBanner } from '../../../../../data_management/stream_detail_lifecycle/failure_store/no_permission_banner';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
-import type { useDataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { getFormattedError } from '../../../../../../util/errors';
+import { NoFailureStorePanel } from './no_failure_store_panel';
+import { FailureStoreInfo } from './failure_store_info';
+import { useUpdateFailureStore } from '../../../../../hooks/use_update_failure_store';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { NoPermissionBanner } from './no_permission_banner';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import type { useDataStreamStats } from '../hooks/use_data_stream_stats';
+import { getFormattedError } from '../../../../../util/errors';
 import {
   transformFailureStoreConfig,
   useFailureStoreConfig,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
+} from '../hooks/use_failure_store_config';
 
 // Lazy load the FailureStoreModal to reduce bundle size
 const LazyFailureStoreModal = React.lazy(async () => ({

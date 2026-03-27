@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { PreservedTimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
-import { formatMillisecondsInUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/duration_utils';
-import { getTimeSizeAndUnitLabel } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
+import type { PreservedTimeUnit } from './time_unit_types';
+import { formatMillisecondsInUnit } from './duration_utils';
+import { getTimeSizeAndUnitLabel } from '../../helpers/format_size_units';
 
 export const getBoundsHelpTextValues = ({
   lowerBoundMs,

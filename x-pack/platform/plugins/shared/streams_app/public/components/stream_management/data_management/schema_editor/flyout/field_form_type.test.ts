@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { getFieldTypeOptions } from '../../../../../data_management/schema_editor/flyout/field_form_type';
-import { FIELD_TYPE_MAP } from '../../../../../data_management/schema_editor/constants';
+import { getFieldTypeOptions } from './field_form_type';
+import { FIELD_TYPE_MAP } from '../constants';
 
 describe('getFieldTypeOptions', () => {
   describe('alphabetical sorting', () => {

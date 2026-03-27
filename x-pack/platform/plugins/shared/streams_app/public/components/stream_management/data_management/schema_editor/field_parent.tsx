@@ -7,7 +7,7 @@
 
 import { EuiBadge, EuiLink } from '@elastic/eui';
 import React from 'react';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
 
 export const FieldParent = ({
   parent,

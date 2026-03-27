@@ -24,13 +24,13 @@ import type { IlmPolicyPhases, PhaseName, Streams } from '@kbn/streams-schema';
 import { capitalize } from 'lodash';
 import moment from 'moment';
 import React, { useMemo } from 'react';
-import { orderIlmPhases } from '../../../../../data_management/stream_detail_lifecycle/helpers/helpers';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import type { StreamAggregations } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import { useIngestionRate, useIngestionRatePerTier } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
-import type { CalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
+import { orderIlmPhases } from '../helpers/helpers';
+import { formatBytes } from '../helpers/format_bytes';
+import { useIlmPhasesColorAndDescription } from '../hooks/use_ilm_phases_color_and_description';
+import type { StreamAggregations } from '../hooks/use_ingestion_rate';
+import { useIngestionRate, useIngestionRatePerTier } from '../hooks/use_ingestion_rate';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import type { CalculatedStats } from '../helpers/get_calculated_stats';
 
 interface IngestionRateBuckets {
   start: moment.Moment;

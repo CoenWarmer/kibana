@@ -7,7 +7,7 @@
 
 import { useAbortController } from '@kbn/react-hooks';
 import type { StreamQuery } from '@kbn/streams-schema';
-import { useKibana } from './use_kibana';
+import { useKibana } from '../use_kibana';
 
 interface SignificantEventsApiBulkOperationCreate {
   index: StreamQuery;

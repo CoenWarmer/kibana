@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { TIME_UNIT_OPTIONS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+export { TIME_UNIT_OPTIONS } from '../shared';

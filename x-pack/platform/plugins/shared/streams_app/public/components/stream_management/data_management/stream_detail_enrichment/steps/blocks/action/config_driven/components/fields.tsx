@@ -8,15 +8,15 @@
 import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
 import { configDrivenProcessors } from '..';
-import type { ConfigDrivenProcessorType } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
-import { ProcessorFieldSelector } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { TextField } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/components/text_field';
-import { BooleanField } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/components/boolean_field';
-import { ArrayField } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/components/array_field';
-import type { FieldConfiguration } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
-import { ProcessorConditionEditor } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import type { ConfigDrivenProcessorType } from '../types';
+import { ProcessorFieldSelector } from '../../processor_field_selector';
+import { FieldsAccordion } from '../../optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../ignore_toggles';
+import { TextField } from './text_field';
+import { BooleanField } from './boolean_field';
+import { ArrayField } from './array_field';
+import type { FieldConfiguration } from '../types';
+import { ProcessorConditionEditor } from '../../processor_condition_editor';
 
 export const ConfigDrivenProcessorFields = ({ type }: { type: ConfigDrivenProcessorType }) => {
   const processor = configDrivenProcessors[type];

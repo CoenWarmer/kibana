@@ -20,25 +20,25 @@ import { isCondition } from '@kbn/streamlang';
 import { getSegments, MAX_NESTING_LEVEL, type SampleDocument } from '@kbn/streams-schema';
 import { isEmpty } from 'lodash';
 import React, { useMemo, useState, useCallback } from 'react';
-import { useDocViewerSetup } from '../../../../../hooks/use_doc_viewer_setup';
-import { useDocumentExpansion } from '../../../../../hooks/use_document_expansion';
-import { useStreamDataViewFieldTypes } from '../../../../../hooks/use_stream_data_view_field_types';
-import { AssetImage } from '../../../../asset_image';
-import { StreamsAppSearchBar } from '../../../../streams_app_search_bar';
-import { MemoPreviewTable, PreviewFlyout, type PreviewTableMode } from '../../../../data_management/shared';
-import { buildCellActions } from '../../../../data_management/stream_detail_routing/cell_actions';
-import { DocumentMatchFilterControls } from '../../../../data_management/stream_detail_routing/document_match_filter_controls';
+import { useDocViewerSetup } from '../../../../hooks/use_doc_viewer_setup';
+import { useDocumentExpansion } from '../../../../hooks/use_document_expansion';
+import { useStreamDataViewFieldTypes } from '../../../../hooks/use_stream_data_view_field_types';
+import { AssetImage } from '../../../asset_image';
+import { StreamsAppSearchBar } from '../../../streams_app_search_bar';
+import { MemoPreviewTable, PreviewFlyout, type PreviewTableMode } from '../shared';
+import { buildCellActions } from './cell_actions';
+import { DocumentMatchFilterControls } from './document_match_filter_controls';
 import {
   selectPreviewDocuments,
   useStreamRoutingEvents,
   useStreamSamplesSelector,
   useStreamsRoutingSelector,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { processCondition, toDataTableRecordWithIndex } from '../../../../data_management/stream_detail_routing/utils';
-import { useQueryStreamHint } from '../../../../../hooks/use_query_stream_hint';
-import { QueryStreamHintCallout } from '../../../../query_streams/query_stream_hint_callout';
-import { RowSelectionContext } from '../../../../data_management/shared/preview_table';
-import { useQueryStreamCreation } from '../../../../data_management/stream_detail_routing/query_stream_creation_context';
+} from './state_management/stream_routing_state_machine';
+import { processCondition, toDataTableRecordWithIndex } from './utils';
+import { useQueryStreamHint } from '../../../../hooks/use_query_stream_hint';
+import { QueryStreamHintCallout } from '../../../query_streams/query_stream_hint_callout';
+import { RowSelectionContext } from '../shared/preview_table';
+import { useQueryStreamCreation } from './query_stream_creation_context';
 
 export function PreviewPanel() {
   const samplesSnapshot = useStreamSamplesSelector((snapshot) => snapshot);

@@ -10,8 +10,8 @@ import { useFormContext } from 'react-hook-form';
 import { EuiCode, EuiFieldText, EuiFormRow } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
-import { ToggleField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/toggle_field';
-import type { ExtractBooleanFields, ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { ToggleField } from '../toggle_field';
+import type { ExtractBooleanFields, ProcessorFormState } from '../../../../types';
 
 export const OverrideField = () => {
   return (

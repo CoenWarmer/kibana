@@ -10,9 +10,9 @@ import { useFormContext } from 'react-hook-form';
 import { EuiFieldText, EuiFormRow } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { isAlwaysCondition } from '@kbn/streamlang';
-import type { ConvertFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
-import { isStepUnderEdit } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import { useInteractiveModeSelector } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import type { ConvertFormState } from '../../../../types';
+import { isStepUnderEdit } from '../../../../state_management/steps_state_machine';
+import { useInteractiveModeSelector } from '../../../../state_management/stream_enrichment_state_machine';
 
 export const TargetFieldSelector = () => {
   const {

@@ -11,11 +11,11 @@ import { FormattedMessage } from '@kbn/i18n-react';
 import { EuiSpacer, EuiFieldText, EuiFormRow, EuiCode } from '@elastic/eui';
 import { useController } from 'react-hook-form';
 import type { ReplaceProcessor } from '@kbn/streamlang';
-import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { ReplaceTargetFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/replace/target_field';
+import { ProcessorFieldSelector } from '../processor_field_selector';
+import { FieldsAccordion } from '../optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../ignore_toggles';
+import { ProcessorConditionEditor } from '../processor_condition_editor';
+import { ReplaceTargetFieldSelector } from './target_field';
 
 export type ReplaceFormState = ReplaceProcessor;
 

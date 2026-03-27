@@ -11,13 +11,13 @@ import { getPlaceholderFor } from '@kbn/xstate-utils';
 import { isEmpty } from 'lodash';
 import type { ActorRefFrom, MachineImplementationsFrom, SnapshotFrom } from 'xstate';
 import { assign, setup } from 'xstate';
-import type { MappedSchemaField } from '../../../../../../data_management/schema_editor/types';
-import { getValidSteps } from '../../../../../../data_management/stream_detail_enrichment/utils';
-import type { PreviewDocsFilterOption } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_documents_search';
+import type { MappedSchemaField } from '../../../schema_editor/types';
+import { getValidSteps } from '../../utils';
+import type { PreviewDocsFilterOption } from './simulation_documents_search';
 import {
   createSimulationRunFailureNotifier,
   createSimulationRunnerActor,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_runner_actor';
+} from './simulation_runner_actor';
 import type {
   SampleDocumentWithUIAttributes,
   Simulation,
@@ -25,8 +25,8 @@ import type {
   SimulationEvent,
   SimulationInput,
   SimulationMachineDeps,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import { getSchemaFieldsFromSimulation, mapField, stageDocOnlyOverride, unmapField } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/utils';
+} from './types';
+import { getSchemaFieldsFromSimulation, mapField, stageDocOnlyOverride, unmapField } from './utils';
 
 export type SimulationActorRef = ActorRefFrom<typeof simulationMachine>;
 export type SimulationActorSnapshot = SnapshotFrom<typeof simulationMachine>;

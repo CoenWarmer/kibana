@@ -8,7 +8,7 @@
 import React from 'react';
 import { EuiBadge, EuiToolTip } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import type { SchemaEditorField } from '../../../../data_management/schema_editor/types';
+import type { SchemaEditorField } from './types';
 
 const FIELD_RESULT_MAP = {
   created: {

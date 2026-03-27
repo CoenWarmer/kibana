@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { splitSizeAndUnits, toMillis } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
-import type { PreservedTimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
+import { splitSizeAndUnits, toMillis } from '../../helpers/format_size_units';
+import type { PreservedTimeUnit } from './time_unit_types';
 
 export interface DoubledDurationResult {
   value: string;

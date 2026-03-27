@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getStepIndexFromArrayItemPath } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
+import { getStepIndexFromArrayItemPath } from './utils';
 
 describe('streams DSL steps flyout utils', () => {
   describe('getStepIndexFromArrayItemPath()', () => {

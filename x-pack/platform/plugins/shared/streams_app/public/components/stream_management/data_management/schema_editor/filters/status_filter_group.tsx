@@ -9,12 +9,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { uniq } from 'lodash';
 import { i18n } from '@kbn/i18n';
 import type { EuiSelectableOption, EuiSelectableProps } from '@elastic/eui';
-import { FilterGroup } from '../../../../../data_management/schema_editor/filters/filter_group';
-import { FIELD_STATUS_MAP } from '../../../../../data_management/schema_editor/constants';
-import type { TControlsChangeHandler } from '../../../../../data_management/schema_editor/hooks/use_controls';
-import type { SchemaFieldStatus } from '../../../../../data_management/schema_editor/types';
-import { useSchemaEditorContext } from '../../../../../data_management/schema_editor/schema_editor_context';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
+import { FilterGroup } from './filter_group';
+import { FIELD_STATUS_MAP } from '../constants';
+import type { TControlsChangeHandler } from '../hooks/use_controls';
+import type { SchemaFieldStatus } from '../types';
+import { useSchemaEditorContext } from '../schema_editor_context';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
 
 const BUTTON_LABEL = i18n.translate(
   'xpack.streams.streamDetailSchemaEditor.fieldStatusFilterGroupButtonLabel',

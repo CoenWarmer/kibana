@@ -8,16 +8,16 @@
 import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { useEuiTheme } from '@elastic/eui';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import type { EnhancedFailureStoreStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import type { useFailureStoreConfig } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import { DataLifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_summary';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import type { EnhancedFailureStoreStats } from '../hooks/use_data_stream_stats';
+import type { useFailureStoreConfig } from '../hooks/use_failure_store_config';
+import { formatBytes } from '../helpers/format_bytes';
+import { useIlmPhasesColorAndDescription } from '../hooks/use_ilm_phases_color_and_description';
+import { DataLifecycleSummary } from '../common/data_lifecycle/data_lifecycle_summary';
 import {
   buildLifecyclePhases,
   type LifecyclePhase,
-} from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+} from '../common/data_lifecycle/lifecycle_types';
 
 interface FailureStoreSummaryProps {
   stats?: EnhancedFailureStoreStats;

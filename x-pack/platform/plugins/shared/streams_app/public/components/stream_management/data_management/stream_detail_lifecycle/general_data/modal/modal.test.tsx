@@ -10,11 +10,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Streams } from '@kbn/streams-schema';
 import type { IlmPolicy } from '@kbn/streams-schema';
-import { EditLifecycleModal } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/modal';
+import { EditLifecycleModal } from './modal';
 
 jest.mock('../../../../../hooks/use_kibana');
 
-import { useKibana } from '../../../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../hooks/use_kibana';
 
 const mockUseKibana = useKibana as jest.MockedFunction<typeof useKibana>;
 

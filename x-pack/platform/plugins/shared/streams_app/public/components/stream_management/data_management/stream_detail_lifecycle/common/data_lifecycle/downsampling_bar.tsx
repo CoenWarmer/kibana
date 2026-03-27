@@ -8,9 +8,9 @@
 import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiFlexGrid, EuiFlexItem, EuiPanel, EuiSpacer, EuiText, useEuiTheme } from '@elastic/eui';
-import { useDownsamplingColors } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_downsampling_colors';
-import type { DownsamplingSegment } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
-import { DownsamplingPhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_phase';
+import { useDownsamplingColors } from '../../hooks/use_downsampling_colors';
+import type { DownsamplingSegment } from './data_lifecycle_segments';
+import { DownsamplingPhase } from './downsampling_phase';
 
 const getDownsamplingLayout = (segments: DownsamplingSegment[]) => {
   const deleteIndex = segments.findIndex((segment) => segment.isDelete);

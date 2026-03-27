@@ -9,7 +9,7 @@ import React from 'react';
 import { FieldNameWithIcon } from '@kbn/react-field';
 import { i18n } from '@kbn/i18n';
 import { EuiFlexGroup, EuiFlexItem, EuiToken } from '@elastic/eui';
-import { FIELD_TYPE_MAP, type FieldTypeOption } from '../../../../data_management/schema_editor/constants';
+import { FIELD_TYPE_MAP, type FieldTypeOption } from './constants';
 
 export const FieldType = ({ type, aliasFor }: { type: FieldTypeOption; aliasFor?: string }) => {
   if (aliasFor) {

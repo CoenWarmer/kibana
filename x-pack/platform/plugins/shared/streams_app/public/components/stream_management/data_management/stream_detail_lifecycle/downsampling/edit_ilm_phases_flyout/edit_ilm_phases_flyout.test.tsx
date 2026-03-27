@@ -10,7 +10,7 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import { I18nProvider } from '@kbn/i18n-react';
 import type { IlmPolicyPhases, PhaseName } from '@kbn/streams-schema';
 import { isEqual } from 'lodash';
-import { EditIlmPhasesFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/edit_ilm_phases_flyout';
+import { EditIlmPhasesFlyout } from './edit_ilm_phases_flyout';
 
 jest.mock('../../hooks/use_ilm_phases_color_and_description', () => ({
   useIlmPhasesColorAndDescription: () => ({

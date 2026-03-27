@@ -16,20 +16,20 @@ import type {
 } from '@kbn/streamlang';
 import { GrokCollection, GrokCollectionProvider } from '@kbn/grok-ui';
 import type { Streams } from '@kbn/streams-schema';
-import type { EnrichmentDataSource } from '../../../../../../../../common/url_schema';
+import type { EnrichmentDataSource } from '../../../../../../../common/url_schema';
 import {
   streamEnrichmentMachine,
   createStreamEnrichmentMachineImplementations,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/stream_enrichment_state_machine';
-import type { StreamEnrichmentInput, StreamEnrichmentServiceDependencies } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+} from './stream_enrichment_state_machine';
+import type { StreamEnrichmentInput, StreamEnrichmentServiceDependencies } from './types';
 import type {
   PreviewDocsFilterOption,
   SimulationActorSnapshot,
   SimulationContext,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import type { MappedSchemaField, SchemaField } from '../../../../../../data_management/schema_editor/types';
-import type { InteractiveModeSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import type { YamlModeSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine';
+} from '../simulation_state_machine';
+import type { MappedSchemaField, SchemaField } from '../../../schema_editor/types';
+import type { InteractiveModeSnapshot } from '../interactive_mode_machine';
+import type { YamlModeSnapshot } from '../yaml_mode_machine';
 
 const consoleInspector = createConsoleInspector();
 

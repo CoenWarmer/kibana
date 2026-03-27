@@ -7,7 +7,7 @@
 
 import createContainer from 'constate';
 
-import type { SchemaEditorProps } from '../../../../data_management/schema_editor/types';
+import type { SchemaEditorProps } from './types';
 
 const useSchemaEditor = (props: SchemaEditorProps) => props;
 

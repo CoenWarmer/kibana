@@ -10,9 +10,9 @@ import React, { useCallback, useState } from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { useAbortController } from '@kbn/react-hooks';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { StreamDeleteModal } from '../../../../../stream_delete_modal';
-import { Row } from '../../../../../data_management/stream_detail_management/advanced_view/row';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { StreamDeleteModal } from '../../../../stream_delete_modal';
+import { Row } from './row';
 
 export function DeleteStreamPanel({ definition }: { definition: Streams.all.GetResponse }) {
   const {

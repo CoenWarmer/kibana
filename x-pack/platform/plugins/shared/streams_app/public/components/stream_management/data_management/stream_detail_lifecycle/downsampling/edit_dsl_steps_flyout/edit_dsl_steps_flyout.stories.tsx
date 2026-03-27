@@ -10,8 +10,8 @@ import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiSpacer } from '@elastic/eui';
 import type { IngestStreamLifecycleDSL } from '@kbn/streams-schema';
-import { EditDslStepsFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
+import { EditDslStepsFlyout } from './edit_dsl_steps_flyout';
+import { MAX_DOWNSAMPLE_STEPS } from './form';
 
 const meta: Meta<typeof EditDslStepsFlyout> = {
   component: EditDslStepsFlyout,

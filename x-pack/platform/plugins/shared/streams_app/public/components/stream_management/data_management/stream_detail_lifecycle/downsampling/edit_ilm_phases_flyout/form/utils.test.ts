@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getRelativeBoundsInMs } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
+import { getRelativeBoundsInMs } from './utils';
 
 describe('edit_ilm_phases_flyout/form/utils', () => {
   describe('getRelativeBoundsInMs()', () => {

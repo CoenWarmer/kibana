@@ -19,17 +19,17 @@ import type {
   SchemaField,
   TypedMappedSchemaField,
   UnmappedSchemaField,
-} from '../../../../../../data_management/schema_editor/types';
-import { isSchemaFieldTyped } from '../../../../../../data_management/schema_editor/types';
-import { convertToFieldDefinitionConfig } from '../../../../../../data_management/schema_editor/utils';
-import { collectDescendantStepIds } from '../../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import type { PreviewDocsFilterOption } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_documents_search';
+} from '../../../schema_editor/types';
+import { isSchemaFieldTyped } from '../../../schema_editor/types';
+import { convertToFieldDefinitionConfig } from '../../../schema_editor/utils';
+import { collectDescendantStepIds } from '../utils';
+import type { PreviewDocsFilterOption } from './simulation_documents_search';
 import type {
   DetectedField,
   SampleDocumentWithUIAttributes,
   Simulation,
   SimulationContext,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+} from './types';
 
 export function getSourceField(
   processor: StreamlangProcessorDefinitionWithUIAttributes

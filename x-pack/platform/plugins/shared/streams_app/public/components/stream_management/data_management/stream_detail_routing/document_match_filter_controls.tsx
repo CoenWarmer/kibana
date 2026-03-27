@@ -14,11 +14,11 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React, { useCallback } from 'react';
-import { getPercentageFormatter } from '../../../../../util/formatters';
+import { getPercentageFormatter } from '../../../../util/formatters';
 import {
   useStreamSamplesSelector,
   type DocumentMatchFilterOptions,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+} from './state_management/stream_routing_state_machine';
 
 export interface DocumentMatchFilterControlsProps {
   onFilterChange: (filter: DocumentMatchFilterOptions) => void;

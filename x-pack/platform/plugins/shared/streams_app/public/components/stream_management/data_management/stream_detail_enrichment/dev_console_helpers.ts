@@ -6,12 +6,12 @@
  */
 
 import { copyToClipboard } from '@elastic/eui';
-import type { InteractiveModeSnapshot } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import type { SimulationActorSnapshot } from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import type { InteractiveModeSnapshot } from './state_management/interactive_mode_machine';
+import type { SimulationActorSnapshot } from './state_management/simulation_state_machine';
 import {
   selectPreviewRecords,
   selectOriginalPreviewRecords,
-} from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+} from './state_management/simulation_state_machine/selectors';
 
 /**
  * Type of suggestion that can be copied

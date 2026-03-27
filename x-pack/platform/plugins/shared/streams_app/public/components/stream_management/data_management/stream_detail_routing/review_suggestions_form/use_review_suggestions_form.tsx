@@ -12,12 +12,12 @@ import { isRequestAbortedError } from '@kbn/server-route-repository-client';
 import { lastValueFrom } from 'rxjs';
 import { isEmpty } from 'lodash';
 import useUpdateEffect from 'react-use/lib/useUpdateEffect';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useFetchErrorToast } from '../../../../../../hooks/use_fetch_error_toast';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useFetchErrorToast } from '../../../../../hooks/use_fetch_error_toast';
 import {
   useStreamsRoutingActorRef,
   useStreamsRoutingSelector,
-} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+} from '../state_management/stream_routing_state_machine';
 
 export interface FetchSuggestedPartitionsParams {
   streamName: string;

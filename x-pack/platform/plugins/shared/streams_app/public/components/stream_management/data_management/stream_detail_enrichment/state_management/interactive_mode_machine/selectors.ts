@@ -7,8 +7,8 @@
 
 import { isActionBlock } from '@kbn/streamlang';
 import { createSelector } from 'reselect';
-import { isStepUnderEdit } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import type { InteractiveModeContext } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
+import { isStepUnderEdit } from '../steps_state_machine';
+import type { InteractiveModeContext } from './types';
 
 /**
  * Selects the processor marked as the draft processor.

@@ -8,12 +8,12 @@ import { EuiFlexGroup, EuiFlexItem, EuiSuperSelect } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React, { useEffect, useMemo } from 'react';
 import { getRegularEcsField } from '@kbn/streams-schema';
-import { EcsRecommendation } from '../../../../../data_management/schema_editor/flyout/ecs_recommendation';
-import { FieldType } from '../../../../../data_management/schema_editor/field_type';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import type { FieldTypeOption } from '../../../../../data_management/schema_editor/constants';
-import { EMPTY_CONTENT, FIELD_TYPE_MAP } from '../../../../../data_management/schema_editor/constants';
-import type { MappedSchemaField, SchemaField } from '../../../../../data_management/schema_editor/types';
+import { EcsRecommendation } from './ecs_recommendation';
+import { FieldType } from '../field_type';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import type { FieldTypeOption } from '../constants';
+import { EMPTY_CONTENT, FIELD_TYPE_MAP } from '../constants';
+import type { MappedSchemaField, SchemaField } from '../types';
 
 /**
  * Returns a filtered and alphabetically sorted (by display label) list of field type options.

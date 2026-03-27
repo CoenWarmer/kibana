@@ -8,7 +8,7 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { EuiButtonEmpty } from '@elastic/eui';
-import { IlmPhaseSelect } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+import { IlmPhaseSelect } from './ilm_phase_select';
 
 jest.mock('../../hooks/use_ilm_phases_color_and_description', () => ({
   useIlmPhasesColorAndDescription: () => ({

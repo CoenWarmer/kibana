@@ -34,10 +34,10 @@ import {
   parseInterval,
   toMilliseconds,
   useDslStepsFlyoutTabErrors,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import { DslStepsFlyoutArrayView } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections';
-import { useStyles } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
-import type { EditDslStepsFlyoutChangeMeta, EditDslStepsFlyoutProps } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/types';
+} from './form';
+import { DslStepsFlyoutArrayView } from './sections';
+import { useStyles } from './use_styles';
+import type { EditDslStepsFlyoutChangeMeta, EditDslStepsFlyoutProps } from './types';
 
 const FragmentFormWrapper = ({ children }: React.PropsWithChildren) => <>{children}</>;
 

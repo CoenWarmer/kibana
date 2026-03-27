@@ -9,8 +9,8 @@ import { createSelector } from 'reselect';
 import { flattenObject } from '@kbn/object-utils';
 import type { FlattenRecord } from '@kbn/streams-schema';
 import { isEqual } from 'lodash';
-import type { StreamRoutingContext } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/types';
-import type { RoutingSamplesContext } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
+import type { StreamRoutingContext } from './types';
+import type { RoutingSamplesContext } from './routing_samples_state_machine';
 
 /**
  * Selects the set of dotted fields that are not supported by the current simulation.

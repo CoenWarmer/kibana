@@ -10,7 +10,7 @@ import type {
   FieldDefinitionConfigAdvancedParameters,
   Streams,
 } from '@kbn/streams-schema';
-import type { TableColumnName } from '../../../../data_management/schema_editor/constants';
+import type { TableColumnName } from './constants';
 
 export type SchemaFieldStatus = 'inherited' | 'mapped' | 'unmapped';
 /**

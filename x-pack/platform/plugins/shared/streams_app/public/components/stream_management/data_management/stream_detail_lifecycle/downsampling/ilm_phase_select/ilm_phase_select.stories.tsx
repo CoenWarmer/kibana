@@ -9,8 +9,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 import { EuiButton, EuiFlexGroup, EuiFlexItem } from '@elastic/eui';
-import type { IlmPhaseSelectOption } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
-import { IlmPhaseSelect } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+import type { IlmPhaseSelectOption } from './ilm_phase_select';
+import { IlmPhaseSelect } from './ilm_phase_select';
 
 const meta: Meta<typeof IlmPhaseSelect> = {
   component: IlmPhaseSelect,

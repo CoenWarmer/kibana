@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getTimeSizeAndUnitLabel, toMillis } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
+import { getTimeSizeAndUnitLabel, toMillis } from './format_size_units';
 
 describe('format_size_units', () => {
   describe('getTimeSizeAndUnitLabel', () => {

@@ -9,7 +9,7 @@ import React from 'react';
 import { EuiPanel, EuiTitle, EuiText, EuiFlexItem, EuiSpacer, EuiFlexGroup } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/react';
-import { AssetImage } from '../../../../../asset_image';
+import { AssetImage } from '../../../../asset_image';
 
 interface PartitioningPanelProps {
   message: string;

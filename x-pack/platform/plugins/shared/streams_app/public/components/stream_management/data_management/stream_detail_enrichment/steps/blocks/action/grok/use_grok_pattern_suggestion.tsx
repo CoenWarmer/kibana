@@ -10,14 +10,14 @@ import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { isRequestAbortedError } from '@kbn/server-route-repository-client';
 import type { GrokProcessor } from '@kbn/streamlang';
 import { lastValueFrom } from 'rxjs';
-import { useFetchErrorToast } from '../../../../../../../../../hooks/use_fetch_error_toast';
-import type { Simulation } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import { NoSuggestionsError, isNoSuggestionsError } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
+import { useFetchErrorToast } from '../../../../../../../../hooks/use_fetch_error_toast';
+import type { Simulation } from '../../../../state_management/simulation_state_machine/types';
+import { NoSuggestionsError, isNoSuggestionsError } from '../utils/no_suggestions_error';
 import {
   usePatternSuggestionDependencies,
   prepareSamplesForPatternExtraction,
   extractMessagesFromField,
-} from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/pattern_suggestion_helpers';
+} from '../utils/pattern_suggestion_helpers';
 
 export const SUGGESTED_GROK_PROCESSOR_ID = 'grok-processor';
 

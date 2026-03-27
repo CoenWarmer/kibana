@@ -7,13 +7,13 @@
 
 import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import { ALWAYS_CONDITION } from '@kbn/streamlang';
-import type { SampleDocumentWithUIAttributes, Simulation } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+import type { SampleDocumentWithUIAttributes, Simulation } from './types';
 import {
   collectActiveDocumentsForSelectedCondition,
   collectDescendantProcessorIdsForCondition,
   collectDocumentsAffectedByProcessors,
   getOriginalSampleDocument,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/utils';
+} from './utils';
 
 const makeAction = (
   id: string,

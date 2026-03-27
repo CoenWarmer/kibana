@@ -12,18 +12,18 @@ import { createActorContext, useSelector } from '@xstate/react';
 import { debounce } from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import { waitFor } from 'xstate';
-import type { PartitionSuggestion } from '../../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../../../data_management/stream_detail_routing/types';
+import type { PartitionSuggestion } from '../../review_suggestions_form/use_review_suggestions_form';
+import type { RoutingDefinitionWithUIAttributes } from '../../types';
 import type {
   DocumentMatchFilterOptions,
   RoutingSamplesActorRef,
   RoutingSamplesActorSnapshot,
-} from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
+} from './routing_samples_state_machine';
 import {
   createStreamRoutingMachineImplementations,
   streamRoutingMachine,
-} from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/stream_routing_state_machine';
-import type { StreamRoutingInput, StreamRoutingServiceDependencies } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/types';
+} from './stream_routing_state_machine';
+import type { StreamRoutingInput, StreamRoutingServiceDependencies } from './types';
 
 const consoleInspector = createConsoleInspector();
 

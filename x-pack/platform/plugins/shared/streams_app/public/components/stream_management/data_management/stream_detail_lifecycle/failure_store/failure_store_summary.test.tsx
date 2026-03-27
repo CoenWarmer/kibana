@@ -7,13 +7,13 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import type { EnhancedFailureStoreStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import type { useFailureStoreConfig } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
-import { FailureStoreSummary } from '../../../../../data_management/stream_detail_lifecycle/failure_store/failure_store_summary';
+import type { EnhancedFailureStoreStats } from '../hooks/use_data_stream_stats';
+import type { useFailureStoreConfig } from '../hooks/use_failure_store_config';
+import { FailureStoreSummary } from './failure_store_summary';
 
 jest.mock('../../../../hooks/use_kibana');
 
-import { useKibana } from '../../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../hooks/use_kibana';
 
 const mockUseKibana = useKibana as jest.MockedFunction<typeof useKibana>;
 

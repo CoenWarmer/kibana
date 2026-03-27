@@ -12,9 +12,9 @@ import { CodeEditor } from '@kbn/code-editor';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { dynamic } from '@kbn/shared-ux-utility';
-import { useKibana } from '../../../../../../../../../hooks/use_kibana';
-import { useAIFeatures } from '../../../../../../../../../hooks/use_ai_features';
-import type { ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
+import { useAIFeatures } from '../../../../../../../../hooks/use_ai_features';
+import type { ProcessorFormState } from '../../../../types';
 
 const DissectPatternAISuggestions = dynamic(() =>
   import('./dissect_pattern_suggestion').then((mod) => ({

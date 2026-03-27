@@ -18,34 +18,34 @@ import type {
 import { i18n } from '@kbn/i18n';
 import { useAbortController } from '@kbn/react-hooks';
 import { isEqual } from 'lodash';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import type { DataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { EditPolicyModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
-import { CreatePolicyModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/create_new_policy_modal/create_new_policy_modal';
-import { EditIlmPhasesFlyout } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useIlmPhasesColorAndDescription } from './use_ilm_phases_color_and_description';
+import type { DataStreamStats } from './use_data_stream_stats';
+import { EditPolicyModal } from '../downsampling/edit_policy_modal/edit_policy_modal';
+import { CreatePolicyModal } from '../downsampling/create_new_policy_modal/create_new_policy_modal';
+import { EditIlmPhasesFlyout } from '../downsampling/edit_ilm_phases_flyout';
 import {
   createIlmPhasesFlyoutDeserializer,
   createIlmPhasesFlyoutSerializer,
-} from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import type { LifecyclePhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import { useSnapshotRepositories } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_snapshot_repositories';
+} from '../downsampling/edit_ilm_phases_flyout/form';
+import type { LifecyclePhase } from '../common/data_lifecycle/lifecycle_types';
+import { useSnapshotRepositories } from './use_snapshot_repositories';
 import {
   buildModifiedPhasesFromEdit,
   getModifiedPhases,
   type DeleteContext,
   type EsIlmPolicyPhases,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/ilm_policy_phase_helpers';
+} from './ilm_policy_phase_helpers';
 import {
   buildAffectedResources,
   buildLifecycleSummaryPhases,
   getSelectedIlmPhases,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/ilm_lifecycle_summary_helpers';
+} from './ilm_lifecycle_summary_helpers';
 import {
   initialLifecycleSummaryUiState,
   lifecycleSummaryUiReducer,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_lifecycle_summary_state';
+} from './use_ilm_lifecycle_summary_state';
 
 interface UseIlmLifecycleSummaryProps {
   definition: Streams.ingest.all.GetResponse;

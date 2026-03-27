@@ -27,15 +27,15 @@ import {
   useStreamEnrichmentEvents,
   useYamlModeSelector,
   useSimulatorSelector,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../state_management/stream_enrichment_state_machine';
 import {
   selectValidationErrors,
   selectSchemaErrors,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { useYamlStepsProcessingSummary } from '../../../../../data_management/stream_detail_enrichment/state_management/use_yaml_steps_processing_summary';
-import { useSimulationErrors } from '../../../../../data_management/stream_detail_enrichment/state_management/use_simulation_errors';
-import { SimulationErrorsList } from '../../../../../data_management/stream_detail_enrichment/simulation_errors';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
+} from '../state_management/stream_enrichment_state_machine/selectors';
+import { useYamlStepsProcessingSummary } from '../state_management/use_yaml_steps_processing_summary';
+import { useSimulationErrors } from '../state_management/use_simulation_errors';
+import { SimulationErrorsList } from '../simulation_errors';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
 
 export const YamlEditorWrapper = () => {
   const dsl = useStreamEnrichmentSelector((state) => state.context.nextStreamlangDSL);

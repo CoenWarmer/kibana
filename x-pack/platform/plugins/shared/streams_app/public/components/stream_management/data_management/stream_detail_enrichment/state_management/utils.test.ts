@@ -6,7 +6,7 @@
  */
 
 import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
+import { collectDescendantStepIds } from './utils';
 
 const makeStep = (
   id: string,

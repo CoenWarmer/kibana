@@ -17,17 +17,17 @@ import {
 } from '@elastic/eui';
 import type { DownsampleStep } from '@kbn/streams-schema/src/models/ingest/lifecycle';
 import type { PhaseName } from '@kbn/streams-schema';
-import { DataLifecycleTimeline } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_timeline';
+import { DataLifecycleTimeline } from './data_lifecycle_timeline';
 import {
   buildDslSegments,
   buildPhaseTimelineSegments,
   getGridTemplateColumns,
   getPhaseColumnSpans,
   buildDownsamplingSegments,
-} from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
-import { LifecycleBar } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_bar';
-import { DownsamplingBar } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_bar';
-import { type LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+} from './data_lifecycle_segments';
+import { LifecycleBar } from './lifecycle_bar';
+import { DownsamplingBar } from './downsampling_bar';
+import { type LifecyclePhase } from './lifecycle_types';
 
 export interface DataLifecycleSummaryModel {
   phases: LifecyclePhase[];

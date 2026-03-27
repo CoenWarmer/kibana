@@ -9,8 +9,8 @@ import type { GrokCollection } from '@kbn/grok-ui';
 import { ALWAYS_CONDITION, type StreamlangProcessorDefinition } from '@kbn/streamlang';
 import type { StreamlangConditionBlock, StreamlangDSL } from '@kbn/streamlang/types/streamlang';
 import { createActor } from 'xstate';
-import { interactiveModeMachine } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/interactive_mode_machine';
-import type { InteractiveModeParentRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
+import { interactiveModeMachine } from './interactive_mode_machine';
+import type { InteractiveModeParentRef } from './types';
 
 // Mock htmlIdGenerator to return unique IDs (the default EUI test-env mock returns
 // the same 'generated-id' for all calls, which breaks tests that create multiple steps)

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { buildRequestPreviewCodeContent } from '../../../../data_management/shared/utils';
+import { buildRequestPreviewCodeContent } from '../shared/utils';
 
 export function useRequestPreviewFlyoutState() {
   const [isRequestPreviewFlyoutOpen, setIsRequestPreviewFlyoutOpen] = React.useState(false);

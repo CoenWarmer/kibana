@@ -13,8 +13,8 @@ import userEvent from '@testing-library/user-event';
 import yaml from 'yaml';
 import type { Condition, FilterCondition } from '@kbn/streamlang';
 
-import { ConditionEditor } from '../../../../data_management/shared/condition_editor';
-import type { Suggestion } from '../../../../data_management/shared/autocomplete_selector';
+import { ConditionEditor } from './condition_editor';
+import type { Suggestion } from './autocomplete_selector';
 
 jest.mock('@kbn/code-editor', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

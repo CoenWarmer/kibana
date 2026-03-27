@@ -6,7 +6,7 @@
  */
 
 import { i18n } from '@kbn/i18n';
-import type { DiscardPromptOptions } from '../../../../../../../../hooks/use_discard_confirm';
+import type { DiscardPromptOptions } from '../../../../../../../hooks/use_discard_confirm';
 
 export const discardChangesPromptOptions: DiscardPromptOptions = {
   message: i18n.translate('xpack.streams.enrichment.processor.discardChanges.message', {

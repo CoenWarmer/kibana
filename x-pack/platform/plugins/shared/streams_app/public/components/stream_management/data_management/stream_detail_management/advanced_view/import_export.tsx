@@ -9,9 +9,9 @@ import React from 'react';
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiPanel, EuiText } from '@elastic/eui';
 import type { Streams } from '@kbn/streams-schema';
 import { i18n } from '@kbn/i18n';
-import { Row } from '../../../../../data_management/stream_detail_management/advanced_view/row';
-import { ImportContentPackFlyout } from '../../../../../data_management/content/import_flyout';
-import { ExportContentPackFlyout } from '../../../../../data_management/content/export_flyout';
+import { Row } from './row';
+import { ImportContentPackFlyout } from '../../content/import_flyout';
+import { ExportContentPackFlyout } from '../../content/export_flyout';
 
 export function ImportExportPanel({
   definition,

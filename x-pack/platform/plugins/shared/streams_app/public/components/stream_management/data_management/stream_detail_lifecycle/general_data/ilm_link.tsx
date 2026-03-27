@@ -10,7 +10,7 @@ import { EuiLink } from '@elastic/eui';
 import type { IlmLocatorParams } from '@kbn/index-lifecycle-management-common-shared';
 import { ILM_LOCATOR_ID } from '@kbn/index-lifecycle-management-common-shared';
 import type { IngestStreamLifecycleILM } from '@kbn/streams-schema';
-import { useKibana } from '../../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../hooks/use_kibana';
 
 export function IlmLink({ lifecycle }: { lifecycle: IngestStreamLifecycleILM }) {
   const {

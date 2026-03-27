@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-export { StepTabsRow } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_tabs_row';
-export type { StepTabsRowProps } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_tabs_row';
+export { StepTabsRow } from './step_tabs_row';
+export type { StepTabsRowProps } from './step_tabs_row';
 
-export { StepPanel } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_panel';
-export type { StepPanelProps } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_panel';
+export { StepPanel } from './step_panel';
+export type { StepPanelProps } from './step_panel';
 
-export { DslStepsFlyoutArrayView } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/dsl_steps_flyout_array_view';
-export type { DslStepsFlyoutArrayViewProps } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/dsl_steps_flyout_array_view';
+export { DslStepsFlyoutArrayView } from './dsl_steps_flyout_array_view';
+export type { DslStepsFlyoutArrayViewProps } from './dsl_steps_flyout_array_view';

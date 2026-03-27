@@ -14,9 +14,9 @@ import type {
 } from '@kbn/streams-schema';
 import type { QueryStatus } from '@kbn/streams-plugin/common';
 import moment from 'moment';
-import { useKibana } from './use_kibana';
-import { useTimefilter } from './use_timefilter';
-import { useFetchErrorToast } from './use_fetch_error_toast';
+import { useKibana } from '../use_kibana';
+import { useTimefilter } from '../use_timefilter';
+import { useFetchErrorToast } from '../use_fetch_error_toast';
 
 export interface SignificantEventQueryRow {
   query: StreamQuery;

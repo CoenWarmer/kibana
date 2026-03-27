@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { UseField } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import { useOnFieldErrorsChange } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { useOnFieldErrorsChange } from '../form';
 
 export const GlobalFieldsMount = () => {
   const onFieldErrorsChange = useOnFieldErrorsChange();

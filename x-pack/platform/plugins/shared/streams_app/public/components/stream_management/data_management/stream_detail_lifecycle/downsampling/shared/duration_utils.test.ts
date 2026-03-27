@@ -10,7 +10,7 @@ import {
   getDoubledDurationFromPrevious,
   parseInterval,
   toMilliseconds,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/duration_utils';
+} from './duration_utils';
 
 describe('downsampling/shared/duration_utils', () => {
   describe('toMilliseconds()', () => {

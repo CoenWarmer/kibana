@@ -21,32 +21,32 @@ import {
   streamlangDSLSchemaStrict,
   type StreamlangDSL,
 } from '@kbn/streamlang/types/streamlang';
-import type { EnrichmentDataSource, EnrichmentUrlState } from '../../../../../../../../common/url_schema';
-import { getStreamTypeFromDefinition } from '../../../../../../../util/get_stream_type_from_definition';
+import type { EnrichmentDataSource, EnrichmentUrlState } from '../../../../../../../common/url_schema';
+import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
 import type {
   StreamEnrichmentContextType,
   StreamEnrichmentEvent,
   StreamEnrichmentInput,
   StreamEnrichmentServiceDependencies,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+} from './types';
 import {
   createUpsertStreamActor,
   createUpsertStreamFailureNofitier,
   createUpsertStreamSuccessNofitier,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/upsert_stream_actor';
+} from './upsert_stream_actor';
 
 import {
   createDataSourceMachineImplementations,
   dataSourceMachine,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { interactiveModeMachine } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import { createInteractiveModeMachineImplementations } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/interactive_mode_machine';
+} from '../data_source_state_machine';
+import { interactiveModeMachine } from '../interactive_mode_machine';
+import { createInteractiveModeMachineImplementations } from '../interactive_mode_machine/interactive_mode_machine';
 import {
   createSimulationMachineImplementations,
   simulationMachine,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import { yamlModeMachine } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine';
-import { createUrlInitializerActor, createUrlSyncAction } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/url_state_actor';
+} from '../simulation_state_machine';
+import { yamlModeMachine } from '../yaml_mode_machine';
+import { createUrlInitializerActor, createUrlSyncAction } from './url_state_actor';
 import {
   createFailureStoreDataSource,
   defaultEnrichmentUrlState,
@@ -56,7 +56,7 @@ import {
   getUpsertFields,
   selectDataSource,
   spawnDataSource,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+} from './utils';
 
 export type StreamEnrichmentActorRef = ActorRefFrom<typeof streamEnrichmentMachine>;
 export type StreamEnrichmentActorSnapshot = SnapshotFrom<typeof streamEnrichmentMachine>;

@@ -8,15 +8,15 @@
 import React from 'react';
 import { EuiButton, EuiContextMenu, EuiPopover } from '@elastic/eui';
 import { useBoolean } from '@kbn/react-hooks';
-import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { DATA_SOURCES_I18N } from './translations';
 import {
   createDefaultCustomSamplesDataSource,
   defaultKqlSamplesDataSource,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+} from '../state_management/stream_enrichment_state_machine/utils';
 import {
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../state_management/stream_enrichment_state_machine';
 
 export const AddDataSourcesContextMenu = () => {
   const { addDataSource } = useStreamEnrichmentEvents();

@@ -12,8 +12,8 @@ import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import type { APIReturnType, StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
 import type { SampleDocument } from '@kbn/streams-schema';
 import type { FieldDefinition } from '@kbn/streams-schema';
-import type { MappedSchemaField, SchemaField } from '../../../../../../data_management/schema_editor/types';
-import type { PreviewDocsFilterOption } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_documents_search';
+import type { MappedSchemaField, SchemaField } from '../../../schema_editor/types';
+import type { PreviewDocsFilterOption } from './simulation_documents_search';
 
 export type Simulation = APIReturnType<'POST /internal/streams/{name}/processing/_simulate'>;
 export type DetectedField = Simulation['detected_fields'][number];

@@ -9,7 +9,7 @@ import React from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { IngestStreamLifecycleDSL } from '@kbn/streams-schema';
 import { isEqual } from 'lodash';
-import { EditDslStepsFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
+import { EditDslStepsFlyout } from './edit_dsl_steps_flyout';
 
 const DATA_TEST_SUBJ = 'streamsEditDslStepsFlyout';
 

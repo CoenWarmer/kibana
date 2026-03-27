@@ -9,7 +9,7 @@ import type { ClassicFieldDefinitionConfig, FieldDefinitionConfig } from '@kbn/s
 import { Streams } from '@kbn/streams-schema';
 import { isEqual, omit } from 'lodash';
 import type { IngestUpsertRequest } from '@kbn/streams-schema';
-import type { MappedSchemaField, SchemaEditorField, SchemaField } from '../../../../data_management/schema_editor/types';
+import type { MappedSchemaField, SchemaEditorField, SchemaField } from './types';
 
 export const getGeoPointSuggestion = ({
   fieldName,

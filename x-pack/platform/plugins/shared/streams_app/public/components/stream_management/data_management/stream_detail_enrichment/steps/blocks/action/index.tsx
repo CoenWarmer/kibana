@@ -13,14 +13,14 @@ import { css } from '@emotion/react';
 import {
   useSimulatorSelector,
   useStreamEnrichmentSelector,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { isRootStep, isStepUnderEdit } from '../../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import type { StepConfigurationProps } from '../../../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import type { ProcessorMetrics } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import { ActionBlockEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/editor';
-import { ActionBlockListItem } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/list_item';
-import { getStepPanelColour } from '../../../../../../../data_management/stream_detail_enrichment/utils';
-import { selectStreamType } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from '../../../state_management/stream_enrichment_state_machine';
+import { isRootStep, isStepUnderEdit } from '../../../state_management/steps_state_machine';
+import type { StepConfigurationProps } from '../../steps_list';
+import type { ProcessorMetrics } from '../../../state_management/simulation_state_machine';
+import { ActionBlockEditor } from './editor';
+import { ActionBlockListItem } from './list_item';
+import { getStepPanelColour } from '../../../utils';
+import { selectStreamType } from '../../../state_management/stream_enrichment_state_machine/selectors';
 
 export type ActionBlockProps = StepConfigurationProps & {
   processorMetrics?: ProcessorMetrics;

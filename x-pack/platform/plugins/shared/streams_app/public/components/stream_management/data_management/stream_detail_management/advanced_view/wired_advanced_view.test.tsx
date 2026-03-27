@@ -9,8 +9,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import type { Streams } from '@kbn/streams-schema';
 import { I18nProvider } from '@kbn/i18n-react';
-import { WiredAdvancedView } from '../../../../../data_management/stream_detail_management/advanced_view/wired_advanced_view';
-import { useStreamsPrivileges } from '../../../../../../hooks/use_streams_privileges';
+import { WiredAdvancedView } from './wired_advanced_view';
+import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
 
 jest.mock('@kbn/ebt-tools', () => ({
   usePerformanceContext: () => ({ onPageReady: jest.fn() }),

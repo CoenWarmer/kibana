@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { EuiBadge, EuiFlexGroup, EuiFlexItem, EuiIcon, EuiToolTip } from '@elastic/eui';
-import type { FieldStatus } from '../../../../data_management/schema_editor/constants';
-import { FIELD_STATUS_MAP } from '../../../../data_management/schema_editor/constants';
+import type { FieldStatus } from './constants';
+import { FIELD_STATUS_MAP } from './constants';
 
 export const FieldStatusBadge = ({
   status,

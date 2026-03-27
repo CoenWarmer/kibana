@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { StepActorSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/steps_state_machine';
+import type { StepActorSnapshot } from './steps_state_machine';
 
 export const isStepUnderEdit = (stepSnapshot: StepActorSnapshot) => {
   return stepSnapshot.matches('draft') || stepSnapshot.matches({ configured: 'editing' });

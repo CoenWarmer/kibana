@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getNestedMessage } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/utils';
+import { getNestedMessage } from './utils';
 
 describe('getNestedMessage', () => {
   it('should return singular message for steps only', () => {

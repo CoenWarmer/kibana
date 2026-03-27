@@ -9,8 +9,8 @@ import { createSelector } from 'reselect';
 
 import { flattenObjectNestedLast } from '@kbn/object-utils';
 import type { FlattenRecord } from '@kbn/streams-schema';
-import type { SimulationContext } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import { getFilterSimulationDocumentsFn } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/utils';
+import type { SimulationContext } from './types';
+import { getFilterSimulationDocumentsFn } from './utils';
 
 /**
  * Selects the simulated documents with applied filtering by

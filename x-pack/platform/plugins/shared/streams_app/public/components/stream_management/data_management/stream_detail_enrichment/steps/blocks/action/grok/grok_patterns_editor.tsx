@@ -25,9 +25,9 @@ import { dynamic } from '@kbn/shared-ux-utility';
 import { css } from '@emotion/react';
 import { isEmpty } from 'lodash';
 import { useGrokCollection } from '@kbn/grok-ui';
-import { SortableList } from '../../../../../../../../data_management/stream_detail_enrichment/sortable_list';
-import { useAIFeatures } from '../../../../../../../../../hooks/use_ai_features';
-import type { GrokFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { SortableList } from '../../../../sortable_list';
+import { useAIFeatures } from '../../../../../../../../hooks/use_ai_features';
+import type { GrokFormState } from '../../../../types';
 
 const GrokPatternAISuggestions = dynamic(() =>
   import('./grok_pattern_suggestion').then((mod) => ({ default: mod.GrokPatternAISuggestions }))

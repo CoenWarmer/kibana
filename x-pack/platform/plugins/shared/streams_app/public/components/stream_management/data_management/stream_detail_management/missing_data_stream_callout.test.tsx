@@ -9,7 +9,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nProvider } from '@kbn/i18n-react';
-import { MissingDataStreamCallout } from '../../../../data_management/stream_detail_management/missing_data_stream_callout';
+import { MissingDataStreamCallout } from './missing_data_stream_callout';
 
 const mockFetch = jest.fn();
 const mockNavigateToApp = jest.fn();

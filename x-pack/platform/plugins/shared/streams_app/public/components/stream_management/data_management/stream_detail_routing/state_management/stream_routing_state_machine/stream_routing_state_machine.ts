@@ -17,7 +17,7 @@ import type {
   StreamRoutingEvent,
   StreamRoutingInput,
   StreamRoutingServiceDependencies,
-} from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/types';
+} from './types';
 import {
   createUpsertStreamActor,
   createStreamFailureNofitier,
@@ -26,15 +26,15 @@ import {
   createDeleteStreamActor,
   createQueryStreamActor,
   createQueryStreamSuccessNotifier,
-} from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/stream_actors';
-import { routingConverter } from '../../../../../../data_management/stream_detail_routing/utils';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../../../data_management/stream_detail_routing/types';
-import { selectCurrentRule } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/selectors';
+} from './stream_actors';
+import { routingConverter } from '../../utils';
+import type { RoutingDefinitionWithUIAttributes } from '../../types';
+import { selectCurrentRule } from './selectors';
 import {
   createRoutingSamplesMachineImplementations,
   routingSamplesMachine,
-} from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
-import type { PartitionSuggestion } from '../../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+} from './routing_samples_state_machine';
+import type { PartitionSuggestion } from '../../review_suggestions_form/use_review_suggestions_form';
 
 export type StreamRoutingActorRef = ActorRefFrom<typeof streamRoutingMachine>;
 

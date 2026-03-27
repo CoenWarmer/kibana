@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getPhaseDurationMs } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/get_phase_duration_ms';
+import { getPhaseDurationMs } from './get_phase_duration_ms';
 
 const createForm = (values: Record<string, unknown>) => {
   const fields = Object.fromEntries(Object.entries(values).map(([k, v]) => [k, { value: v }]));

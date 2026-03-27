@@ -13,11 +13,11 @@ import type { Streams, PhaseName } from '@kbn/streams-schema';
 import type { ISearchStart } from '@kbn/data-plugin/public';
 import type { CoreStart } from '@kbn/core/public';
 import { lastValueFrom } from 'rxjs';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
-import type { CalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import { getFailureStoreIndexName } from '../../../../../data_management/stream_detail_lifecycle/helpers/failure_store_index_name';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import type { CalculatedStats } from '../helpers/get_calculated_stats';
+import { useIlmPhasesColorAndDescription } from './use_ilm_phases_color_and_description';
+import { getFailureStoreIndexName } from '../helpers/failure_store_index_name';
 
 const TIMESTAMP_FIELD = '@timestamp';
 const DEFAULT_SAMPLER_PROBABILITY = 0.1;

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { buildRequestPreviewCodeContent } from '../../../../data_management/shared/utils';
+import { buildRequestPreviewCodeContent } from './utils';
 
 describe('buildRequestPreviewCodeContent()', () => {
   it('returns only method and url when body is not provided', () => {

@@ -6,7 +6,7 @@
  */
 
 import type { IlmPolicyPhases } from '@kbn/streams-schema';
-import { buildLifecycleSummaryPhases, getSelectedIlmPhases } from '../../../../../data_management/stream_detail_lifecycle/hooks/ilm_lifecycle_summary_helpers';
+import { buildLifecycleSummaryPhases, getSelectedIlmPhases } from './ilm_lifecycle_summary_helpers';
 
 describe('ilm_lifecycle_summary_helpers', () => {
   describe('getSelectedIlmPhases', () => {

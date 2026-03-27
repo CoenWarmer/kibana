@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { EuiText } from '@elastic/eui';
-import type { StepsProcessingSummaryMap } from '../../../../../../../data_management/stream_detail_enrichment/hooks/use_steps_processing_summary';
-import { getNestedMessage } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/utils';
+import type { StepsProcessingSummaryMap } from '../../../hooks/use_steps_processing_summary';
+import { getNestedMessage } from './utils';
 
 export const NestedChildrenProcessingSummary = ({
   childIds,

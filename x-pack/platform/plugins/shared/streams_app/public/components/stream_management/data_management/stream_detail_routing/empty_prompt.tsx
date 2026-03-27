@@ -18,7 +18,7 @@ import {
 import { i18n } from '@kbn/i18n';
 import { useEuiTheme, EuiLoadingSpinner } from '@elastic/eui';
 import { css } from '@emotion/react';
-import { PartitioningPanel } from '../../../../data_management/stream_detail_routing/partition_suggestions/partitioning_panel';
+import { PartitioningPanel } from './partition_suggestions/partitioning_panel';
 
 interface NoDataEmptyPromptProps {
   createNewRule: () => void;

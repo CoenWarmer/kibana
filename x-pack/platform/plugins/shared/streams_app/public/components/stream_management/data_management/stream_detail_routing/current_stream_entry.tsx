@@ -18,7 +18,7 @@ import type { Streams } from '@kbn/streams-schema';
 import { getAncestorsAndSelf } from '@kbn/streams-schema';
 import React from 'react';
 import { css } from '@emotion/css';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
 
 export function CurrentStreamEntry({
   definition,

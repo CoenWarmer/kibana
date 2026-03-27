@@ -9,7 +9,7 @@ import React from 'react';
 import { EuiPanel, EuiText } from '@elastic/eui';
 import type { Streams } from '@kbn/streams-schema';
 import { i18n } from '@kbn/i18n';
-import { Settings } from '../../../../../data_management/stream_detail_management/advanced_view/settings';
+import { Settings } from './settings';
 
 export function IndexConfiguration({
   definition,

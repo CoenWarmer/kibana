@@ -9,8 +9,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 import { EuiOverlayMask } from '@elastic/eui';
-import type { AffectedResource } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
-import { EditPolicyModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
+import type { AffectedResource } from './edit_policy_modal';
+import { EditPolicyModal } from './edit_policy_modal';
 
 interface StoryArgs {
   affectedResources: AffectedResource[];

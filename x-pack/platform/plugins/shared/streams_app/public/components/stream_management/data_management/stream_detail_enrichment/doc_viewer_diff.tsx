@@ -17,7 +17,7 @@ import {
 } from '@kbn/monaco';
 import { useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/css';
-import { DEFAULT_MARGIN_BOTTOM, getTabContentAvailableHeight } from '../../../../data_management/stream_detail_enrichment/get_height';
+import { DEFAULT_MARGIN_BOTTOM, getTabContentAvailableHeight } from './get_height';
 
 export const DocViewerContext = React.createContext<{
   originalSample?: Record<string, unknown>;

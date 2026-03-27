@@ -9,20 +9,20 @@ import { i18n } from '@kbn/i18n';
 import type { Streams } from '@kbn/streams-schema';
 import { EuiFlexGroup, EuiFlexItem, EuiPageHeader, EuiToolTip, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/react';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { useStreamsAppParams } from '../../../../../hooks/use_streams_app_params';
-import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
-import { useTimeRange } from '../../../../../hooks/use_time_range';
-import type { ManagementTabs } from '../../../../data_management/stream_detail_management/wrapper';
-import { StreamsAppPageTemplate } from '../../../../streams_app_page_template';
-import { DiscoverBadgeButton, QueryStreamBadge } from '../../../../stream_badges';
-import { useStreamsDetailManagementTabs } from '../../../../data_management/stream_detail_management/use_streams_detail_management_tabs';
-import { StreamDetailAttachments } from '../../../../stream_detail_attachments';
-import { RedirectTo } from '../../../../redirect_to';
-import { QueryStreamSchemaEditor } from '../../../../query_streams/query_stream_schema_editor';
-import { QueryStreamsAdvancedView } from '../../../../query_streams/query_streams_advanced_view';
-import { FeedbackButton } from '../../../../feedback_button';
-import { StreamOverview } from '../../../../stream_detail_overview';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
+import { useStreamsAppParams } from '../../../../hooks/use_streams_app_params';
+import { useStreamsPrivileges } from '../../../../hooks/use_streams_privileges';
+import { useTimeRange } from '../../../../hooks/use_time_range';
+import type { ManagementTabs } from './wrapper';
+import { StreamsAppPageTemplate } from '../../../streams_app_page_template';
+import { DiscoverBadgeButton, QueryStreamBadge } from '../../../stream_badges';
+import { useStreamsDetailManagementTabs } from './use_streams_detail_management_tabs';
+import { StreamDetailAttachments } from '../../../stream_detail_attachments';
+import { RedirectTo } from '../../../redirect_to';
+import { QueryStreamSchemaEditor } from '../../../query_streams/query_stream_schema_editor';
+import { QueryStreamsAdvancedView } from '../../../query_streams/query_streams_advanced_view';
+import { FeedbackButton } from '../../../feedback_button';
+import { StreamOverview } from '../../../stream_detail_overview';
 
 const queryStreamManagementSubTabs = [
   'overview',

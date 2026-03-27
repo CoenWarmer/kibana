@@ -11,14 +11,14 @@ import { usePerformanceContext } from '@kbn/ebt-tools';
 import type { Streams } from '@kbn/streams-schema';
 import { isRoot, LOGS_ROOT_STREAM_NAME } from '@kbn/streams-schema';
 import { EuiCallOut, EuiSpacer } from '@elastic/eui';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import { StreamDiscoveryConfiguration } from '../../../../../stream_detail_systems/stream_discovery_configuration';
-import { StreamDescription } from '../../../../../stream_detail_systems/stream_description';
-import { IndexConfiguration } from '../../../../../data_management/stream_detail_management/advanced_view/index_configuration';
-import { DeleteStreamPanel } from '../../../../../data_management/stream_detail_management/advanced_view/delete_stream';
-import { ImportExportPanel } from '../../../../../data_management/stream_detail_management/advanced_view/import_export';
-import { useStreamsPrivileges } from '../../../../../../hooks/use_streams_privileges';
-import { useAIFeatures } from '../../../../../../hooks/use_ai_features';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
+import { StreamDiscoveryConfiguration } from '../../../stream_detail_systems/stream_discovery_configuration';
+import { StreamDescription } from '../../../stream_detail_systems/stream_description';
+import { IndexConfiguration } from './index_configuration';
+import { DeleteStreamPanel } from './delete_stream';
+import { ImportExportPanel } from './import_export';
+import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
+import { useAIFeatures } from '../../../../../hooks/use_ai_features';
 
 export function WiredAdvancedView({
   definition,

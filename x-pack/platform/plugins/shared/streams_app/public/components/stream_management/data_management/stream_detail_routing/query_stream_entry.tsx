@@ -22,16 +22,16 @@ import { css } from '@emotion/css';
 import { css as cssReact } from '@emotion/react';
 import { Streams, getEsqlViewName, isChildOf } from '@kbn/streams-schema';
 import { useDebounceFn } from '@kbn/react-hooks';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
-import { InlineQueryStreamForm } from '../../../../query_streams/inline_query_stream_form';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../hooks/use_streams_app_fetch';
+import { InlineQueryStreamForm } from '../../../query_streams/inline_query_stream_form';
 import {
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { useQueryStreamCreation } from '../../../../data_management/stream_detail_routing/query_stream_creation_context';
-import { QueryStreamBadge } from '../../../../stream_badges';
+} from './state_management/stream_routing_state_machine';
+import { useQueryStreamCreation } from './query_stream_creation_context';
+import { QueryStreamBadge } from '../../../stream_badges';
 
 interface IdleQueryStreamEntryProps {
   streamName: string;

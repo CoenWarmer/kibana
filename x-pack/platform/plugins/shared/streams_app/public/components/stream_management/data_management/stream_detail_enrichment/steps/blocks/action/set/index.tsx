@@ -7,12 +7,12 @@
 
 import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
-import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { IgnoreEmptyValueField, OverrideField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/set/set_optional_fields';
-import { SetValueOrCopyFromField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/set/set_value_or_copy_from_field';
+import { ProcessorFieldSelector } from '../processor_field_selector';
+import { FieldsAccordion } from '../optional_fields_accordion';
+import { ProcessorConditionEditor } from '../processor_condition_editor';
+import { IgnoreFailureToggle } from '../ignore_toggles';
+import { IgnoreEmptyValueField, OverrideField } from './set_optional_fields';
+import { SetValueOrCopyFromField } from './set_value_or_copy_from_field';
 
 export const SetProcessorForm = () => {
   return (

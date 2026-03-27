@@ -19,22 +19,22 @@ import { useSelector } from '@xstate/react';
 import React, { useEffect, useRef } from 'react';
 import { useFirstMountState } from 'react-use/lib/useFirstMountState';
 import useToggle from 'react-use/lib/useToggle';
-import { useConditionFilteringEnabled } from '../../../../../../../data_management/stream_detail_enrichment/hooks/use_condition_filtering_enabled';
-import { isRootStep, isStepUnderEdit } from '../../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import { useConditionFilteringEnabled } from '../../../hooks/use_condition_filtering_enabled';
+import { isRootStep, isStepUnderEdit } from '../../../state_management/steps_state_machine';
 import {
   useInteractiveModeSelector,
   useSimulatorSelector,
   useStreamEnrichmentEvents,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { collectDescendantStepIds } from '../../../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import { getStepPanelColour } from '../../../../../../../data_management/stream_detail_enrichment/utils';
-import type { StepConfigurationProps } from '../../../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import { StepsListItem } from '../../../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import { BlockDisableOverlay } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/block_disable_overlay';
-import { WhereBlockConfiguration } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/configuration';
-import { ConnectedNodesList } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/connected_nodes_list';
-import { NestedChildrenProcessingSummary } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/nested_children_processing_summary';
-import { WhereBlockSummary } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/summary';
+} from '../../../state_management/stream_enrichment_state_machine';
+import { collectDescendantStepIds } from '../../../state_management/utils';
+import { getStepPanelColour } from '../../../utils';
+import type { StepConfigurationProps } from '../../steps_list';
+import { StepsListItem } from '../../steps_list';
+import { BlockDisableOverlay } from '../block_disable_overlay';
+import { WhereBlockConfiguration } from './configuration';
+import { ConnectedNodesList } from './connected_nodes_list';
+import { NestedChildrenProcessingSummary } from './nested_children_processing_summary';
+import { WhereBlockSummary } from './summary';
 
 export const WhereBlock = (props: StepConfigurationProps) => {
   const { stepRef, stepUnderEdit, rootLevelMap, stepsProcessingSummaryMap, level } = props;

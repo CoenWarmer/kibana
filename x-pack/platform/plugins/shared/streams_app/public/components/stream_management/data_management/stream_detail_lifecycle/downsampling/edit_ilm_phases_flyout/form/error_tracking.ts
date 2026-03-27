@@ -8,7 +8,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { isEqual } from 'lodash';
 import type { PhaseName } from '@kbn/streams-schema';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from './types';
 
 export type OnFieldErrorsChange = (path: string, errors: string[] | null) => void;
 

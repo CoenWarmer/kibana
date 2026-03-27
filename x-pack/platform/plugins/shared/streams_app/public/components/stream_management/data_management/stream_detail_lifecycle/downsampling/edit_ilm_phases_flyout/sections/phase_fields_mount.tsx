@@ -8,7 +8,7 @@
 import React from 'react';
 import type { PhaseName } from '@kbn/streams-schema';
 import { UseField } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import { PHASE_MOUNT_PATHS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { PHASE_MOUNT_PATHS } from '../constants';
 
 export const PhaseFieldsMount = ({ phase }: { phase: PhaseName }) => {
   return (

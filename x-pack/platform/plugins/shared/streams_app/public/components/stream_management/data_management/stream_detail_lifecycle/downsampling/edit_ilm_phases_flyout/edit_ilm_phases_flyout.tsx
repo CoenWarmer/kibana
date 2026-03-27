@@ -23,7 +23,7 @@ import {
   useGeneratedHtmlId,
 } from '@elastic/eui';
 import { isEqual } from 'lodash';
-import type { EditIlmPhasesFlyoutChangeMeta, EditIlmPhasesFlyoutProps } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/types';
+import type { EditIlmPhasesFlyoutChangeMeta, EditIlmPhasesFlyoutProps } from './types';
 import {
   createIlmPhasesFlyoutDeserializer,
   createIlmPhasesFlyoutSerializer,
@@ -32,11 +32,11 @@ import {
   OnFieldErrorsChangeProvider,
   toMilliseconds,
   useIlmPhasesFlyoutTabErrors,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { DEFAULT_NEW_PHASE_MIN_AGE, ILM_PHASE_ORDER } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
-import { GlobalFieldsMount, PhasePanel, PhaseTabsRow } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections';
-import { useStyles } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/use_styles';
-import { getDoubledDurationFromPrevious, type PreservedTimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+} from './form';
+import { DEFAULT_NEW_PHASE_MIN_AGE, ILM_PHASE_ORDER } from './constants';
+import { GlobalFieldsMount, PhasePanel, PhaseTabsRow } from './sections';
+import { useStyles } from './use_styles';
+import { getDoubledDurationFromPrevious, type PreservedTimeUnit } from '../shared';
 
 export const EditIlmPhasesFlyout = ({
   initialPhases,

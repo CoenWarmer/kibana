@@ -17,12 +17,12 @@ import type {
   DataSourceMachineDeps,
   DataSourceToParentEvent,
   DataSourceSimulationMode,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/types';
+} from './types';
 import {
   createDataCollectionFailureNotifier,
   createDataCollectorActor,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/data_collector_actor';
-import type { EnrichmentDataSourceWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/types';
+} from './data_collector_actor';
+import type { EnrichmentDataSourceWithUIAttributes } from '../../types';
 
 export type DataSourceActorRef = ActorRefFrom<typeof dataSourceMachine>;
 export type DataSourceActorSnapshot = SnapshotFrom<typeof dataSourceMachine>;

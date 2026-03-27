@@ -10,17 +10,17 @@ import { i18n } from '@kbn/i18n';
 import type { RoutingDefinition } from '@kbn/streams-schema';
 import { isRoutingEnabled } from '@kbn/streams-schema';
 import React, { useMemo } from 'react';
-import { useRoutingFieldSuggestions } from '../../../../../hooks/use_field_suggestions';
-import { useStreamDataViewFieldTypes } from '../../../../../hooks/use_stream_data_view_field_types';
-import { useRoutingValueSuggestions } from '../../../../../hooks/use_value_suggestions';
+import { useRoutingFieldSuggestions } from '../../../../hooks/use_field_suggestions';
+import { useStreamDataViewFieldTypes } from '../../../../hooks/use_stream_data_view_field_types';
+import { useRoutingValueSuggestions } from '../../../../hooks/use_value_suggestions';
 import {
   getFilterConditionField,
   getFilterConditionOperator,
   isArrayOperator,
-} from '../../../../../util/condition';
-import type { ConditionEditorProps } from '../../../../data_management/shared/condition_editor';
-import { ConditionEditor } from '../../../../data_management/shared/condition_editor';
-import { useStreamSamplesSelector } from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+} from '../../../../util/condition';
+import type { ConditionEditorProps } from '../shared/condition_editor';
+import { ConditionEditor } from '../shared/condition_editor';
+import { useStreamSamplesSelector } from './state_management/stream_routing_state_machine';
 
 type RoutingConditionChangeParams = Omit<RoutingDefinition, 'destination'>;
 

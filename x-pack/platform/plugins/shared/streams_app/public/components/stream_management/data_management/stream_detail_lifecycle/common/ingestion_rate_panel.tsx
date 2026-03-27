@@ -8,7 +8,7 @@
 import { EuiFlexGroup, EuiFlexItem, EuiLoadingSpinner, EuiPanel, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { StreamsAppSearchBar } from '../../../../../streams_app_search_bar';
+import { StreamsAppSearchBar } from '../../../../streams_app_search_bar';
 
 interface IngestionRatePanelProps {
   isLoading: boolean;

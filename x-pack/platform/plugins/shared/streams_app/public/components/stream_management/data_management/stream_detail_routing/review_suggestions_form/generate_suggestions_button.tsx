@@ -7,8 +7,8 @@
 
 import React from 'react';
 import type { EuiButtonProps } from '@elastic/eui';
-import type { AIFeatures } from '../../../../../../hooks/use_ai_features';
-import { ConnectorListButtonBase } from '../../../../../connector_list_button/connector_list_button';
+import type { AIFeatures } from '../../../../../hooks/use_ai_features';
+import { ConnectorListButtonBase } from '../../../../connector_list_button/connector_list_button';
 
 export interface GenerateSuggestionButtonProps extends EuiButtonProps {
   onClick(connectorId: string): void;

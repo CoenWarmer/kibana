@@ -16,8 +16,8 @@ import type {
   ConfigDrivenProcessorConfiguration,
   FieldConfiguration,
   FieldOptions,
-} from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
-import { getConvertFormStateToConfig, getConvertProcessorToFormState } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/utils';
+} from '../types';
+import { getConvertFormStateToConfig, getConvertProcessorToFormState } from '../utils';
 
 export type AppendProcessorFormState = AppendProcessor;
 

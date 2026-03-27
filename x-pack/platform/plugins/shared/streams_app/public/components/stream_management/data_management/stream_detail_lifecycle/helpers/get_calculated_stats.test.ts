@@ -7,7 +7,7 @@
 
 import moment from 'moment';
 import type { TimeState } from '@kbn/es-query';
-import { getCalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
+import { getCalculatedStats } from './get_calculated_stats';
 
 const createTimeState = (start: number, end: number): TimeState => ({
   start,

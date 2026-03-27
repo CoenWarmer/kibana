@@ -8,11 +8,11 @@
 import React from 'react';
 import { EuiPanel, EuiFlexGroup, EuiFlexItem, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/css';
-import { RoutingConditionEditor } from '../../../../data_management/stream_detail_routing/routing_condition_editor';
-import { EditRoutingRuleControls } from '../../../../data_management/stream_detail_routing/control_bars';
-import { StreamNameFormRow, useChildStreamInput } from '../../../../stream_name_form_row';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../data_management/stream_detail_routing/types';
-import { useStreamRoutingEvents } from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { RoutingConditionEditor } from './routing_condition_editor';
+import { EditRoutingRuleControls } from './control_bars';
+import { StreamNameFormRow, useChildStreamInput } from '../../../stream_name_form_row';
+import type { RoutingDefinitionWithUIAttributes } from './types';
+import { useStreamRoutingEvents } from './state_management/stream_routing_state_machine';
 
 export function EditRoutingStreamEntry({
   onChange,

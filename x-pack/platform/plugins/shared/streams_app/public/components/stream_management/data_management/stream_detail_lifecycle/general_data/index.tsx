@@ -12,18 +12,18 @@ import { type IngestStreamLifecycle, type Streams, type IlmPolicy } from '@kbn/s
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 import React, { useState } from 'react';
 import { omit } from 'lodash';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
-import { getFormattedError } from '../../../../../../util/errors';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import type { useDataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { SectionPanel } from '../../../../../data_management/stream_detail_lifecycle/common/section_panel';
-import { EditLifecycleModal } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal';
-import { RetentionCard } from '../../../../../data_management/stream_detail_lifecycle/general_data/cards/retention_card';
-import { StorageSizeCard } from '../../../../../data_management/stream_detail_lifecycle/general_data/cards/storage_size_card';
-import { IngestionCard } from '../../../../../data_management/stream_detail_lifecycle/general_data/cards/ingestion_card';
-import { LifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/general_data/lifecycle_summary';
-import { IngestionRate } from '../../../../../data_management/stream_detail_lifecycle/general_data/ingestion_rate';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { getFormattedError } from '../../../../../util/errors';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
+import type { useDataStreamStats } from '../hooks/use_data_stream_stats';
+import { SectionPanel } from '../common/section_panel';
+import { EditLifecycleModal } from './modal';
+import { RetentionCard } from './cards/retention_card';
+import { StorageSizeCard } from './cards/storage_size_card';
+import { IngestionCard } from './cards/ingestion_card';
+import { LifecycleSummary } from './lifecycle_summary';
+import { IngestionRate } from './ingestion_rate';
 
 export const StreamDetailGeneralData = ({
   definition,

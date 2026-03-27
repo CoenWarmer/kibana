@@ -6,10 +6,10 @@
  */
 import React from 'react';
 import { Streams } from '@kbn/streams-schema';
-import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
-import { WiredStreamDetailManagement } from '../../../../data_management/stream_detail_management/wired';
-import { ClassicStreamDetailManagement } from '../../../../data_management/stream_detail_management/classic';
-import { QueryStreamDetailManagement } from '../../../../data_management/stream_detail_management/query';
+import { useStreamDetail } from '../../../../hooks/use_stream_detail';
+import { WiredStreamDetailManagement } from './wired';
+import { ClassicStreamDetailManagement } from './classic';
+import { QueryStreamDetailManagement } from './query';
 
 export function StreamDetailManagement() {
   const { definition, refresh } = useStreamDetail();

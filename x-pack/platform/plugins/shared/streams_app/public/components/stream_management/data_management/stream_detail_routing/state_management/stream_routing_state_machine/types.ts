@@ -12,11 +12,11 @@ import type { DataPublicPluginStart } from '@kbn/data-plugin/public';
 import type { TimefilterHook } from '@kbn/data-plugin/public/query/timefilter/use_timefilter';
 import type { Condition } from '@kbn/streamlang';
 import type { RoutingDefinition } from '@kbn/streams-schema';
-import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../../../data_management/stream_detail_routing/types';
+import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
+import type { RoutingDefinitionWithUIAttributes } from '../../types';
 import type { DocumentMatchFilterOptions } from '.';
-import type { RoutingSamplesContext } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
-import type { PartitionSuggestion } from '../../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+import type { RoutingSamplesContext } from './routing_samples_state_machine';
+import type { PartitionSuggestion } from '../../review_suggestions_form/use_review_suggestions_form';
 
 export interface StreamRoutingServiceDependencies {
   forkSuccessNofitier: (streamName: string) => void;

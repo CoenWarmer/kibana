@@ -8,9 +8,9 @@
 import React from 'react';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderWithI18n } from '@kbn/test-jest-helpers';
-import { Settings } from '../../../../../data_management/stream_detail_management/advanced_view/settings';
-import { createMockWiredStreamDefinition } from '../../../../../data_management/shared/mocks';
-import type { StreamsAppKibanaContext } from '../../../../../../hooks/use_kibana';
+import { Settings } from './settings';
+import { createMockWiredStreamDefinition } from '../../shared/mocks';
+import type { StreamsAppKibanaContext } from '../../../../../hooks/use_kibana';
 
 jest.mock('../../../../hooks/use_kibana');
 jest.mock('../../../../hooks/use_stream_detail');
@@ -24,9 +24,9 @@ jest.mock('@kbn/unsaved-changes-prompt', () => ({
   useUnsavedChangesPrompt: jest.fn(),
 }));
 
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamDetail } from '../../../../../../hooks/use_stream_detail';
-import { useStreamsPrivileges } from '../../../../../../hooks/use_streams_privileges';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
+import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 
 const mockUseKibana = useKibana as jest.MockedFunction<typeof useKibana>;

@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useAbortController } from '@kbn/react-hooks';
 import type { Feature } from '@kbn/streams-schema';
 import { groupBy } from 'lodash';
-import { useKibana } from './use_kibana';
+import { useKibana } from '../use_kibana';
 
 export interface BulkDeleteResult {
   succeededCount: number;

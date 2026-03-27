@@ -40,10 +40,10 @@ import {
   isRoot,
 } from '@kbn/streams-schema';
 import React, { useMemo, useState } from 'react';
-import { useKibana } from '../../../../../../../hooks/use_kibana';
-import { buildRequestPreviewCodeContent } from '../../../../../../data_management/shared/utils';
-import { DEFAULT_RETENTION_UNIT, DEFAULT_RETENTION_VALUE, DslField } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/dsl';
-import { IlmField } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { buildRequestPreviewCodeContent } from '../../../shared/utils';
+import { DEFAULT_RETENTION_UNIT, DEFAULT_RETENTION_VALUE, DslField } from './dsl';
+import { IlmField } from './ilm';
 
 export type LifecycleEditAction = 'ilm' | 'custom' | 'indefinite';
 

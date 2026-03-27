@@ -6,11 +6,11 @@
  */
 
 import { useMemo } from 'react';
-import { collectDescendantProcessorIdsForCondition } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import { collectDescendantProcessorIdsForCondition } from '../state_management/simulation_state_machine';
 import {
   useInteractiveModeSelector,
   useSimulatorSelector,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../state_management/stream_enrichment_state_machine';
 
 /**
  * Determine if condition filtering is enabled for a given condition block.

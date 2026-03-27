@@ -7,10 +7,10 @@
 import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { formatNumber } from '@elastic/eui';
-import { PrivilegesWarningIconWrapper } from '../../../../../../insufficient_privileges/insufficient_privileges';
-import { BaseMetricCard } from '../../../../../../data_management/stream_detail_lifecycle/common/base_metric_card';
-import { formatBytes } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import type { EnhancedFailureStoreStats } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { PrivilegesWarningIconWrapper } from '../../../../../insufficient_privileges/insufficient_privileges';
+import { BaseMetricCard } from '../../common/base_metric_card';
+import { formatBytes } from '../../helpers/format_bytes';
+import type { EnhancedFailureStoreStats } from '../../hooks/use_data_stream_stats';
 
 export const StorageSizeCard = ({
   hasPrivileges,

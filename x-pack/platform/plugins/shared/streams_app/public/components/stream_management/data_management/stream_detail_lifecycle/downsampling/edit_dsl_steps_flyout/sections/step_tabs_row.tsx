@@ -20,8 +20,8 @@ import {
 } from '@elastic/eui';
 
 import type { ArrayItem } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import { useStyles } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
+import { MAX_DOWNSAMPLE_STEPS } from '../form';
+import { useStyles } from '../use_styles';
 
 export interface StepTabsRowProps {
   items: ArrayItem[];

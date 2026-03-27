@@ -10,8 +10,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nProvider } from '@kbn/i18n-react';
 import { SchemaEditorFlyout } from '.';
-import { createMockClassicStreamDefinition, createMockMappedField } from '../../../../../data_management/shared/mocks';
-import type { SchemaField } from '../../../../../data_management/schema_editor/types';
+import { createMockClassicStreamDefinition, createMockMappedField } from '../../shared/mocks';
+import type { SchemaField } from '../types';
 
 // Mock the useKibana hook
 jest.mock('../../../../hooks/use_kibana', () => ({

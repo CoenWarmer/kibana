@@ -25,16 +25,16 @@ import { i18n } from '@kbn/i18n';
 import type { Streams } from '@kbn/streams-schema';
 import { isEmpty } from 'lodash';
 import { css } from '@emotion/css';
-import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
-import type { TableColumnName } from '../../../../data_management/schema_editor/constants';
-import { TABLE_COLUMNS, EMPTY_CONTENT } from '../../../../data_management/schema_editor/constants';
-import { FieldActionsCell } from '../../../../data_management/schema_editor/field_actions';
-import { FieldParent } from '../../../../data_management/schema_editor/field_parent';
-import { FieldStatusBadge } from '../../../../data_management/schema_editor/field_status';
-import { FieldResultBadge } from '../../../../data_management/schema_editor/field_result';
-import type { TControls } from '../../../../data_management/schema_editor/hooks/use_controls';
-import type { SchemaField, SchemaEditorField } from '../../../../data_management/schema_editor/types';
-import { FieldType } from '../../../../data_management/schema_editor/field_type';
+import { getStreamTypeFromDefinition } from '../../../../util/get_stream_type_from_definition';
+import type { TableColumnName } from './constants';
+import { TABLE_COLUMNS, EMPTY_CONTENT } from './constants';
+import { FieldActionsCell } from './field_actions';
+import { FieldParent } from './field_parent';
+import { FieldStatusBadge } from './field_status';
+import { FieldResultBadge } from './field_result';
+import type { TControls } from './hooks/use_controls';
+import type { SchemaField, SchemaEditorField } from './types';
+import { FieldType } from './field_type';
 
 export function FieldsTable({
   isLoading,

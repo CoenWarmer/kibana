@@ -17,11 +17,11 @@ import { isRunningResponse } from '@kbn/data-plugin/common';
 import type { IEsSearchResponse } from '@kbn/search-types';
 import { pick } from 'lodash';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
-import type { EnrichmentDataSource } from '../../../../../../../../common/url_schema';
-import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
-import { getFormattedError } from '../../../../../../../util/errors';
-import type { DataSourceMachineDeps } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/types';
-import type { EnrichmentDataSourceWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/types';
+import type { EnrichmentDataSource } from '../../../../../../../common/url_schema';
+import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
+import { getFormattedError } from '../../../../../../util/errors';
+import type { DataSourceMachineDeps } from './types';
+import type { EnrichmentDataSourceWithUIAttributes } from '../../types';
 
 export interface SamplesFetchInput {
   dataSource: EnrichmentDataSourceWithUIAttributes;

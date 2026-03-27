@@ -12,25 +12,25 @@ import { Streams } from '@kbn/streams-schema';
 import type { ReactNode } from 'react';
 import React, { useEffect, useRef } from 'react';
 import useAsync from 'react-use/lib/useAsync';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { useStreamDetail } from '../../../../hooks/use_stream_detail';
+import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
 import {
   STREAMS_HISTOGRAM_NUM_DATA_POINTS,
   useStreamDocCountsFetch,
-} from '../../../../../hooks/use_streams_doc_counts_fetch';
-import { useTimeRange } from '../../../../../hooks/use_time_range';
-import { calculateDataQuality } from '../../../../../util/calculate_data_quality';
-import { FeedbackButton } from '../../../../feedback_button';
+} from '../../../../hooks/use_streams_doc_counts_fetch';
+import { useTimeRange } from '../../../../hooks/use_time_range';
+import { calculateDataQuality } from '../../../../util/calculate_data_quality';
+import { FeedbackButton } from '../../../feedback_button';
 import {
   ClassicStreamBadge,
   DiscoverBadgeButton,
   LifecycleBadge,
   TimeSeriesBadge,
   WiredStreamBadge,
-} from '../../../../stream_badges';
-import { StreamsAppPageTemplate } from '../../../../streams_app_page_template';
-import { TAB_TO_TOUR_STEP_ID, useStreamsTour } from '../../../../streams_tour';
+} from '../../../stream_badges';
+import { StreamsAppPageTemplate } from '../../../streams_app_page_template';
+import { TAB_TO_TOUR_STEP_ID, useStreamsTour } from '../../../streams_tour';
 
 export type ManagementTabs = Record<
   string,

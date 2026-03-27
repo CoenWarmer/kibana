@@ -18,14 +18,14 @@ import {
 import { css } from '@emotion/css';
 import { i18n } from '@kbn/i18n';
 import { getRegularEcsField } from '@kbn/streams-schema';
-import { getFormattedError } from '../../../../../util/errors';
-import { useControls } from '../../../../data_management/schema_editor/hooks/use_controls';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import type { SchemaEditorProps, SchemaField } from '../../../../data_management/schema_editor/types';
-import { SchemaEditorContextProvider } from '../../../../data_management/schema_editor/schema_editor_context';
-import { Controls } from '../../../../data_management/schema_editor/schema_editor_controls';
-import { FieldsTable } from '../../../../data_management/schema_editor/schema_editor_table';
-import { DEFAULT_TABLE_COLUMN_NAMES, FIELD_TYPE_MAP } from '../../../../data_management/schema_editor/constants';
+import { getFormattedError } from '../../../../util/errors';
+import { useControls } from './hooks/use_controls';
+import { useKibana } from '../../../../hooks/use_kibana';
+import type { SchemaEditorProps, SchemaField } from './types';
+import { SchemaEditorContextProvider } from './schema_editor_context';
+import { Controls } from './schema_editor_controls';
+import { FieldsTable } from './schema_editor_table';
+import { DEFAULT_TABLE_COLUMN_NAMES, FIELD_TYPE_MAP } from './constants';
 
 export function SchemaEditor({
   defaultColumns = DEFAULT_TABLE_COLUMN_NAMES,

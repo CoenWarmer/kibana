@@ -12,15 +12,15 @@ import type { Instruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-
 import {
   useInteractiveModeSelector,
   useStreamEnrichmentEvents,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { StepsListItem } from '../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import { isRootStep, isStepUnderEdit } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import { getRootLevelStepsMap } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { useStepsProcessingSummary } from '../../../../../data_management/stream_detail_enrichment/hooks/use_steps_processing_summary';
-import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import { DragDropMonitor } from '../../../../../data_management/stream_detail_enrichment/steps/drag_drop_monitor';
-import { handleDragDropReorder } from '../../../../../data_management/stream_detail_enrichment/steps/drag_drop_reorder_handler';
-import { ProcessingButtonsManual } from '../../../../../data_management/stream_detail_enrichment/empty_prompts';
+} from '../state_management/stream_enrichment_state_machine';
+import { StepsListItem } from './steps_list';
+import { isRootStep, isStepUnderEdit } from '../state_management/steps_state_machine';
+import { getRootLevelStepsMap } from '../state_management/stream_enrichment_state_machine/utils';
+import { useStepsProcessingSummary } from '../hooks/use_steps_processing_summary';
+import type { InteractiveModeContext } from '../state_management/interactive_mode_machine';
+import { DragDropMonitor } from './drag_drop_monitor';
+import { handleDragDropReorder } from './drag_drop_reorder_handler';
+import { ProcessingButtonsManual } from '../empty_prompts';
 
 export const RootSteps = ({
   stepRefs,

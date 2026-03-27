@@ -10,8 +10,8 @@ import { CodeEditor } from '@kbn/code-editor';
 import { useController } from 'react-hook-form';
 import React from 'react';
 import { i18n } from '@kbn/i18n';
-import { parseXJsonOrString, serializeXJson } from '../../../../../../../../data_management/stream_detail_enrichment/helpers';
-import type { ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { parseXJsonOrString, serializeXJson } from '../../../../helpers';
+import type { ProcessorFormState } from '../../../../types';
 
 export const GrokPatternDefinition = () => {
   const { field, fieldState } = useController<ProcessorFormState, 'pattern_definitions'>({

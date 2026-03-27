@@ -17,18 +17,18 @@ import {
 } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { EuiFieldNumber, EuiFlexGroup, EuiFlexItem, EuiFormRow, EuiSelect } from '@elastic/eui';
 
-import type { PreservedTimeUnit, TimeUnit } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
-import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
-import { getStepIndexFromArrayItemPath, toMilliseconds } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/constants';
+import type { PreservedTimeUnit, TimeUnit } from '../types';
+import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../shared';
+import { getStepIndexFromArrayItemPath, toMilliseconds } from '../utils';
+import { MAX_DOWNSAMPLE_STEPS } from '../constants';
 import {
   afterGreaterThanPreviousStep,
   afterMustBeInteger,
   afterMustBeNonNegative,
   afterSmallerThanDataRetention,
   requiredAfterValue,
-} from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/validations';
-import { useOnStepFieldErrorsChange } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
+} from '../validations';
+import { useOnStepFieldErrorsChange } from '../error_tracking';
 
 export interface AfterFieldProps {
   item: ArrayItem;

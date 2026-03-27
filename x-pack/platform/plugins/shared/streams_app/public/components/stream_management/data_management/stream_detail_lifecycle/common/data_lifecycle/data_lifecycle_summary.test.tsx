@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DataLifecycleSummary } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_summary';
-import { type LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+import { DataLifecycleSummary } from './data_lifecycle_summary';
+import { type LifecyclePhase } from './lifecycle_types';
 
 describe('DataLifecycleSummary', () => {
   const defaultProps = {

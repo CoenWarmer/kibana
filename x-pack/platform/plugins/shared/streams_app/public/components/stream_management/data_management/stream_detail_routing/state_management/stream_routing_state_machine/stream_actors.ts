@@ -13,10 +13,10 @@ import type { APIReturnType } from '@kbn/streams-plugin/public/api';
 import type { RoutingDefinition, RoutingStatus, Streams } from '@kbn/streams-schema';
 import type { ErrorActorEvent } from 'xstate';
 import { fromPromise } from 'xstate';
-import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
-import { getFormattedError } from '../../../../../../../util/errors';
-import { buildRoutingForkRequestPayload, buildRoutingSaveRequestPayload } from '../../../../../../data_management/stream_detail_routing/utils';
-import type { StreamRoutingServiceDependencies } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/types';
+import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
+import { getFormattedError } from '../../../../../../util/errors';
+import { buildRoutingForkRequestPayload, buildRoutingSaveRequestPayload } from '../../utils';
+import type { StreamRoutingServiceDependencies } from './types';
 
 /**
  * Upsert stream actor factory

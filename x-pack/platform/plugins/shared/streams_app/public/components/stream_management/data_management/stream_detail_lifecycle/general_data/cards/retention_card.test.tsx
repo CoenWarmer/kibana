@@ -9,7 +9,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Streams } from '@kbn/streams-schema';
-import { RetentionCard } from '../../../../../../data_management/stream_detail_lifecycle/general_data/cards/retention_card';
+import { RetentionCard } from './retention_card';
 
 jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({

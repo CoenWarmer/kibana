@@ -8,7 +8,7 @@
 import {
   dslLifecycleSummaryUiReducer,
   initialDslLifecycleSummaryUiState,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/use_dsl_lifecycle_summary_state';
+} from './use_dsl_lifecycle_summary_state';
 import type { IngestStreamLifecycleDSL } from '@kbn/streams-schema';
 
 describe('dslLifecycleSummaryUiReducer', () => {

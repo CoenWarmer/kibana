@@ -11,10 +11,10 @@ import { __IntlProvider as IntlProvider } from '@kbn/i18n-react';
 import {
   GenerateSuggestionButton,
   type GenerateSuggestionButtonProps,
-} from '../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { AdditionalChargesCallout } from '../../../../../data_management/shared/additional_charges_callout';
-import type { AIFeatures } from '../../../../../../hooks/use_ai_features';
-import type { UseGenAIConnectorsResult } from '../../../../../../hooks/use_genai_connectors';
+} from './generate_suggestions_button';
+import { AdditionalChargesCallout } from '../../shared/additional_charges_callout';
+import type { AIFeatures } from '../../../../../hooks/use_ai_features';
+import type { UseGenAIConnectorsResult } from '../../../../../hooks/use_genai_connectors';
 import { InferenceConnectorType } from '@kbn/inference-common';
 
 jest.mock('../../../../hooks/use_kibana', () => ({

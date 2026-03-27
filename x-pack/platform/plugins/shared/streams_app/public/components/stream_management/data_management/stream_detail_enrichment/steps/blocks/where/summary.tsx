@@ -18,14 +18,14 @@ import { i18n } from '@kbn/i18n';
 import { isConditionBlock } from '@kbn/streamlang';
 import { useSelector } from '@xstate/react';
 import React from 'react';
-import { ConditionDisplay } from '../../../../../../../data_management/shared';
-import { CreateStepButton } from '../../../../../../../data_management/stream_detail_enrichment/create_step_button';
-import { getPercentageFormatter } from '../../../../../../../../util/formatters';
-import { useSimulatorSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import type { StepConfigurationProps } from '../../../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import { BlockDisableOverlay } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/block_disable_overlay';
-import { StepContextMenu } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/context_menu';
-import { DragHandle } from '../../../../../../../data_management/stream_detail_enrichment/steps/draggable_step_wrapper';
+import { ConditionDisplay } from '../../../../shared';
+import { CreateStepButton } from '../../../create_step_button';
+import { getPercentageFormatter } from '../../../../../../../util/formatters';
+import { useSimulatorSelector } from '../../../state_management/stream_enrichment_state_machine';
+import type { StepConfigurationProps } from '../../steps_list';
+import { BlockDisableOverlay } from '../block_disable_overlay';
+import { StepContextMenu } from '../context_menu';
+import { DragHandle } from '../../draggable_step_wrapper';
 
 interface WhereBlockSummaryProps extends StepConfigurationProps {
   onClick?: () => void;

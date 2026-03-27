@@ -9,7 +9,7 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 import type { EuiFormRowProps } from '@elastic/eui';
 import { EuiFormRow, EuiSwitch, htmlIdGenerator } from '@elastic/eui';
-import type { ExtractBooleanFields, ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import type { ExtractBooleanFields, ProcessorFormState } from '../../../types';
 
 interface ToggleFieldProps {
   helpText?: EuiFormRowProps['helpText'];

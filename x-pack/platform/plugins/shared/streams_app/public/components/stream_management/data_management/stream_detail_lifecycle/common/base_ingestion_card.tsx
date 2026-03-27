@@ -7,9 +7,9 @@
 import React from 'react';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { formatNumber } from '@elastic/eui';
-import { PrivilegesWarningIconWrapper } from '../../../../../insufficient_privileges/insufficient_privileges';
-import { BaseMetricCard } from '../../../../../data_management/stream_detail_lifecycle/common/base_metric_card';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
+import { PrivilegesWarningIconWrapper } from '../../../../insufficient_privileges/insufficient_privileges';
+import { BaseMetricCard } from './base_metric_card';
+import { formatBytes } from '../helpers/format_bytes';
 
 interface BaseIngestionCardProps {
   period: 'daily' | 'monthly';

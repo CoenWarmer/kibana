@@ -9,12 +9,12 @@ import { i18n } from '@kbn/i18n';
 import { useAbortController, useAbortableAsync } from '@kbn/react-hooks';
 import { Streams, getAdvancedParameters } from '@kbn/streams-schema';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
-import { getFormattedError } from '../../../../../../util/errors';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import type { SchemaEditorField, SchemaField } from '../../../../../data_management/schema_editor/types';
-import { buildSchemaSavePayload, isFieldUncommitted } from '../../../../../data_management/schema_editor/utils';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import { getFormattedError } from '../../../../../util/errors';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
+import type { SchemaEditorField, SchemaField } from '../types';
+import { buildSchemaSavePayload, isFieldUncommitted } from '../utils';
 
 export const useSchemaFields = ({
   definition,

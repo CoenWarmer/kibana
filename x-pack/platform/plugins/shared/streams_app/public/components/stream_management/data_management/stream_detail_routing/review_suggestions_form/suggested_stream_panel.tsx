@@ -22,19 +22,19 @@ import { i18n } from '@kbn/i18n';
 import React from 'react';
 import { type Streams } from '@kbn/streams-schema';
 import { type Condition, isCondition } from '@kbn/streamlang';
-import type { PartitionSuggestion } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
-import { useMatchRate } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_match_rate';
+import type { PartitionSuggestion } from './use_review_suggestions_form';
+import { useMatchRate } from './use_match_rate';
 import {
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
   useStreamSamplesSelector,
-} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/use_stream_routing';
-import { SelectablePanel } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/selectable_panel';
-import { ConditionPanel, VerticalRule } from '../../../../../data_management/shared';
-import { StreamNameFormRow, useChildStreamInput } from '../../../../../stream_name_form_row';
-import { RoutingConditionEditor } from '../../../../../data_management/stream_detail_routing/routing_condition_editor';
-import { processCondition } from '../../../../../data_management/stream_detail_routing/utils';
-import { EditSuggestedRuleControls } from '../../../../../data_management/stream_detail_routing/control_bars';
+} from '../state_management/stream_routing_state_machine/use_stream_routing';
+import { SelectablePanel } from './selectable_panel';
+import { ConditionPanel, VerticalRule } from '../../shared';
+import { StreamNameFormRow, useChildStreamInput } from '../../../../stream_name_form_row';
+import { RoutingConditionEditor } from '../routing_condition_editor';
+import { processCondition } from '../utils';
+import { EditSuggestedRuleControls } from '../control_bars';
 
 export function SuggestedStreamPanel({
   definition,

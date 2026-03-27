@@ -10,8 +10,8 @@ import { EuiFlexGroup, EuiFlexItem, EuiCheckbox, EuiToolTip, EuiFormPrepend } fr
 import type { EuiComboBoxProps } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import type { RangeCondition } from '@kbn/streamlang';
-import type { Suggestion } from '../../../../data_management/shared/autocomplete_selector';
-import { AutocompleteSelector } from '../../../../data_management/shared/autocomplete_selector';
+import type { Suggestion } from './autocomplete_selector';
+import { AutocompleteSelector } from './autocomplete_selector';
 
 export interface RangeInputProps {
   value: RangeCondition;

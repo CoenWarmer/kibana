@@ -15,8 +15,8 @@ import {
   useEuiTheme,
 } from '@elastic/eui';
 import type { PhaseName } from '@kbn/streams-schema';
-import type { LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import type { TimelineSegment } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
+import type { LifecyclePhase } from './lifecycle_types';
+import type { TimelineSegment } from './data_lifecycle_segments';
 
 export const DataLifecycleTimeline = ({
   phases,

@@ -14,13 +14,13 @@ import type { FlattenRecord } from '@kbn/streams-schema';
 import { flattenObjectNestedLast } from '@kbn/object-utils';
 
 import { i18n } from '@kbn/i18n';
-import { getFormattedError } from '../../../../../../../util/errors';
-import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
+import { getFormattedError } from '../../../../../../util/errors';
+import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
 import {
   NoSuggestionsError,
   isNoSuggestionsError,
-} from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
-import type { SampleDocumentWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+} from '../../steps/blocks/action/utils/no_suggestions_error';
+import type { SampleDocumentWithUIAttributes } from '../simulation_state_machine/types';
 
 // Minimal input needed from state machine (services injected in implementation)
 export interface SuggestPipelineInputMinimal {

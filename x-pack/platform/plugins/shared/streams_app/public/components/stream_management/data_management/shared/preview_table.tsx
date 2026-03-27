@@ -32,10 +32,10 @@ import type {
   DocumentWithIgnoredFields,
 } from '@kbn/streams-schema/src/shared/record_types';
 import useAsync from 'react-use/lib/useAsync';
-import { recalcColumnWidths } from '../../../../data_management/stream_detail_enrichment/utils';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import type { SimulationContext } from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import { PreviewTableCell, isDocumentWithIgnoredFields } from '../../../../data_management/shared/preview_table_cell';
+import { recalcColumnWidths } from '../stream_detail_enrichment/utils';
+import { useKibana } from '../../../../hooks/use_kibana';
+import type { SimulationContext } from '../stream_detail_enrichment/state_management/simulation_state_machine';
+import { PreviewTableCell, isDocumentWithIgnoredFields } from './preview_table_cell';
 
 export type PreviewTableMode = 'columns' | 'summary';
 

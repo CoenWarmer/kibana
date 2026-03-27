@@ -10,7 +10,7 @@ import type { EuiThemeComputed } from '@elastic/eui';
 import { EuiFlexGroup, EuiFlexItem, EuiIcon, EuiPanel, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { capitalize } from 'lodash';
-import { getInteractivePanelStyles } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/interactive_panel_styles';
+import { getInteractivePanelStyles } from './interactive_panel_styles';
 
 interface LifecyclePhaseButtonProps {
   euiTheme: EuiThemeComputed;

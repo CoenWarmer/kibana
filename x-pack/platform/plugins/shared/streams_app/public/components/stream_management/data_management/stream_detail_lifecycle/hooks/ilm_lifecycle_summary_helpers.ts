@@ -7,12 +7,12 @@
 
 import { i18n } from '@kbn/i18n';
 import type { IlmPolicyPhases, IlmPolicyWithUsage, PhaseName } from '@kbn/streams-schema';
-import type { DataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import type { LifecyclePhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import type { AffectedResource } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import { getILMRatios } from '../../../../../data_management/stream_detail_lifecycle/helpers/helpers';
-import { ILM_PHASE_ORDER } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import type { DataStreamStats } from './use_data_stream_stats';
+import type { LifecyclePhase } from '../common/data_lifecycle/lifecycle_types';
+import type { AffectedResource } from '../downsampling/edit_policy_modal/edit_policy_modal';
+import { formatBytes } from '../helpers/format_bytes';
+import { getILMRatios } from '../helpers/helpers';
+import { ILM_PHASE_ORDER } from '../downsampling/edit_ilm_phases_flyout/constants';
 
 type IlmPhaseUiMeta = Record<PhaseName, { color: string; description: string }>;
 

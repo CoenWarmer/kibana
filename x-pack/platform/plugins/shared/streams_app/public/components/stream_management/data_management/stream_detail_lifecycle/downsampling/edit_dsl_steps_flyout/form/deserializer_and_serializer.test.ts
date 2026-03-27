@@ -8,10 +8,10 @@
 import { cloneDeep } from 'lodash';
 import type { IngestStreamLifecycleDSL } from '@kbn/streams-schema';
 
-import { createDslStepsFlyoutDeserializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/deserializer';
-import { createDslStepsFlyoutSerializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/serializer';
-import type { DslStepsFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/constants';
+import { createDslStepsFlyoutDeserializer } from './deserializer';
+import { createDslStepsFlyoutSerializer } from './serializer';
+import type { DslStepsFlyoutFormInternal } from './types';
+import { MAX_DOWNSAMPLE_STEPS } from './constants';
 
 const unknownValue = { some: 'value' };
 

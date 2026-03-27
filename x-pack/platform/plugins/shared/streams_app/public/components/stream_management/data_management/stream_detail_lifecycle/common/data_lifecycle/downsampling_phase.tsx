@@ -20,7 +20,7 @@ import {
 } from '@elastic/eui';
 import type { DownsampleStep } from '@kbn/streams-schema/src/models/ingest/lifecycle';
 import { capitalize } from 'lodash';
-import { getInteractivePanelStyles } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/interactive_panel_styles';
+import { getInteractivePanelStyles } from './interactive_panel_styles';
 
 interface DownsamplingPhaseProps {
   downsample: DownsampleStep;

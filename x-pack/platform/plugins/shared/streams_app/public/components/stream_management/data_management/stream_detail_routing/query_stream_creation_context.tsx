@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { useExecuteQueryStreamPreview } from '../../../../../hooks/use_execute_query_stream_preview';
+import { useExecuteQueryStreamPreview } from '../../../../hooks/use_execute_query_stream_preview';
 
 export type QueryStreamCreationState = ReturnType<typeof useExecuteQueryStreamPreview>;
 

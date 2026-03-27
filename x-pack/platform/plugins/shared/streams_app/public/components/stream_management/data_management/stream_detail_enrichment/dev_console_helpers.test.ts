@@ -11,9 +11,9 @@ import {
   registerDissectSuggestion,
   clearDissectSuggestion,
   createCopyStreamsSuggestionHelper,
-} from '../../../../data_management/stream_detail_enrichment/dev_console_helpers';
-import type { InteractiveModeSnapshot } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import type { SimulationActorSnapshot } from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+} from './dev_console_helpers';
+import type { InteractiveModeSnapshot } from './state_management/interactive_mode_machine';
+import type { SimulationActorSnapshot } from './state_management/simulation_state_machine';
 
 // Mock the EUI functions
 jest.mock('@elastic/eui', () => ({

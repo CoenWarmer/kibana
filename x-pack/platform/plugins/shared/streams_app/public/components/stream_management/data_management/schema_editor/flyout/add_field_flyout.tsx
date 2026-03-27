@@ -41,12 +41,12 @@ import { mapKeys } from 'lodash';
 import { prefixOTelField } from '@kbn/otel-semantic-conventions';
 import { useBoolean } from '@kbn/react-hooks';
 import type { FieldMetadata } from '@kbn/fields-metadata-plugin/common/fields_metadata/models/field_metadata';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import type { MappedSchemaField, SchemaField } from '../../../../../data_management/schema_editor/types';
-import { useSchemaEditorContext } from '../../../../../data_management/schema_editor/schema_editor_context';
-import { FieldTypeSelector as FieldTypeSelectorComponent } from '../../../../../data_management/schema_editor/flyout/field_form_type';
-import { FieldFormFormat, typeSupportsFormat } from '../../../../../data_management/schema_editor/flyout/field_form_format';
-import { deserializeJson, serializeXJson } from '../../../../../data_management/stream_detail_enrichment/helpers';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import type { MappedSchemaField, SchemaField } from '../types';
+import { useSchemaEditorContext } from '../schema_editor_context';
+import { FieldTypeSelector as FieldTypeSelectorComponent } from './field_form_type';
+import { FieldFormFormat, typeSupportsFormat } from './field_form_format';
+import { deserializeJson, serializeXJson } from '../../stream_detail_enrichment/helpers';
 
 export interface AddFieldFlyoutProps {
   onClose: () => void;

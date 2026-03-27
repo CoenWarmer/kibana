@@ -25,45 +25,45 @@ import type { DefaultValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useGrokCollection } from '@kbn/grok-ui';
 import type { ActionBlockProps } from '.';
-import { useDiscardConfirm } from '../../../../../../../../hooks/use_discard_confirm';
-import { selectPreviewRecords } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { useDiscardConfirm } from '../../../../../../../hooks/use_discard_confirm';
+import { selectPreviewRecords } from '../../../state_management/simulation_state_machine/selectors';
 import {
   useGetStreamEnrichmentState,
   useStreamEnrichmentSelector,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../../../state_management/stream_enrichment_state_machine';
 import {
   selectStreamType,
   selectValidationErrors,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import type { ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+} from '../../../state_management/stream_enrichment_state_machine/selectors';
+import type { ProcessorFormState } from '../../../types';
 import {
   convertFormStateToProcessor,
   getFormStateFromActionStep,
   SPECIALISED_TYPES,
-} from '../../../../../../../data_management/stream_detail_enrichment/utils';
-import { ConfigDrivenProcessorFields } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/components/fields';
-import type { ConfigDrivenProcessorType } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
-import { ConvertProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/convert';
-import { DateProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/date';
-import { DissectProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/dissect';
-import { DropProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/drop_document';
-import { GrokProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/grok';
-import { ManualIngestPipelineProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/manual_ingest_pipeline';
-import { MathProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math';
-import { ProcessorContextProvider } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_context';
-import { ProcessorErrors } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_metrics';
-import { ProcessorTypeSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_type_selector';
-import { deleteProcessorPromptOptions, discardChangesPromptOptions } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/prompt_options';
-import { ReplaceProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/replace';
-import { RedactProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/redact';
-import { SetProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/set';
-import { SplitProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/split';
-import { SortProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/sort';
-import { TransformStringProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/transform_string';
-import { ConcatProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/concat';
-import { JoinProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/join';
-import { JsonExtractProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/json_extract';
-import { NetworkDirectionProcessorForm } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/network_direction';
+} from '../../../utils';
+import { ConfigDrivenProcessorFields } from './config_driven/components/fields';
+import type { ConfigDrivenProcessorType } from './config_driven/types';
+import { ConvertProcessorForm } from './convert';
+import { DateProcessorForm } from './date';
+import { DissectProcessorForm } from './dissect';
+import { DropProcessorForm } from './drop_document';
+import { GrokProcessorForm } from './grok';
+import { ManualIngestPipelineProcessorForm } from './manual_ingest_pipeline';
+import { MathProcessorForm } from './math';
+import { ProcessorContextProvider } from './processor_context';
+import { ProcessorErrors } from './processor_metrics';
+import { ProcessorTypeSelector } from './processor_type_selector';
+import { deleteProcessorPromptOptions, discardChangesPromptOptions } from './prompt_options';
+import { ReplaceProcessorForm } from './replace';
+import { RedactProcessorForm } from './redact';
+import { SetProcessorForm } from './set';
+import { SplitProcessorForm } from './split';
+import { SortProcessorForm } from './sort';
+import { TransformStringProcessorForm } from './transform_string';
+import { ConcatProcessorForm } from './concat';
+import { JoinProcessorForm } from './join';
+import { JsonExtractProcessorForm } from './json_extract';
+import { NetworkDirectionProcessorForm } from './network_direction';
 
 export const ActionBlockEditor = forwardRef<HTMLDivElement, ActionBlockProps>((props, ref) => {
   const { processorMetrics, stepRef } = props;

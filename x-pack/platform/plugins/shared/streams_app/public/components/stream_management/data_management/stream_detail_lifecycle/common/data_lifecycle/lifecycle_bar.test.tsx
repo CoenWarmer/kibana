@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { LifecycleBar } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_bar';
-import type { LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+import { LifecycleBar } from './lifecycle_bar';
+import type { LifecyclePhase } from './lifecycle_types';
 
 describe('LifecycleBar', () => {
   const defaultProps = {

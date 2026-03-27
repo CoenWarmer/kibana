@@ -19,20 +19,20 @@ import {
 import { i18n } from '@kbn/i18n';
 import { useEuiTheme } from '@elastic/eui';
 import { isEqual } from 'lodash';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import type { DataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import { OverrideSettingsModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/override_settings_modal/override_settings_modal';
-import { EditDslStepsFlyout } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import type { LifecyclePhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import { buildLifecyclePhases } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useIlmPhasesColorAndDescription } from './use_ilm_phases_color_and_description';
+import type { DataStreamStats } from './use_data_stream_stats';
+import { formatBytes } from '../helpers/format_bytes';
+import { OverrideSettingsModal } from '../downsampling/override_settings_modal/override_settings_modal';
+import { EditDslStepsFlyout } from '../downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
+import { MAX_DOWNSAMPLE_STEPS } from '../downsampling/edit_dsl_steps_flyout/form';
+import type { LifecyclePhase } from '../common/data_lifecycle/lifecycle_types';
+import { buildLifecyclePhases } from '../common/data_lifecycle/lifecycle_types';
 import {
   dslLifecycleSummaryUiReducer,
   initialDslLifecycleSummaryUiState,
   type OverrideSettingsContext,
-} from '../../../../../data_management/stream_detail_lifecycle/hooks/use_dsl_lifecycle_summary_state';
+} from './use_dsl_lifecycle_summary_state';
 
 interface UseDslLifecycleSummaryProps {
   definition: Streams.ingest.all.GetResponse;

@@ -11,8 +11,8 @@ import {
   getMathFunctionDefinition,
   getMathParameterNames,
 } from '@kbn/streamlang';
-import type { Suggestion } from '../../../../../../../../data_management/shared/autocomplete_selector';
-import { STREAMS_MATH_LANGUAGE_ID } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_tokenization';
+import type { Suggestion } from '../../../../../shared/autocomplete_selector';
+import { STREAMS_MATH_LANGUAGE_ID } from './math_expression_tokenization';
 
 // Completion items creation
 

@@ -12,7 +12,7 @@ import type {
   IlmPolicyPhase,
   IlmPolicyPhases,
 } from '@kbn/streams-schema';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from './types';
 
 type AnyRecord = Record<string, unknown>;
 type DownsampleOutput = { after: string; fixed_interval: string } & AnyRecord;

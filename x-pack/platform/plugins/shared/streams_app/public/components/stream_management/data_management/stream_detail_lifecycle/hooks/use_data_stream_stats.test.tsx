@@ -8,9 +8,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { of } from 'rxjs';
 import type { TimeState } from '@kbn/es-query';
-import { useDataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
+import { useDataStreamStats } from './use_data_stream_stats';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
 
 jest.mock('../../../../hooks/use_kibana');
 jest.mock('../../../../hooks/use_timefilter');

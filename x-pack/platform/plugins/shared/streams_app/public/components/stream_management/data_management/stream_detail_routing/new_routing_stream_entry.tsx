@@ -9,14 +9,14 @@ import { EuiFlexGroup, EuiPanel, EuiText, useEuiTheme } from '@elastic/eui';
 import { css } from '@emotion/css';
 import { i18n } from '@kbn/i18n';
 import React, { useEffect, useRef } from 'react';
-import { AddRoutingRuleControls } from '../../../../data_management/stream_detail_routing/control_bars';
-import { RoutingConditionEditor } from '../../../../data_management/stream_detail_routing/routing_condition_editor';
+import { AddRoutingRuleControls } from './control_bars';
+import { RoutingConditionEditor } from './routing_condition_editor';
 import {
   selectCurrentRule,
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { StreamNameFormRow, useChildStreamInput } from '../../../../stream_name_form_row';
+} from './state_management/stream_routing_state_machine';
+import { StreamNameFormRow, useChildStreamInput } from '../../../stream_name_form_row';
 
 export function NewRoutingStreamEntry() {
   const panelRef = useRef<HTMLDivElement>(null);
