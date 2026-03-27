@@ -205,6 +205,12 @@ export async function resolveRestoreStrategy(
         `${changedInvalidationFiles.join(', ')}. ` +
         `Local artifacts may be stale — cleaning them.`
     );
+    if (changedInvalidationFiles.includes('yarn.lock')) {
+      log.warning(
+        '[Bootstrap] yarn.lock changed — if you recently switched branches, ' +
+          'run: yarn kbn bootstrap'
+      );
+    }
 
     if (!cacheServerAvailable) {
       log.info('[Cache] Cache server unavailable — will restore directly from GCS.');
@@ -300,7 +306,8 @@ export async function resolveRestoreStrategy(
 
   if (!bestGcsArchive) {
     log.info(
-      `[Cache check] No GCS archive found — proceeding with ${effectiveRebuildSet.size} local rebuilds.`
+      `[Cache check] No GCS archive found — tsc will rebuild ${effectiveRebuildSet.size} project(s) ` +
+        `from local artifacts. This is normal after a branch switch or merge.`
     );
     await invalidateTsBuildInfoFiles(effectiveRebuildSet, log);
     return { shouldRestore: false };
@@ -365,6 +372,11 @@ export async function resolveRestoreStrategy(
       12
     )}) would not reduce the rebuild ` +
       `count (${gcsEffectiveCount} vs ${effectiveRebuildSet.size} locally) — skipping restore.`
+  );
+  log.info(
+    `[Cache check] tsc will rebuild ${effectiveRebuildSet.size} project(s) incrementally ` +
+      `from local artifacts. This is normal after a branch switch or merge — ` +
+      `run the type check once and subsequent runs will be fast.`
   );
 
   // GCS restore would not help, but we still need to ensure tsc rechecks the

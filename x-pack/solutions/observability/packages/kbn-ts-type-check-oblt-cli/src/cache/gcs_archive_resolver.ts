@@ -9,7 +9,7 @@ import { REPO_ROOT } from '@kbn/repo-info';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { TsProject } from '@kbn/ts-projects';
 import execa from 'execa';
-import { MAX_COMMITS_TO_CHECK } from './constants';
+import { MAX_COMMITS_TO_CHECK, CACHE_INVALIDATION_FILES } from './constants';
 import type { GcsFileSystem } from './file_system/gcs_file_system';
 import {
   buildCandidateShaList,
@@ -23,6 +23,7 @@ import { isCacheServerAvailable } from './cache_server_client';
 import { detectStaleArtifacts } from './detect_stale_artifacts';
 import { buildReverseDependencyMap, computeEffectiveRebuildSet } from './dependency_graph';
 import { getChangedInvalidationFiles } from './artifacts_state';
+import { calculateFileHashes } from './utils';
 
 /**
  * A resolved GCS archive reference, from either commits/<sha>/ or prs/<prNumber>/.
@@ -44,6 +45,12 @@ export interface BestGcsArchive {
    *  node_modules change (i.e. yarn.lock differs between this archive and HEAD).
    *  Only set when this is a PR archive that supersedes an older commit archive. */
   fallbackCommitSha?: string;
+  /** File hashes (yarn.lock, .nvmrc, etc.) recorded when the PR archive was built.
+   *  Present only for PR archives. Used to verify node_modules compatibility via
+   *  the stored hash rather than a git diff of the main merge commit — the merge
+   *  commit's yarn.lock may have been updated on main after the PR CI ran, making
+   *  the git diff unreliable for PR archives. */
+  prBuildFileHashes?: Record<string, string>;
 }
 
 /**
@@ -51,16 +58,45 @@ export interface BestGcsArchive {
  * and HEAD, meaning the archive was built against a different node_modules and
  * cannot be safely used as incremental tsc input.
  * Logs a warning when the check fires so the reason is visible to the user.
+ *
+ * For PR archives the check compares the metadata's stored hashes against the
+ * current file hashes rather than using a git diff of the main merge commit.
+ * This is necessary because a PR's CI may run before a yarn.lock update lands
+ * on main — the squash merge commit then gets main's updated yarn.lock, making
+ * the git diff return "no changes" even though the archive was built with an
+ * older lock file and is therefore incompatible with the current node_modules.
  */
 async function archiveInvalidatedByNodeModulesChange(
   archive: BestGcsArchive,
   log: SomeDevLog
 ): Promise<boolean> {
-  const changed = await getChangedInvalidationFiles(archive.sha);
+  const archiveLabel = archive.prNumber
+    ? `${archive.sha.slice(0, 12)} (PR #${archive.prNumber})`
+    : archive.sha.slice(0, 12);
+
+  let changed: string[];
+
+  if (archive.prBuildFileHashes) {
+    // PR archives: use the hashes recorded in the archive's metadata.json.
+    // The metadata reflects what the archive was actually built with, which may
+    // differ from the main merge commit's files if yarn.lock was updated after
+    // the PR's CI ran.
+    const filesToCheck = CACHE_INVALIDATION_FILES.filter(
+      (f) => archive.prBuildFileHashes![f] !== undefined
+    );
+    if (filesToCheck.length === 0) {
+      // No hashes stored — fall through to git diff.
+      changed = await getChangedInvalidationFiles(archive.sha);
+    } else {
+      const currentHashes = await calculateFileHashes(filesToCheck);
+      changed = filesToCheck.filter((f) => currentHashes[f] !== archive.prBuildFileHashes![f]);
+    }
+  } else {
+    // Commit archives: git diff the archive SHA against HEAD.
+    changed = await getChangedInvalidationFiles(archive.sha);
+  }
+
   if (changed.length > 0) {
-    const archiveLabel = archive.prNumber
-      ? `${archive.sha.slice(0, 12)} (PR #${archive.prNumber})`
-      : archive.sha.slice(0, 12);
     const fileList = changed.join(', ');
     const verb = changed.length === 1 ? 'is' : 'are';
     log.warning(
@@ -97,14 +133,17 @@ async function resolvePrFallbackMatches(
       const prNumber = await extractPrNumberFromCommitMessage(mainSha);
       if (!prNumber) return undefined;
 
-      const tipSha = await gcsFs.getPrArchiveTipSha(prNumber);
+      const [tipSha, prBuildFileHashes] = await Promise.all([
+        gcsFs.getPrArchiveTipSha(prNumber),
+        gcsFs.getPrArchiveFileHashes(prNumber),
+      ]);
       if (!tipSha) return undefined;
 
       log.verbose(
         `[Cache] PR archive found for main commit ${mainSha.slice(0, 12)} (PR #${prNumber})`
       );
 
-      return { sha: mainSha, prNumber, prTipSha: tipSha };
+      return { sha: mainSha, prNumber, prTipSha: tipSha, prBuildFileHashes };
     })
   );
 
@@ -162,9 +201,22 @@ export async function resolveGcsMatchedShas(
     }
   }
 
-  const mainShas = upstreamRemote
+  // Read recent main-branch commits to supplement the local rev-list. This
+  // helps on branches that haven't merged main recently and whose local history
+  // might not reach far enough back to overlap with available GCS archives.
+  //
+  // IMPORTANT: only include main commits that are already reachable from HEAD
+  // (i.e. present in `history`). After a `git merge upstream/main`, upstream
+  // advances past our merge point, so `upstream/main` contains commits our
+  // branch doesn't include yet. Using those future commits as restore candidates
+  // would select an archive built from code we don't have locally, making every
+  // project that changed between our HEAD and that future commit appear stale.
+  const rawMainShas = upstreamRemote
     ? await readMainBranchCommitShas(MAX_COMMITS_TO_CHECK, upstreamRemote)
     : [];
+
+  const historySet = new Set(history);
+  const mainShas = rawMainShas.filter((sha) => historySet.has(sha));
 
   const candidates = buildCandidateShaList(currentSha, [...history, ...mainShas]);
   const matched = candidates.filter((sha) => availableShas.has(sha));
@@ -214,9 +266,17 @@ export async function resolveBestGcsSha(
   // 0 = most recent on main) to determine recency — NOT candidates position,
   // because main commits that aren't local ancestors are appended after the
   // local history section in candidates, giving them artificially high indices.
-  const mainShas = upstreamRemote
+  //
+  // Only include main commits that are actual ancestors of HEAD (present in
+  // the local rev-list). After a `git merge upstream/main`, upstream/main
+  // advances past our merge point — using future main commits would select PR
+  // archives built from code our branch doesn't have, making many projects
+  // appear stale. The same filter is applied in resolveGcsMatchedShas.
+  const rawMainShas = upstreamRemote
     ? await readMainBranchCommitShas(MAX_COMMITS_TO_CHECK, upstreamRemote)
     : [];
+  const historySet = new Set(history);
+  const mainShas = rawMainShas.filter((sha) => historySet.has(sha));
 
   // Find the position of the best commit match within upstream/main. If it is
   // not on main (e.g. a local commit), fall back to checking all main commits.

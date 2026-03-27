@@ -69,6 +69,20 @@ export abstract class AbstractFileSystem {
     return metadata?.commitSha;
   }
 
+  /**
+   * Reads prs/<prNumber>/metadata.json and returns the file hashes recorded at
+   * build time (yarn.lock, .nvmrc, .node-version). Used to verify that the PR
+   * archive was built against the same node_modules as the current checkout.
+   */
+  public async getPrArchiveFileHashes(
+    prNumber: string
+  ): Promise<Record<string, string> | undefined> {
+    const metadata = await this.readMetadata(
+      this.getMetadataPath(join(PULL_REQUESTS_PATH, prNumber))
+    );
+    return metadata?.fileHashes as Record<string, string> | undefined;
+  }
+
   public async findBestSha(shas: string[]): Promise<string | undefined> {
     for (const sha of shas) {
       const archivePath = this.getArchivePath(join(COMMITS_PATH, sha));

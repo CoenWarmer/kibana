@@ -100,7 +100,10 @@ const { restoreTSBuildArtifacts, resolveRestoreStrategy } = jest.requireMock(
     (
       log: SomeDevLog,
       projects: TsProject[]
-    ) => Promise<{ shouldRestore: boolean; bestSha: string | undefined }>
+    ) => Promise<
+      | { shouldRestore: true; bestSha: string; staleProjects: string[]; cacheServerAvailable: boolean; prNumber?: string; prTipSha?: string }
+      | { shouldRestore: false; bestSha?: undefined }
+    >
   >;
 };
 const { writeArtifactsState } = jest.requireMock('./cache/artifacts_state') as {
@@ -238,7 +241,7 @@ describe('type_check orchestration', () => {
     });
 
     it('skips restore when bestSha is undefined even if shouldRestore is true', async () => {
-      resolveRestoreStrategy.mockResolvedValueOnce({ shouldRestore: true, bestSha: undefined });
+      resolveRestoreStrategy.mockResolvedValueOnce({ shouldRestore: false, bestSha: undefined });
 
       const log = createLog();
       const procRunner = createProcRunner();
@@ -274,6 +277,8 @@ describe('type_check orchestration', () => {
       resolveRestoreStrategy.mockResolvedValueOnce({
         shouldRestore: true,
         bestSha: 'abc123def456',
+        staleProjects: [],
+        cacheServerAvailable: true,
       });
 
       const log = createLog();
