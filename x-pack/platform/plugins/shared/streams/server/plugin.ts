@@ -33,7 +33,7 @@ import {
 } from '../common/constants';
 import { registerFeatureFlags } from './feature_flags';
 import { ContentService } from './lib/content/content_service';
-import { registerRules } from './lib/rules/register_rules';
+import { registerRules } from './lib/sig_events/rules/register_rules';
 import { AttachmentService } from './lib/streams/attachments/attachment_service';
 import { QueryService } from './lib/streams/assets/query/query_service';
 import { StreamsService } from './lib/streams/service';
