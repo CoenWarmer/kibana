@@ -46,7 +46,7 @@ jest.mock('../../../stream_detail_systems/stream_description/use_stream_descript
 }));
 
 // Mock hooks used by StreamDiscoveryConfiguration
-jest.mock('../../../../hooks/use_stream_features', () => ({
+jest.mock('../../../../hooks/sig_events/use_stream_features', () => ({
   useStreamFeatures: () => ({
     features: [],
     excludedFeatures: [],
@@ -56,7 +56,7 @@ jest.mock('../../../../hooks/use_stream_features', () => ({
   }),
 }));
 
-jest.mock('../../../../hooks/use_stream_features_api', () => ({
+jest.mock('../../../../hooks/sig_events/use_stream_features_api', () => ({
   useStreamFeaturesApi: () => ({
     getFeaturesIdentificationStatus: jest.fn().mockResolvedValue({ status: 'not_started' }),
     scheduleFeaturesIdentificationTask: jest.fn(),

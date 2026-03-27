@@ -9,7 +9,7 @@ import type { EuiThemeComputed } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import type { StreamQuery } from '@kbn/streams-schema';
 import type { $Values } from 'utility-types';
-import type { SignificantEventItem } from '../../../../hooks/use_fetch_significant_events';
+import type { SignificantEventItem } from '../../../../hooks/sig_events/use_fetch_significant_events';
 import { pValueToLabel } from '../../../significant_events_discovery/utils/p_value_to_label';
 
 type EuiThemeColor = $Values<{

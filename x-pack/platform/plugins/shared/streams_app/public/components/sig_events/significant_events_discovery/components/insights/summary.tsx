@@ -19,7 +19,7 @@ import { TaskStatus } from '@kbn/streams-schema';
 import React, { useEffect, useRef, useState } from 'react';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import type { Insight } from '@kbn/streams-schema';
-import { useInsightsDiscoveryApi } from '../../../../../hooks/use_insights_discovery_api';
+import { useInsightsDiscoveryApi } from '../../../../../hooks/sig_events/use_insights_discovery_api';
 import { useKibana } from '../../../../../hooks/use_kibana';
 import { useTaskPolling } from '../../../../../hooks/use_task_polling';
 import { getFormattedError } from '../../../../../util/errors';

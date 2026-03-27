@@ -32,17 +32,17 @@ import {
   DISCOVERY_QUERIES_QUERY_KEY,
   useFetchDiscoveryQueries,
   type SignificantEventQueryRow,
-} from '../../../../../hooks/use_fetch_discovery_queries';
+} from '../../../../../hooks/sig_events/use_fetch_discovery_queries';
 import {
   DISCOVERY_QUERIES_OCCURRENCES_QUERY_KEY,
   useFetchDiscoveryQueriesOccurrences,
-} from '../../../../../hooks/use_fetch_discovery_queries_occurrences';
+} from '../../../../../hooks/sig_events/use_fetch_discovery_queries_occurrences';
 import { useKibana } from '../../../../../hooks/use_kibana';
-import { useQueriesApi } from '../../../../../hooks/use_queries_api';
+import { useQueriesApi } from '../../../../../hooks/sig_events/use_queries_api';
 import {
   UNBACKED_QUERIES_COUNT_QUERY_KEY,
   useUnbackedQueriesCount,
-} from '../../../../../hooks/use_unbacked_queries_count';
+} from '../../../../../hooks/sig_events/use_unbacked_queries_count';
 import { getFormattedError } from '../../../../../util/errors';
 import { LoadingPanel } from '../../../../loading_panel';
 import { SparkPlot } from '../../../../spark_plot';
