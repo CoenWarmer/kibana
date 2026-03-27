@@ -8,7 +8,7 @@ import React, { useState, useCallback } from 'react';
 import { i18n } from '@kbn/i18n';
 import type { Feature, Streams } from '@kbn/streams-schema';
 import { EuiPanel, EuiText, EuiFlexGroup, EuiFlexItem, EuiSpacer } from '@elastic/eui';
-import { useStreamFeatures } from '../../hooks/sig_events/use_stream_features';
+import { useStreamFeatures } from '../../../hooks/sig_events/use_stream_features';
 import { StreamFeaturesAccordion } from './stream_features/stream_features_accordion';
 import { Row } from '../../stream_management/data_management/stream_detail_management/advanced_view/row';
 import { FeatureIdentificationControl } from '../stream_detail_significant_events_view/feature_identification_control';

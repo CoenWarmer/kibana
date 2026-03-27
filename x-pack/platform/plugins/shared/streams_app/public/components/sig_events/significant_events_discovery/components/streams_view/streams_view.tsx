@@ -26,7 +26,7 @@ import type { TableRow } from './utils';
 import { useAIFeatures } from '../../../../../hooks/use_ai_features';
 import { useIndexPatternsConfig } from '../../../../../hooks/use_index_patterns_config';
 import { useKibana } from '../../../../../hooks/use_kibana';
-import { useInsightsDiscoveryApi } from '../../../../hooks/sig_events/use_insights_discovery_api';
+import { useInsightsDiscoveryApi } from '../../../../../hooks/sig_events/use_insights_discovery_api';
 import { useOnboardingApi } from '../../../../../hooks/use_onboarding_api';
 import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
 import { useTaskPolling } from '../../../../../hooks/use_task_polling';
