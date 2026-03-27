@@ -146,13 +146,8 @@ const importContentRoute = createServerRoute({
     summary: 'Import content into a stream',
     description: 'Links content objects to a stream.',
     availability: {
-<<<<<<< HEAD
-      stability: 'experimental',
-      since: '9.1',
-=======
-      since: '9.1.0',
-      stability: 'experimental',
->>>>>>> ab24b48483453f62b52ae9945321ac737c00708d
+since: '9.1.0',
+stability: 'experimental',
     },
     body: {
       accepts: 'multipart/form-data',
