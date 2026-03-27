@@ -19,7 +19,10 @@ import type {
 } from '@kbn/streamlang';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
 import type { Streams } from '@kbn/streams-schema';
-import type { EnrichmentDataSource, EnrichmentUrlState } from '../../../../../../../common/url_schema';
+import type {
+  EnrichmentDataSource,
+  EnrichmentUrlState,
+} from '../../../../../../../common/url_schema';
 import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
 import type { MappedSchemaField } from '../../../schema_editor/types';
 import type { DataSourceActorRef, DataSourceToParentEvent } from '../data_source_state_machine';

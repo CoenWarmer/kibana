@@ -14,7 +14,10 @@ import type {
   EnrichmentDataSource,
   EnrichmentUrlState,
 } from '../../../../../../../common/url_schema';
-import { ENRICHMENT_URL_STATE_KEY, enrichmentUrlSchema } from '../../../../../../../common/url_schema';
+import {
+  ENRICHMENT_URL_STATE_KEY,
+  enrichmentUrlSchema,
+} from '../../../../../../../common/url_schema';
 import { defaultEnrichmentUrlState, defaultLatestSamplesDataSource } from './utils';
 import type {
   StreamEnrichmentContextType,

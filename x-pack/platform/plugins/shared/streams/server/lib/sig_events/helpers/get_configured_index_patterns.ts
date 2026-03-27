@@ -9,7 +9,7 @@ import { DEFAULT_INDEX_PATTERNS } from '@kbn/streams-schema';
 import type {
   ModelSettingsConfigClient,
   ModelSettings,
-} from '../../sig_events/saved_objects/model_settings_config_client';
+} from '../saved_objects/model_settings_config_client';
 
 /**
  * Resolves index patterns from the given settings string.
