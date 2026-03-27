@@ -41,7 +41,10 @@ import { useAbortableAsync, useBoolean } from '@kbn/react-hooks';
 import { getESQLQueryColumns } from '@kbn/esql-utils';
 import { useStreamDetail } from '../../hooks/use_stream_detail';
 import { useKibana } from '../../hooks/use_kibana';
-import type { SchemaEditorField, SchemaField } from '../stream_management/data_management/schema_editor/types';
+import type {
+  SchemaEditorField,
+  SchemaField,
+} from '../stream_management/data_management/schema_editor/types';
 import { getFormattedError } from '../../util/errors';
 import {
   EMPTY_CONTENT,

@@ -11,7 +11,10 @@ import { DEFAULT_APP_CATEGORIES } from '@kbn/core/server';
 import type { LicenseType } from '@kbn/licensing-types';
 import { STREAMS_ESQL_RULE_TYPE_ID } from '@kbn/rule-data-utils';
 import type { PersistenceAlertType } from '@kbn/rule-registry-plugin/server';
-import { STREAMS_PRODUCER, STREAMS_RULE_REGISTRATION_CONTEXT } from '../../../../../common/constants';
+import {
+  STREAMS_PRODUCER,
+  STREAMS_RULE_REGISTRATION_CONTEXT,
+} from '../../../../../common/constants';
 import { getRuleExecutor } from './executor';
 import type { EsqlRuleParams } from './types';
 import { esqlRuleParams } from './types';
