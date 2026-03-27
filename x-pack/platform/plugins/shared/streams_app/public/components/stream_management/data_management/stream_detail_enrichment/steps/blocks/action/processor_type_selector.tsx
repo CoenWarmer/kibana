@@ -15,17 +15,17 @@ import type { DocLinksStart } from '@kbn/core/public';
 import type { ProcessorType } from '@kbn/streamlang';
 import { Streams } from '@kbn/streams-schema';
 import { useGrokCollection } from '@kbn/grok-ui';
-import { useKibana } from '../../../../../../../hooks/use_kibana';
-import { getDefaultFormStateByType } from '../../../../../../data_management/stream_detail_enrichment/utils';
-import type { ProcessorFormState } from '../../../../../../data_management/stream_detail_enrichment/types';
-import { configDrivenProcessors } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
+import { getDefaultFormStateByType } from '../../../../../../../data_management/stream_detail_enrichment/utils';
+import type { ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { configDrivenProcessors } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven';
 import {
   useGetStreamEnrichmentState,
   useInteractiveModeSelector,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectPreviewRecords } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
-import { useStreamEnrichmentSelector } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { isStepUnderEdit } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectPreviewRecords } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { useStreamEnrichmentSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { isStepUnderEdit } from '../../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
 
 interface TAvailableProcessor {
   type: ProcessorType;

@@ -34,14 +34,14 @@ import { FormattedMessage } from '@kbn/i18n-react';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/css';
 import type { FieldConflict } from '@kbn/streams-plugin/server/routes/internal/streams/schema/route';
-import { useKibana } from '../../../../hooks/use_kibana';
-import { getFormattedError } from '../../../../util/errors';
-import type { MappedSchemaField, SchemaEditorField } from '../../../data_management/schema_editor/types';
-import type { FieldStatus } from '../../../data_management/schema_editor/constants';
-import { FIELD_TYPE_MAP } from '../../../data_management/schema_editor/constants';
-import { convertToFieldDefinitionConfig } from '../../../data_management/schema_editor/utils';
-import { FieldResultBadge } from '../../../data_management/schema_editor/field_result';
-import { FieldStatusBadge } from '../../../data_management/schema_editor/field_status';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { getFormattedError } from '../../../../../util/errors';
+import type { MappedSchemaField, SchemaEditorField } from '../../../../data_management/schema_editor/types';
+import type { FieldStatus } from '../../../../data_management/schema_editor/constants';
+import { FIELD_TYPE_MAP } from '../../../../data_management/schema_editor/constants';
+import { convertToFieldDefinitionConfig } from '../../../../data_management/schema_editor/utils';
+import { FieldResultBadge } from '../../../../data_management/schema_editor/field_result';
+import { FieldStatusBadge } from '../../../../data_management/schema_editor/field_status';
 
 interface SchemaChangesReviewModalProps {
   onClose: () => void;

@@ -23,9 +23,9 @@ import { i18n } from '@kbn/i18n';
 import { FieldNameWithIcon } from '@kbn/react-field';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { useEnrichmentFieldSuggestions } from '../../../../../../../../hooks/use_field_suggestions';
-import { SortableList } from '../../../../../../../data_management/stream_detail_enrichment/sortable_list';
-import type { ConcatFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { useEnrichmentFieldSuggestions } from '../../../../../../../../../hooks/use_field_suggestions';
+import { SortableList } from '../../../../../../../../data_management/stream_detail_enrichment/sortable_list';
+import type { ConcatFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 interface DraggableConcatInputProps {
   index: number;

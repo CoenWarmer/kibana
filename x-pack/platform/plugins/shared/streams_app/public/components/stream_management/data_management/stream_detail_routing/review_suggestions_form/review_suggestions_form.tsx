@@ -19,20 +19,20 @@ import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/css';
 import React, { useCallback, useMemo } from 'react';
 import type { Streams } from '@kbn/streams-schema';
-import { NestedView } from '../../../../nested_view';
-import { GenerateSuggestionButton } from '../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { SuggestedStreamPanel } from '../../../../data_management/stream_detail_routing/review_suggestions_form/suggested_stream_panel';
+import { NestedView } from '../../../../../nested_view';
+import { GenerateSuggestionButton } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
+import { SuggestedStreamPanel } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/suggested_stream_panel';
 import type {
   PartitionSuggestion,
   UseReviewSuggestionsFormResult,
-} from '../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+} from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
 import {
   useStreamSamplesSelector,
   useStreamsRoutingSelector,
   useStreamRoutingEvents,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { CreateStreamConfirmationModal } from '../../../../data_management/stream_detail_routing/review_suggestions_form/create_stream_confirmation_modal';
-import type { AIFeatures } from '../../../../../hooks/use_ai_features';
+} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { CreateStreamConfirmationModal } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/create_stream_confirmation_modal';
+import type { AIFeatures } from '../../../../../../hooks/use_ai_features';
 
 export interface ReviewSuggestionsFormProps
   extends Pick<

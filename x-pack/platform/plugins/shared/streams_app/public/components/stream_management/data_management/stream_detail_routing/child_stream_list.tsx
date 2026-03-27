@@ -28,28 +28,28 @@ import { MAX_NESTING_LEVEL, getSegments } from '@kbn/streams-schema';
 import { isEmpty } from 'lodash';
 import { useScrollToActive } from '@kbn/core-chrome-navigation/src/hooks/use_scroll_to_active';
 import type { DraggableProvided } from '@hello-pangea/dnd';
-import { useStreamsPrivileges } from '../../../../hooks/use_streams_privileges';
-import { NestedView } from '../../../nested_view';
-import { CurrentStreamEntry } from '../../../data_management/stream_detail_routing/current_stream_entry';
-import { NewRoutingStreamEntry } from '../../../data_management/stream_detail_routing/new_routing_stream_entry';
-import { IdleRoutingStreamEntry } from '../../../data_management/stream_detail_routing/idle_routing_stream_entry';
-import { EditRoutingStreamEntry } from '../../../data_management/stream_detail_routing/edit_routing_stream_entry';
+import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
+import { NestedView } from '../../../../nested_view';
+import { CurrentStreamEntry } from '../../../../data_management/stream_detail_routing/current_stream_entry';
+import { NewRoutingStreamEntry } from '../../../../data_management/stream_detail_routing/new_routing_stream_entry';
+import { IdleRoutingStreamEntry } from '../../../../data_management/stream_detail_routing/idle_routing_stream_entry';
+import { EditRoutingStreamEntry } from '../../../../data_management/stream_detail_routing/edit_routing_stream_entry';
 import {
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { IdleQueryStreamEntry, CreatingQueryStreamEntry } from '../../../data_management/stream_detail_routing/query_stream_entry';
-import { ReviewSuggestionsForm } from '../../../data_management/stream_detail_routing/review_suggestions_form/review_suggestions_form';
-import { GenerateSuggestionButton } from '../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { AdditionalChargesCallout } from '../../../data_management/shared/additional_charges_callout';
-import { NoSuggestionsCallout } from '../../../data_management/stream_detail_routing/review_suggestions_form/no_suggestions_callout';
-import { useReviewSuggestionsForm } from '../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
-import { BulkCreateStreamsConfirmationModal } from '../../../data_management/stream_detail_routing/review_suggestions_form/bulk_create_streams_confirmation_modal';
-import { useTimefilter } from '../../../../hooks/use_timefilter';
-import { useAIFeatures } from '../../../../hooks/use_ai_features';
-import { NoDataEmptyPrompt } from '../../../data_management/stream_detail_routing/empty_prompt';
-import { SuggestionLoadingPrompt } from '../../../data_management/shared/suggestion_loading_prompt';
-import type { RoutingDefinitionWithUIAttributes } from '../../../data_management/stream_detail_routing/types';
+} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { IdleQueryStreamEntry, CreatingQueryStreamEntry } from '../../../../data_management/stream_detail_routing/query_stream_entry';
+import { ReviewSuggestionsForm } from '../../../../data_management/stream_detail_routing/review_suggestions_form/review_suggestions_form';
+import { GenerateSuggestionButton } from '../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
+import { AdditionalChargesCallout } from '../../../../data_management/shared/additional_charges_callout';
+import { NoSuggestionsCallout } from '../../../../data_management/stream_detail_routing/review_suggestions_form/no_suggestions_callout';
+import { useReviewSuggestionsForm } from '../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+import { BulkCreateStreamsConfirmationModal } from '../../../../data_management/stream_detail_routing/review_suggestions_form/bulk_create_streams_confirmation_modal';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { useAIFeatures } from '../../../../../hooks/use_ai_features';
+import { NoDataEmptyPrompt } from '../../../../data_management/stream_detail_routing/empty_prompt';
+import { SuggestionLoadingPrompt } from '../../../../data_management/shared/suggestion_loading_prompt';
+import type { RoutingDefinitionWithUIAttributes } from '../../../../data_management/stream_detail_routing/types';
 
 function getReasonDisabledCreateButton(canManageRoutingRules: boolean, maxNestingLevel: boolean) {
   if (maxNestingLevel) {

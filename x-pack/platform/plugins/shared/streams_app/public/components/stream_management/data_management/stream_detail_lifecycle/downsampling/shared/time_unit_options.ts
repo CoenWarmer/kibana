@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { getTimeUnitLabel } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
-import type { TimeUnit } from '../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
+import { getTimeUnitLabel } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
+import type { TimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
 
 export const TIME_UNIT_OPTIONS: ReadonlyArray<{ value: TimeUnit; text: string }> = [
   { value: 'd', text: getTimeUnitLabel('d') },

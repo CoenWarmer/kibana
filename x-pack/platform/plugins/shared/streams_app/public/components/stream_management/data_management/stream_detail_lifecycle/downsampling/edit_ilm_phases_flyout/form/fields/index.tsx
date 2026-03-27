@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-export * from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/downsample_interval_field';
-export * from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/delete_searchable_snapshot_toggle_field';
-export * from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/min_age_field';
-export * from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/read_only_toggle_field';
-export * from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/searchable_snapshot_repository_field';
+export * from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/downsample_interval_field';
+export * from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/delete_searchable_snapshot_toggle_field';
+export * from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/min_age_field';
+export * from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/read_only_toggle_field';
+export * from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/fields/searchable_snapshot_repository_field';

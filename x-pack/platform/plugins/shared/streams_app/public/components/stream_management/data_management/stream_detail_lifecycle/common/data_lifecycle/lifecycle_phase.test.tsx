@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { LifecyclePhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_phase';
+import { LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_phase';
 
 describe('LifecyclePhase', () => {
   describe('Basic rendering', () => {

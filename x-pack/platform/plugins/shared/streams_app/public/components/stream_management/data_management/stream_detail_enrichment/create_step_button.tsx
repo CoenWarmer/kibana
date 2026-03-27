@@ -21,8 +21,8 @@ import {
   useInteractiveModeSelector,
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectStreamType } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectStreamType } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 
 const createConditionText = i18n.translate(
   'xpack.streams.streamDetailView.managementTab.enrichment.createConditionButtonText',

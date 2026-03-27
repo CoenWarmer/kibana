@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export { EditDslStepsFlyout } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
-export type { EditDslStepsFlyoutProps } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/types';
+export { EditDslStepsFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/edit_dsl_steps_flyout';
+export type { EditDslStepsFlyoutProps } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/types';

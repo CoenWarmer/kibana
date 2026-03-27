@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DownsamplingPhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_phase';
+import { DownsamplingPhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_phase';
 import type { DownsampleStep } from '@kbn/streams-schema/src/models/ingest/lifecycle';
 
 describe('DownsamplingPhase', () => {

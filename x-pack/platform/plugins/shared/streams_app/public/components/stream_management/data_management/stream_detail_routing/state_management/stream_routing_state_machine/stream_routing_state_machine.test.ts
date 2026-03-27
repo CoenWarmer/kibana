@@ -11,10 +11,10 @@ import { EMPTY, of } from 'rxjs';
 import { ALWAYS_CONDITION } from '@kbn/streamlang';
 import { isSchema, routingDefinitionListSchema } from '@kbn/streams-schema';
 import type { SampleDocument, Streams } from '@kbn/streams-schema';
-import { streamRoutingMachine } from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/stream_routing_state_machine';
-import { routingSamplesMachine } from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
-import type { RoutingSamplesInput } from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
-import { routingConverter } from '../../../../../data_management/stream_detail_routing/utils';
+import { streamRoutingMachine } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/stream_routing_state_machine';
+import { routingSamplesMachine } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
+import type { RoutingSamplesInput } from '../../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
+import { routingConverter } from '../../../../../../data_management/stream_detail_routing/utils';
 
 const stubRoutingSamplesMachine = routingSamplesMachine.provide({
   actors: {

@@ -22,17 +22,17 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm, FormProvider, useController, useFormContext } from 'react-hook-form';
 import type { DeepPartial } from 'utility-types';
 import { useSelector } from '@xstate/react';
-import { useDiscardConfirm } from '../../../../../../../hooks/use_discard_confirm';
-import type { StepActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import { useStreamEnrichmentSelector } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import type { ConditionBlockFormState } from '../../../../../../data_management/stream_detail_enrichment/types';
+import { useDiscardConfirm } from '../../../../../../../../hooks/use_discard_confirm';
+import type { StepActorRef } from '../../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import { useStreamEnrichmentSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import type { ConditionBlockFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
 import {
   getFormStateFromConditionStep,
   convertConditionBlockFormStateToConfiguration,
-} from '../../../../../../data_management/stream_detail_enrichment/utils';
-import { discardChangesPromptOptions, deleteConditionPromptOptions } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/prompt_options';
-import { ProcessorConditionEditorWrapper } from '../../../../../../data_management/stream_detail_enrichment/processor_condition_editor';
-import { selectStreamType } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from '../../../../../../../data_management/stream_detail_enrichment/utils';
+import { discardChangesPromptOptions, deleteConditionPromptOptions } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/prompt_options';
+import { ProcessorConditionEditorWrapper } from '../../../../../../../data_management/stream_detail_enrichment/processor_condition_editor';
+import { selectStreamType } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 
 interface WhereBlockConfigurationProps {
   stepRef: StepActorRef;

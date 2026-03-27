@@ -13,12 +13,12 @@ import {
 } from '@kbn/streams-schema/src/models/ingest/failure_store';
 import type { TimeState } from '@kbn/es-query';
 import { isRequestAbortedError } from '@kbn/server-route-repository-client';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
-import type { CalculatedStats } from '../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
-import { getCalculatedStats } from '../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
-import { getAggregations } from '../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import { formatBytes } from '../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import type { CalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
+import { getCalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
+import { getAggregations } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
+import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
 
 export type DataStreamStats = DataStreamStatServiceResponse['dataStreamsStats'][number] & {
   /**

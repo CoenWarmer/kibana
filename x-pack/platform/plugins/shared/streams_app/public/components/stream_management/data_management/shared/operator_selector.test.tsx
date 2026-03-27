@@ -10,7 +10,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getDefaultFormValueForOperator } from '@kbn/streamlang';
 
-import { OperatorSelector, BooleanShorthandOperatorKeys } from '../../../data_management/shared/operator_selector';
+import { OperatorSelector, BooleanShorthandOperatorKeys } from '../../../../data_management/shared/operator_selector';
 
 describe('OperatorSelector', () => {
   const baseField = 'is_active';

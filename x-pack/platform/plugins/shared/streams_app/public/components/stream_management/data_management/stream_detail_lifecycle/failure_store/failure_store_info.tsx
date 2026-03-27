@@ -7,15 +7,15 @@
 import React from 'react';
 import type { Streams } from '@kbn/streams-schema';
 import type { TimeState } from '@kbn/es-query';
-import { SectionPanel } from '../../../../data_management/stream_detail_lifecycle/common/section_panel';
-import { RetentionCard } from '../../../../data_management/stream_detail_lifecycle/failure_store/cards/retention_card';
-import { StorageSizeCard } from '../../../../data_management/stream_detail_lifecycle/failure_store/cards/storage_size_card';
-import { IngestionCard } from '../../../../data_management/stream_detail_lifecycle/failure_store/cards/ingestion_card';
-import { FailureStoreSummary } from '../../../../data_management/stream_detail_lifecycle/failure_store/failure_store_summary';
-import { FailureStoreIngestionRate } from '../../../../data_management/stream_detail_lifecycle/failure_store/ingestion_rate';
-import type { StreamAggregations } from '../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import type { EnhancedFailureStoreStats } from '../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import type { useFailureStoreConfig } from '../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
+import { SectionPanel } from '../../../../../data_management/stream_detail_lifecycle/common/section_panel';
+import { RetentionCard } from '../../../../../data_management/stream_detail_lifecycle/failure_store/cards/retention_card';
+import { StorageSizeCard } from '../../../../../data_management/stream_detail_lifecycle/failure_store/cards/storage_size_card';
+import { IngestionCard } from '../../../../../data_management/stream_detail_lifecycle/failure_store/cards/ingestion_card';
+import { FailureStoreSummary } from '../../../../../data_management/stream_detail_lifecycle/failure_store/failure_store_summary';
+import { FailureStoreIngestionRate } from '../../../../../data_management/stream_detail_lifecycle/failure_store/ingestion_rate';
+import type { StreamAggregations } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
+import type { EnhancedFailureStoreStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import type { useFailureStoreConfig } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
 
 export const FailureStoreInfo = ({
   openModal,

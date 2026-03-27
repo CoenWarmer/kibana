@@ -7,8 +7,8 @@
 
 import type { DiscoverAppLocatorParams } from '@kbn/discover-plugin/common';
 import { DISCOVER_APP_LOCATOR } from '@kbn/discover-plugin/common';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { getFailureStoreIndexName } from '../../../../data_management/stream_detail_lifecycle/helpers/failure_store_index_name';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { getFailureStoreIndexName } from '../../../../../data_management/stream_detail_lifecycle/helpers/failure_store_index_name';
 
 export const useFailureStoreRedirectLink = ({ streamName }: { streamName: string }) => {
   const {

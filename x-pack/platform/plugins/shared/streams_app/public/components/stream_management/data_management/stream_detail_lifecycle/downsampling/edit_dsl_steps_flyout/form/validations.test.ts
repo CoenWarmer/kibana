@@ -12,7 +12,7 @@ import {
   afterSmallerThanDataRetention,
   fixedIntervalMultipleOfPreviousStep,
   fixedIntervalMustBeAtLeastFiveMinutes,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/validations';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/validations';
 
 type FlatFormData = Record<string, unknown>;
 

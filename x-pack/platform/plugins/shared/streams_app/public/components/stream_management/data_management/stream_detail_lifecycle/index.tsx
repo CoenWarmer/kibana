@@ -10,11 +10,11 @@ import { EuiFlexGroup, EuiHorizontalRule } from '@elastic/eui';
 import type { Streams } from '@kbn/streams-schema';
 import { usePerformanceContext } from '@kbn/ebt-tools';
 import { getTimeDifferenceInSeconds } from '@kbn/timerange';
-import { StreamDetailFailureStore } from '../../../data_management/stream_detail_lifecycle/failure_store';
-import { StreamDetailGeneralData } from '../../../data_management/stream_detail_lifecycle/general_data';
-import { useDataStreamStats } from '../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { useTimefilter } from '../../../../hooks/use_timefilter';
-import { getStreamTypeFromDefinition } from '../../../../util/get_stream_type_from_definition';
+import { StreamDetailFailureStore } from '../../../../data_management/stream_detail_lifecycle/failure_store';
+import { StreamDetailGeneralData } from '../../../../data_management/stream_detail_lifecycle/general_data';
+import { useDataStreamStats } from '../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
 
 export function StreamDetailLifecycle({
   definition,

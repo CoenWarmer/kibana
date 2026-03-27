@@ -24,12 +24,12 @@ import {
   type DslStepMetaFields,
   type DslStepsFlyoutFormInternal,
   type PreservedTimeUnit,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import { downsamplingHelpText, getDoubledDurationFromPrevious, toMilliseconds } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
-import { TIME_UNIT_OPTIONS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/constants';
-import { useStyles } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
-import { StepPanel } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_panel';
-import { StepTabsRow } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_tabs_row';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
+import { downsamplingHelpText, getDoubledDurationFromPrevious, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+import { TIME_UNIT_OPTIONS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/constants';
+import { useStyles } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
+import { StepPanel } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_panel';
+import { StepTabsRow } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/sections/step_tabs_row';
 
 /** Partial form update including internal __dslStepsFlyout flag for updateFieldValues */
 type DslStepsFlyoutFormFieldUpdate = Partial<DslStepsFlyoutFormInternal> & {

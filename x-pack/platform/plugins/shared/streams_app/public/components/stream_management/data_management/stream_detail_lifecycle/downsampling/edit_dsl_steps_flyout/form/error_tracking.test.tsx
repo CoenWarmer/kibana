@@ -11,7 +11,7 @@ import {
   OnStepFieldErrorsChangeProvider,
   useDslStepsFlyoutTabErrors,
   useOnStepFieldErrorsChange,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
 
 const stepPath = (index: number) => `_meta.downsampleSteps[${index}]`;
 

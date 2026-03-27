@@ -7,7 +7,7 @@
 
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { isEqual } from 'lodash';
-import { getStepIndexFromArrayItemPath } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
+import { getStepIndexFromArrayItemPath } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
 
 export type StepFieldKey = 'after' | 'fixed_interval';
 export type OnStepFieldErrorsChange = (

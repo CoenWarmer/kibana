@@ -11,7 +11,7 @@ import { ALWAYS_CONDITION, convertUIStepsToDSL } from '@kbn/streamlang';
 import type { Streams } from '@kbn/streams-schema';
 import { type FieldDefinition, type FlattenRecord } from '@kbn/streams-schema';
 import { omit } from 'lodash';
-import { buildUpsertStreamRequestPayload, getDefaultFormStateByType } from '../../../data_management/stream_detail_enrichment/utils';
+import { buildUpsertStreamRequestPayload, getDefaultFormStateByType } from '../../../../data_management/stream_detail_enrichment/utils';
 
 let grokCollection: GrokCollection;
 

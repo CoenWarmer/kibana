@@ -13,8 +13,8 @@ import {
   useSimulatorSelector,
   useStreamEnrichmentSelector,
   useYamlModeSelector,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectHasAnyErrors } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectHasAnyErrors } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 
 export type YamlStepsProcessingSummaryMap = Map<string, StepStatus>;
 

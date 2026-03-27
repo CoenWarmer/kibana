@@ -16,10 +16,10 @@ import {
 } from '@elastic/eui';
 import { css } from '@emotion/react';
 import { i18n } from '@kbn/i18n';
-import type { AIFeatures } from '../../../../../hooks/use_ai_features';
-import { GenerateSuggestionButton } from '../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { useInteractiveModeSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { RootSteps } from '../../../../data_management/stream_detail_enrichment/steps/root_steps';
+import type { AIFeatures } from '../../../../../../hooks/use_ai_features';
+import { GenerateSuggestionButton } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
+import { useInteractiveModeSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { RootSteps } from '../../../../../data_management/stream_detail_enrichment/steps/root_steps';
 
 export interface PipelineSuggestionProps {
   aiFeatures: AIFeatures;

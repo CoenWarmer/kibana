@@ -13,8 +13,8 @@ import { I18nProvider } from '@kbn/i18n-react';
 import {
   createMockClassicStreamDefinition,
   createMockWiredStreamDefinition,
-} from '../../../data_management/shared/mocks';
-import type { StreamsAppKibanaContext } from '../../../../hooks/use_kibana';
+} from '../../../../data_management/shared/mocks';
+import type { StreamsAppKibanaContext } from '../../../../../hooks/use_kibana';
 
 jest.mock('../../../hooks/use_kibana');
 jest.mock('../../../hooks/use_stream_detail');
@@ -35,10 +35,10 @@ jest.mock('@kbn/ebt-tools', () => ({
   })),
 }));
 
-import { useKibana } from '../../../../hooks/use_kibana';
-import { useStreamDetail } from '../../../../hooks/use_stream_detail';
-import { useDiscardConfirm } from '../../../../hooks/use_discard_confirm';
-import { useSchemaFields } from '../../../data_management/schema_editor/hooks/use_schema_fields';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
+import { useDiscardConfirm } from '../../../../../hooks/use_discard_confirm';
+import { useSchemaFields } from '../../../../data_management/schema_editor/hooks/use_schema_fields';
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 
 const mockUseKibana = useKibana as jest.MockedFunction<typeof useKibana>;

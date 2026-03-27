@@ -13,8 +13,8 @@ import {
   getPhaseColumnSpans,
   type SegmentPhase,
   type TimelineSegment,
-} from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
-import { buildLifecyclePhases } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+} from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
+import { buildLifecyclePhases } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
 
 describe('buildLifecyclePhases', () => {
   it('should build phases with delete phase when retentionPeriod is provided', () => {

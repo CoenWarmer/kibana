@@ -7,15 +7,15 @@
 
 import { EuiSpacer } from '@elastic/eui';
 import React from 'react';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
 import {
   SourceIpField,
   DestinationIpField,
   NetworkDirectionTargetField,
-} from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/network_direction/network_direction_inputs';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { InternalNetworksSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/network_direction/internal_networks_selector';
+} from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/network_direction/network_direction_inputs';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { InternalNetworksSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/network_direction/internal_networks_selector';
 
 export const NetworkDirectionProcessorForm = () => {
   return (

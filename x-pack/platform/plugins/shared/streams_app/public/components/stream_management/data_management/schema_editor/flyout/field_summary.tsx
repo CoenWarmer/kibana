@@ -17,15 +17,15 @@ import {
 import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { Streams, isRoot } from '@kbn/streams-schema';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { InfoPanel } from '../../../../info_panel';
-import { FieldParent } from '../../../../data_management/schema_editor/field_parent';
-import { FieldStatusBadge } from '../../../../data_management/schema_editor/field_status';
-import { FieldFormFormat, typeSupportsFormat } from '../../../../data_management/schema_editor/flyout/field_form_format';
-import { FieldFormType } from '../../../../data_management/schema_editor/flyout/field_form_type';
-import { ChildrenAffectedCallout } from '../../../../data_management/schema_editor/flyout/children_affected_callout';
-import { EMPTY_CONTENT } from '../../../../data_management/schema_editor/constants';
-import type { SchemaField } from '../../../../data_management/schema_editor/types';
+import { useStreamsAppRouter } from '../../../../../../hooks/use_streams_app_router';
+import { InfoPanel } from '../../../../../info_panel';
+import { FieldParent } from '../../../../../data_management/schema_editor/field_parent';
+import { FieldStatusBadge } from '../../../../../data_management/schema_editor/field_status';
+import { FieldFormFormat, typeSupportsFormat } from '../../../../../data_management/schema_editor/flyout/field_form_format';
+import { FieldFormType } from '../../../../../data_management/schema_editor/flyout/field_form_type';
+import { ChildrenAffectedCallout } from '../../../../../data_management/schema_editor/flyout/children_affected_callout';
+import { EMPTY_CONTENT } from '../../../../../data_management/schema_editor/constants';
+import type { SchemaField } from '../../../../../data_management/schema_editor/types';
 
 const title = i18n.translate('xpack.streams.streamDetailSchemaEditorFieldSummaryTitle', {
   defaultMessage: 'Field summary',

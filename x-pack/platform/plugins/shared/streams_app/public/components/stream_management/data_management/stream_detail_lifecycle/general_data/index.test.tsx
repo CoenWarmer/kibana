@@ -10,7 +10,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { StreamDetailGeneralData } from '.';
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 import type { Streams } from '@kbn/streams-schema';
-import type { useDataStreamStats } from '../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import type { useDataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
 
 let mockFlyoutOpen = false;
 let mockFlyoutHasUnsavedChanges = false;

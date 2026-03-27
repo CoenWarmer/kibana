@@ -9,7 +9,7 @@ import type { EuiComboBoxOptionOption } from '@elastic/eui';
 import { EuiComboBox } from '@elastic/eui';
 import React, { useMemo } from 'react';
 import { i18n } from '@kbn/i18n';
-import type { SchemaField, SchemaFieldType } from '../../../../data_management/schema_editor/types';
+import type { SchemaField, SchemaFieldType } from '../../../../../data_management/schema_editor/types';
 
 interface FieldFormFormatProps {
   value: SchemaField['format'];

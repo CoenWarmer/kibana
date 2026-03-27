@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export * from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/data_source_state_machine';
-export type * from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/types';
+export * from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/data_source_state_machine';
+export type * from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine/types';

@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { css } from '@emotion/react';
-import type { SimulationErrors } from '../../../data_management/stream_detail_enrichment/state_management/use_simulation_errors';
+import type { SimulationErrors } from '../../../../data_management/stream_detail_enrichment/state_management/use_simulation_errors';
 
 export const SimulationErrorsList = ({ errors }: { errors: SimulationErrors }) => {
   return (

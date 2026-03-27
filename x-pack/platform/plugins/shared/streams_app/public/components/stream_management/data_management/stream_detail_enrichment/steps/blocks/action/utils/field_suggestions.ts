@@ -6,8 +6,8 @@
  */
 
 import type { FlattenRecord } from '@kbn/streams-schema';
-import type { DetectedField } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import { getAllFieldsInOrder } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import type { DetectedField } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+import { getAllFieldsInOrder } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 
 export interface FieldSuggestion {
   name: string;

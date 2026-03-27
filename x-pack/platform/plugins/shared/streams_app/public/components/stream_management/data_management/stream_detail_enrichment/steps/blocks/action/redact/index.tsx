@@ -22,12 +22,12 @@ import {
   type EuiComboBoxOptionOption,
 } from '@elastic/eui';
 import { useController, useFieldArray, useFormContext } from 'react-hook-form';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { RedactPatternDefinition } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/redact/redact_pattern_definition';
-import type { RedactFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { RedactPatternDefinition } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/redact/redact_pattern_definition';
+import type { RedactFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 // Common Grok patterns useful for redaction with human-readable labels
 // These are official ES Grok patterns from @kbn/grok-ui

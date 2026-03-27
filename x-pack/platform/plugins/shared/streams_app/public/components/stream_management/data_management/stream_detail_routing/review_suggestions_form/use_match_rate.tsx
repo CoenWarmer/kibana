@@ -9,11 +9,11 @@ import type { Streams } from '@kbn/streams-schema';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from '@xstate/react';
 import { createActor } from 'xstate';
-import { getPercentageFormatter } from '../../../../../util/formatters';
-import { useTimefilter } from '../../../../../hooks/use_timefilter';
-import type { PartitionSuggestion } from '../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { createDocumentsCountCollectorActor } from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
+import { getPercentageFormatter } from '../../../../../../util/formatters';
+import { useTimefilter } from '../../../../../../hooks/use_timefilter';
+import type { PartitionSuggestion } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { createDocumentsCountCollectorActor } from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine/routing_samples_state_machine';
 
 const percentageFormatter = getPercentageFormatter({ precision: 2 });
 

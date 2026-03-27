@@ -33,19 +33,19 @@ import type { monaco } from '@kbn/monaco';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useToggle from 'react-use/lib/useToggle';
 import yaml from 'yaml';
-import { useKibana } from '../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../hooks/use_kibana';
 import {
   alwaysToEmptyEquals,
   conditionNeedsValueField,
   emptyEqualsToAlways,
   getFilterConditionOperator,
   isConditionEditableInUi,
-} from '../../../../util/condition';
-import type { Suggestion } from '../../../data_management/shared/autocomplete_selector';
-import { AutocompleteSelector } from '../../../data_management/shared/autocomplete_selector';
-import { conditionYamlService } from '../../../data_management/shared/condition_yaml_service';
-import { OperatorSelector } from '../../../data_management/shared/operator_selector';
-import { RangeInput } from '../../../data_management/shared/range_input';
+} from '../../../../../util/condition';
+import type { Suggestion } from '../../../../data_management/shared/autocomplete_selector';
+import { AutocompleteSelector } from '../../../../data_management/shared/autocomplete_selector';
+import { conditionYamlService } from '../../../../data_management/shared/condition_yaml_service';
+import { OperatorSelector } from '../../../../data_management/shared/operator_selector';
+import { RangeInput } from '../../../../data_management/shared/range_input';
 
 const SYNTAX_EDITOR_CONDITION_CHANGE_DEBOUNCE_MS = 300;
 

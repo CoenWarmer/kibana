@@ -10,7 +10,7 @@ import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
-import { ToggleField } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/toggle_field';
+import { ToggleField } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/toggle_field';
 
 export const IgnoreFailureToggle = () => {
   const value = useWatch({ name: 'ignore_failure' });

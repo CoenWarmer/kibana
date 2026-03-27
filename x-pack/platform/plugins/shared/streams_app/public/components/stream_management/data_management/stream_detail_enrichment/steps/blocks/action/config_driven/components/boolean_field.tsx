@@ -6,9 +6,9 @@
  */
 
 import React from 'react';
-import type { ConfigDrivenProcessorFormState, FieldConfiguration } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
-import { ToggleField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/toggle_field';
-import type { ExtractBooleanFields } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import type { ConfigDrivenProcessorFormState, FieldConfiguration } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
+import { ToggleField } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/toggle_field';
+import type { ExtractBooleanFields } from '../../../../../../../../../data_management/stream_detail_enrichment/types';
 
 export const BooleanField = ({
   fieldConfiguration,

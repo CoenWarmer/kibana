@@ -12,8 +12,8 @@ import {
   convertStepsForUI,
 } from '@kbn/streamlang';
 import { isStreamlangDSLSchema, type StreamlangDSL } from '@kbn/streamlang/types/streamlang';
-import type { YamlModeContext, YamlModeInput, YamlModeEvent } from '../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/types';
-import { hasErrorsInParentSnapshot } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import type { YamlModeContext, YamlModeInput, YamlModeEvent } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/types';
+import { hasErrorsInParentSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 
 export type YamlModeActorRef = ActorRefFrom<typeof yamlModeMachine>;
 export type YamlModeSnapshot = SnapshotFrom<typeof yamlModeMachine>;

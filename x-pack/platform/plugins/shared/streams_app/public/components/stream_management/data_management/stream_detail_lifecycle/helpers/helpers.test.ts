@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { parseDuration, parseDurationInSeconds, orderIlmPhases, getILMRatios } from '../../../../data_management/stream_detail_lifecycle/helpers/helpers';
+import { parseDuration, parseDurationInSeconds, orderIlmPhases, getILMRatios } from '../../../../../data_management/stream_detail_lifecycle/helpers/helpers';
 import type { IlmPolicyPhases } from '@kbn/streams-schema';
 
 describe('helpers', () => {

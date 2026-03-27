@@ -10,7 +10,7 @@ import { UnifiedDocViewerFlyout } from '@kbn/unified-doc-viewer-plugin/public';
 import type { DataTableRecord } from '@kbn/discover-utils';
 import type { DocViewsRegistry } from '@kbn/unified-doc-viewer';
 import type { DataView } from '@kbn/data-views-plugin/common';
-import { useKibana } from '../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../hooks/use_kibana';
 
 export const FLYOUT_WIDTH_KEY = 'streamsEnrichment:flyoutWidth';
 

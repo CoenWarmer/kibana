@@ -9,13 +9,13 @@ import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import { isConditionBlock } from '@kbn/streamlang';
 import { useSelector } from '@xstate/react';
 import React from 'react';
-import type { StepsProcessingSummaryMap } from '../../../../data_management/stream_detail_enrichment/hooks/use_steps_processing_summary';
-import type { InteractiveModeContext } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
-import type { RootLevelMap } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { ActionBlock } from '../../../../data_management/stream_detail_enrichment/steps/blocks/action';
-import { WhereBlock } from '../../../../data_management/stream_detail_enrichment/steps/blocks/where';
-import { DraggableStepWrapper } from '../../../../data_management/stream_detail_enrichment/steps/draggable_step_wrapper';
-import { useInteractiveModeSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import type { StepsProcessingSummaryMap } from '../../../../../data_management/stream_detail_enrichment/hooks/use_steps_processing_summary';
+import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
+import type { RootLevelMap } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import { ActionBlock } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/action';
+import { WhereBlock } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/where';
+import { DraggableStepWrapper } from '../../../../../data_management/stream_detail_enrichment/steps/draggable_step_wrapper';
+import { useInteractiveModeSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
 
 export interface StepConfigurationProps {
   stepRef: InteractiveModeContext['stepRefs'][number];

@@ -9,8 +9,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
 import userEvent from '@testing-library/user-event';
-import { DocumentMatchFilterControls } from '../../../data_management/stream_detail_routing/document_match_filter_controls';
-import { useStreamSamplesSelector } from '../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { DocumentMatchFilterControls } from '../../../../data_management/stream_detail_routing/document_match_filter_controls';
+import { useStreamSamplesSelector } from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
 
 jest.mock('./state_management/stream_routing_state_machine');
 

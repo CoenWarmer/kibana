@@ -7,11 +7,11 @@
 
 import { createSelector } from 'reselect';
 import moment from 'moment';
-import type { StreamEnrichmentActorSnapshot } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/stream_enrichment_state_machine';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import type { StreamEnrichmentContextType } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
-import { canDataSourceTypeBeOutdated } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import type { DataSourceContext } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { StreamEnrichmentActorSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/stream_enrichment_state_machine';
+import { getStreamTypeFromDefinition } from '../../../../../../../util/get_stream_type_from_definition';
+import type { StreamEnrichmentContextType } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+import { canDataSourceTypeBeOutdated } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import type { DataSourceContext } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
 
 /**
  * Selects whether the state machine is in interactive mode.

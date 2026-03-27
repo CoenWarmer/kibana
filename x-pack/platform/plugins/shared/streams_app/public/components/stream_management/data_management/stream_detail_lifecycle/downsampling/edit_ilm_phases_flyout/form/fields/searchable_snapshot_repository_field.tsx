@@ -14,7 +14,7 @@ import {
   useFormData,
 } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { EuiButtonIcon, EuiFormRow, EuiLink, EuiSelect, EuiText } from '@elastic/eui';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
 
 export interface SearchableSnapshotRepositoryFieldProps {
   form: FormHook<IlmPolicyPhases, IlmPhasesFlyoutFormInternal>;

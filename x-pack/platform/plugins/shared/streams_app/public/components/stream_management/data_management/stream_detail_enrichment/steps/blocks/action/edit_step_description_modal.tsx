@@ -22,13 +22,13 @@ import {
 import { css } from '@emotion/react';
 import { i18n } from '@kbn/i18n';
 import type { StreamlangProcessorDefinitionWithUIAttributes } from '@kbn/streamlang';
-import { getStepDescription } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils';
+import { getStepDescription } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils';
 import {
   ADD_DESCRIPTION_MENU_LABEL,
   DESCRIPTION_FIELD_ARIA_LABEL,
   DESCRIPTION_HELP_TEXT,
   EDIT_DESCRIPTION_MENU_LABEL,
-} from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/translations';
+} from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/translations';
 
 export interface EditStepDescriptionModalProps {
   step: StreamlangProcessorDefinitionWithUIAttributes;

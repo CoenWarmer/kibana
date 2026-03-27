@@ -19,8 +19,8 @@ import {
   type PopoverAnchorPosition,
   useEuiTheme,
 } from '@elastic/eui';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import { ILM_PHASE_ORDER } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { useIlmPhasesColorAndDescription } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
+import { ILM_PHASE_ORDER } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
 
 export type IlmPhaseSelectOption = (typeof ILM_PHASE_ORDER)[number];
 

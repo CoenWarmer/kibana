@@ -12,15 +12,15 @@ import { __IntlProvider as IntlProvider } from '@kbn/i18n-react';
 
 // Setup userEvent with pointerEventsCheck disabled to avoid issues with EUI animation
 const user = userEvent.setup({ pointerEventsCheck: 0 });
-import { FieldActionsCell } from '../../../data_management/schema_editor/field_actions';
-import { SchemaEditorContextProvider } from '../../../data_management/schema_editor/schema_editor_context';
+import { FieldActionsCell } from '../../../../data_management/schema_editor/field_actions';
+import { SchemaEditorContextProvider } from '../../../../data_management/schema_editor/schema_editor_context';
 import type {
   InheritedSchemaField,
   MappedSchemaField,
   UnmappedSchemaField,
   SchemaEditorField,
   SchemaEditorProps,
-} from '../../../data_management/schema_editor/types';
+} from '../../../../data_management/schema_editor/types';
 
 // Mock the Kibana hook
 const mockOverlaysOpenFlyout = jest.fn();

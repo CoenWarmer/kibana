@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { useKibana } from '../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../hooks/use_kibana';
 
 interface UseSnapshotRepositoriesOptions {
   enabled?: boolean;

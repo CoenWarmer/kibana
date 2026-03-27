@@ -11,12 +11,12 @@ import { i18n } from '@kbn/i18n';
 import { useBoolean } from '@kbn/react-hooks';
 import { toMountPoint } from '@kbn/react-kibana-mount';
 import { Streams } from '@kbn/streams-schema';
-import { StreamsAppContextProvider } from '../../../streams_app_context_provider';
-import { SchemaEditorFlyout } from '../../../data_management/schema_editor/flyout';
-import { useSchemaEditorContext } from '../../../data_management/schema_editor/schema_editor_context';
-import type { SchemaField } from '../../../data_management/schema_editor/types';
-import { useKibana } from '../../../../hooks/use_kibana';
-import { getGeoPointSuggestion } from '../../../data_management/schema_editor/utils';
+import { StreamsAppContextProvider } from '../../../../streams_app_context_provider';
+import { SchemaEditorFlyout } from '../../../../data_management/schema_editor/flyout';
+import { useSchemaEditorContext } from '../../../../data_management/schema_editor/schema_editor_context';
+import type { SchemaField } from '../../../../data_management/schema_editor/types';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { getGeoPointSuggestion } from '../../../../data_management/schema_editor/utils';
 
 export const FieldActionsCell = ({ field }: { field: SchemaField }) => {
   const context = useKibana();

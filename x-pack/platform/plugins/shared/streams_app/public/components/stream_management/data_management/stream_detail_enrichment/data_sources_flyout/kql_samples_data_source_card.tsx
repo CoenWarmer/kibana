@@ -9,15 +9,15 @@ import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
 import useAsync from 'react-use/lib/useAsync';
 import type { Query, TimeRange } from '@kbn/es-query';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamEnrichmentSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import type { DataSourceActorRef } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { useDataSourceSelector } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { KqlSamplesDataSourceWithUIAttributes } from '../../../../data_management/stream_detail_enrichment/types';
-import { UncontrolledStreamsAppSearchBar } from '../../../../streams_app_search_bar/uncontrolled_streams_app_bar';
-import { DataSourceCard } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
-import { NameField } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/name_field';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { useStreamEnrichmentSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import type { DataSourceActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { useDataSourceSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { KqlSamplesDataSourceWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/types';
+import { UncontrolledStreamsAppSearchBar } from '../../../../../streams_app_search_bar/uncontrolled_streams_app_bar';
+import { DataSourceCard } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
+import { NameField } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/name_field';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
 
 interface KqlSamplesDataSourceCardProps {
   readonly dataSourceRef: DataSourceActorRef;

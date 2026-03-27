@@ -10,7 +10,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { RangeCondition } from '@kbn/streamlang';
 
-import { RangeInput } from '../../../data_management/shared/range_input';
+import { RangeInput } from '../../../../data_management/shared/range_input';
 
 describe('RangeInput', () => {
   it('renders from and to input fields', () => {

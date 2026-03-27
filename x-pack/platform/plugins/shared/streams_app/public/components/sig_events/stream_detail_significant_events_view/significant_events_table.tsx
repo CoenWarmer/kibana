@@ -14,13 +14,13 @@ import type { TickFormatter } from '@elastic/charts';
 import type { StreamQuery, Streams } from '@kbn/streams-schema';
 import { DISCOVER_APP_LOCATOR } from '@kbn/deeplinks-analytics/constants';
 import type { DiscoverAppLocatorParams } from '@kbn/discover-plugin/common';
-import type { SignificantEventItem } from '../../../hooks/sig_events/use_fetch_significant_events';
-import { useKibana } from '../../../hooks/use_kibana';
-import { formatChangePoint } from '../../stream_detail_significant_events_view/utils/change_point';
-import { SignificantEventsHistogramChart } from '../../stream_detail_significant_events_view/significant_events_histogram';
-import { buildDiscoverParams } from '../../significant_events_discovery/utils/discover_helpers';
-import { useTimefilter } from '../../../hooks/use_timefilter';
-import { SeverityBadge } from '../../significant_events_discovery/components/severity_badge/severity_badge';
+import type { SignificantEventItem } from '../../../../hooks/sig_events/use_fetch_significant_events';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { formatChangePoint } from '../../../stream_detail_significant_events_view/utils/change_point';
+import { SignificantEventsHistogramChart } from '../../../stream_detail_significant_events_view/significant_events_histogram';
+import { buildDiscoverParams } from '../../../significant_events_discovery/utils/discover_helpers';
+import { useTimefilter } from '../../../../hooks/use_timefilter';
+import { SeverityBadge } from '../../../significant_events_discovery/components/severity_badge/severity_badge';
 
 export function SignificantEventsTable({
   definition,

@@ -7,8 +7,8 @@
 import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiIconTip } from '@elastic/eui';
-import { BaseIngestionCard } from '../../../../../data_management/stream_detail_lifecycle/common/base_ingestion_card';
-import type { EnhancedFailureStoreStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { BaseIngestionCard } from '../../../../../../data_management/stream_detail_lifecycle/common/base_ingestion_card';
+import type { EnhancedFailureStoreStats } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
 
 export const IngestionCard = ({
   period,

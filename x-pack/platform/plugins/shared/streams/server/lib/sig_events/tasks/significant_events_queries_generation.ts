@@ -16,9 +16,9 @@ import { getErrorMessage } from '../../streams/errors/parse_error';
 import { formatInferenceProviderError } from '../../../routes/utils/create_connector_sse_error';
 import { resolveConnectorId } from '../../../routes/utils/resolve_connector_id';
 import type { TaskContext } from '.';
-import type { TaskParams } from '../types';
+import type { TaskParams } from '../../tasks/types';
 import { PromptsConfigService } from '../../sig_events/saved_objects/prompts_config_service';
-import { cancellableTask } from '../cancellable_task';
+import { cancellableTask } from '../../tasks/cancellable_task';
 import { generateSignificantEventDefinitions } from '../../significant_events/generate_significant_events';
 import { isDefinitionNotFoundError } from '../../streams/errors/definition_not_found_error';
 

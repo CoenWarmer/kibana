@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DownsamplingBar } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_bar';
-import type { DownsamplingSegment } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
+import { DownsamplingBar } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/downsampling_bar';
+import type { DownsamplingSegment } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
 
 describe('DownsamplingBar', () => {
   const defaultProps = {

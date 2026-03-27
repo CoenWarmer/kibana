@@ -18,8 +18,8 @@ import { i18n } from '@kbn/i18n';
 import type { MappingRuntimeFields } from '@elastic/elasticsearch/lib/api/types';
 import type { Condition } from '@kbn/streamlang';
 import { conditionToQueryDsl, getConditionFields } from '@kbn/streamlang';
-import { processCondition } from '../../../../../data_management/stream_detail_routing/utils';
-import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
+import { processCondition } from '../../../../../../data_management/stream_detail_routing/utils';
+import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
 
 export interface RoutingSamplesMachineDeps {
   data: DataPublicPluginStart;

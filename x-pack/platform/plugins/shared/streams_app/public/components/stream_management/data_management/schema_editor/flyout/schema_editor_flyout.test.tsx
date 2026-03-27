@@ -10,7 +10,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { __IntlProvider as IntlProvider } from '@kbn/i18n-react';
 import type { Streams } from '@kbn/streams-schema';
-import type { SchemaField } from '../../../../data_management/schema_editor/types';
+import type { SchemaField } from '../../../../../data_management/schema_editor/types';
 import { SchemaEditorFlyout } from '.';
 
 jest.mock('../../../../hooks/use_streams_app_router', () => ({

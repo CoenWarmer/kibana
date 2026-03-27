@@ -8,8 +8,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
-import { StorageSizeCard } from '../../../../../data_management/stream_detail_lifecycle/general_data/cards/storage_size_card';
-import type { DataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { StorageSizeCard } from '../../../../../../data_management/stream_detail_lifecycle/general_data/cards/storage_size_card';
+import type { DataStreamStats } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
 
 const createMockStats = (
   totalDocs: number | undefined,

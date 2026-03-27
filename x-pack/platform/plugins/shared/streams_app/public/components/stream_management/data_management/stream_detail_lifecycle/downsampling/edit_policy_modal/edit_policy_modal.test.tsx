@@ -8,8 +8,8 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { renderWithI18n } from '@kbn/test-jest-helpers';
-import type { AffectedResource } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
-import { EditPolicyModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
+import type { AffectedResource } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
+import { EditPolicyModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_policy_modal/edit_policy_modal';
 
 describe('EditPolicyModal', () => {
   const affectedResources = [

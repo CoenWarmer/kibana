@@ -20,25 +20,25 @@ import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
 import { getTimeDifferenceInSeconds } from '@kbn/timerange';
 import React, { useEffect } from 'react';
 import { usePerformanceContext } from '@kbn/ebt-tools';
-import { getStreamTypeFromDefinition } from '../../../../util/get_stream_type_from_definition';
-import { useKibana } from '../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../hooks/use_streams_app_fetch';
-import type { StatefulStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
-import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
-import { useTimefilter } from '../../../../hooks/use_timefilter';
-import { ManagementBottomBar } from '../../../data_management/management_bottom_bar';
-import { RequestPreviewFlyout } from '../../../data_management/request_preview_flyout';
-import { useRequestPreviewFlyoutState } from '../../../data_management/request_preview_flyout/use_request_preview_flyout_state';
-import { ChildStreamList } from '../../../data_management/stream_detail_routing/child_stream_list';
-import { PreviewPanel } from '../../../data_management/stream_detail_routing/preview_panel';
+import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import type { StatefulStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { ManagementBottomBar } from '../../../../data_management/management_bottom_bar';
+import { RequestPreviewFlyout } from '../../../../data_management/request_preview_flyout';
+import { useRequestPreviewFlyoutState } from '../../../../data_management/request_preview_flyout/use_request_preview_flyout_state';
+import { ChildStreamList } from '../../../../data_management/stream_detail_routing/child_stream_list';
+import { PreviewPanel } from '../../../../data_management/stream_detail_routing/preview_panel';
 import {
   StreamRoutingContextProvider,
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
   selectHasRoutingChanges,
-} from '../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { buildRoutingSaveRequestPayload, routingConverter } from '../../../data_management/stream_detail_routing/utils';
-import { QueryStreamCreationProvider } from '../../../data_management/stream_detail_routing/query_stream_creation_context';
+} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { buildRoutingSaveRequestPayload, routingConverter } from '../../../../data_management/stream_detail_routing/utils';
+import { QueryStreamCreationProvider } from '../../../../data_management/stream_detail_routing/query_stream_creation_context';
 
 interface StreamDetailRoutingProps {
   definition: Streams.WiredStream.GetResponse;

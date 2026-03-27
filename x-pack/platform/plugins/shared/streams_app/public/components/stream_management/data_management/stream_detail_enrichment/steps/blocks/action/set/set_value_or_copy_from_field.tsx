@@ -10,7 +10,7 @@ import { useFormContext } from 'react-hook-form';
 import { EuiFieldText, EuiFormRow, EuiLink, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
 
 const VALUE_FIELD = 'value';
 const COPY_FROM_FIELD = 'copy_from';

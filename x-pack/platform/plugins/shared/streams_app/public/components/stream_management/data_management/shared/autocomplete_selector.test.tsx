@@ -9,7 +9,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { EuiComboBoxProps } from '@elastic/eui';
-import { AutocompleteSelector } from '../../../data_management/shared/autocomplete_selector';
+import { AutocompleteSelector } from '../../../../data_management/shared/autocomplete_selector';
 
 jest.mock('@kbn/react-field', () => ({
   FieldIcon: ({ type }: { type: string }) => <span data-test-subj={`field-icon-${type}`} />,

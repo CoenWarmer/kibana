@@ -14,11 +14,11 @@ import { isEmpty } from 'lodash';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
 import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import { convertUIStepsToDSL } from '@kbn/streamlang';
-import { getFormattedError } from '../../../../../../util/errors';
-import type { Simulation, SimulationMachineDeps } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import type { SchemaField } from '../../../../../data_management/schema_editor/types';
-import { getMappedSchemaFields } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/utils';
-import { convertToFieldDefinitionConfig } from '../../../../../data_management/schema_editor/utils';
+import { getFormattedError } from '../../../../../../../util/errors';
+import type { Simulation, SimulationMachineDeps } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+import type { SchemaField } from '../../../../../../data_management/schema_editor/types';
+import { getMappedSchemaFields } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/utils';
+import { convertToFieldDefinitionConfig } from '../../../../../../data_management/schema_editor/utils';
 
 export interface SimulationRunnerInput {
   streamName: string;

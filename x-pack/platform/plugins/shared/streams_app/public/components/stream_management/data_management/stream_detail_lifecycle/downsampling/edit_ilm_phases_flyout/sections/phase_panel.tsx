@@ -12,14 +12,14 @@ import type { FormHook } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_l
 import { useFormData } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiText } from '@elastic/eui';
 
-import { useIlmPhasesColorAndDescription } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { DeleteSearchableSnapshotToggleField, MinAgeField, ReadOnlyToggleField } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { READONLY_ALLOWED_PHASES, TIME_UNIT_OPTIONS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
-import { DownsampleFieldSection } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/downsample_field_section';
-import { PhaseFieldsMount } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/phase_fields_mount';
-import { RemovePhaseButton } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/remove_phase_button';
-import { SearchableSnapshotFieldSection } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/searchable_snapshot_field_section';
+import { useIlmPhasesColorAndDescription } from '../../../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
+import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { DeleteSearchableSnapshotToggleField, MinAgeField, ReadOnlyToggleField } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { READONLY_ALLOWED_PHASES, TIME_UNIT_OPTIONS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { DownsampleFieldSection } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/downsample_field_section';
+import { PhaseFieldsMount } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/phase_fields_mount';
+import { RemovePhaseButton } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/remove_phase_button';
+import { SearchableSnapshotFieldSection } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/sections/searchable_snapshot_field_section';
 
 export interface PhasePanelProps {
   phase: PhaseName;

@@ -13,7 +13,7 @@ import {
   grokExpressionOverwritesSourceField,
   hasPrecedingProcessorTouchedField,
   type SampleWithDataSource,
-} from '../../../data_management/stream_detail_enrichment/processor_outcome_preview_helpers';
+} from '../../../../data_management/stream_detail_enrichment/processor_outcome_preview_helpers';
 
 describe('processor_outcome_preview_helpers', () => {
   describe('createOriginalGrokFieldValuesMap', () => {

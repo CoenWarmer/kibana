@@ -10,7 +10,7 @@ import { EuiComboBox, EuiFormRow } from '@elastic/eui';
 import React from 'react';
 import { useController } from 'react-hook-form';
 import { i18n } from '@kbn/i18n';
-import type { FieldConfiguration } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
+import type { FieldConfiguration } from '../../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/types';
 
 export const ArrayField = ({ fieldConfiguration }: { fieldConfiguration: FieldConfiguration }) => {
   const { field: fieldName, label, helpText, required } = fieldConfiguration;

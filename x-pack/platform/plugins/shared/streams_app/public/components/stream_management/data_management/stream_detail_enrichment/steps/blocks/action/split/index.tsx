@@ -10,12 +10,12 @@ import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { EuiSpacer, EuiFieldText, EuiFormRow, EuiCode } from '@elastic/eui';
 import { useController } from 'react-hook-form';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { SplitTargetFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/split/target_field';
-import type { SplitFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { SplitTargetFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/split/target_field';
+import type { SplitFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 export const SplitProcessorForm = () => {
   const { field: separatorField, fieldState: separatorFieldState } = useController<

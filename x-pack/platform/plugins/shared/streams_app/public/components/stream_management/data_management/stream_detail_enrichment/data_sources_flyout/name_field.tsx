@@ -8,7 +8,7 @@
 import React from 'react';
 import type { EuiFieldTextProps } from '@elastic/eui';
 import { EuiFormRow, EuiFieldText } from '@elastic/eui';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
 
 export const NameField = (props: Omit<EuiFieldTextProps, 'name'>) => {
   return (

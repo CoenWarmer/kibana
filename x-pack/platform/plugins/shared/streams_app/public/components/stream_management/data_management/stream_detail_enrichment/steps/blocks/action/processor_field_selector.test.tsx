@@ -9,8 +9,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ProcessorFieldSelector } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { AutocompleteSelector } from '../../../../../../data_management/shared/autocomplete_selector';
+import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { AutocompleteSelector } from '../../../../../../../data_management/shared/autocomplete_selector';
 
 jest.mock('../../../../../../hooks/use_field_suggestions', () => ({
   useEnrichmentFieldSuggestions: jest.fn(() => [

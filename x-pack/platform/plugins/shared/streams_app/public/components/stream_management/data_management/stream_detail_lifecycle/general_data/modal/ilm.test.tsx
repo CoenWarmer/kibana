@@ -9,9 +9,9 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
 import type { IlmPolicy, IlmPolicyPhases, IngestStreamLifecycleAll } from '@kbn/streams-schema';
-import { IlmField } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
-import type { PhaseProps } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
-import { getPhaseDescription } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
+import { IlmField } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
+import type { PhaseProps } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
+import { getPhaseDescription } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/ilm';
 
 describe('getPhaseDescription', () => {
   const colors = { hot: 'hotC', warm: 'warmC', cold: 'coldC', frozen: 'frozenC' };

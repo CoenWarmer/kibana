@@ -8,14 +8,14 @@
 import { i18n } from '@kbn/i18n';
 import React, { type ReactNode, useCallback, useMemo } from 'react';
 import { useController } from 'react-hook-form';
-import { useEnrichmentFieldSuggestions } from '../../../../../../../hooks/use_field_suggestions';
-import { useStreamDataViewFieldTypes } from '../../../../../../../hooks/use_stream_data_view_field_types';
-import { AutocompleteSelector } from '../../../../../../data_management/shared/autocomplete_selector';
+import { useEnrichmentFieldSuggestions } from '../../../../../../../../hooks/use_field_suggestions';
+import { useStreamDataViewFieldTypes } from '../../../../../../../../hooks/use_stream_data_view_field_types';
+import { AutocompleteSelector } from '../../../../../../../data_management/shared/autocomplete_selector';
 import {
   useSimulatorSelector,
   useStreamEnrichmentSelector,
-} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { useProcessorContext } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_context';
+} from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { useProcessorContext } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_context';
 
 export interface ProcessorFieldSelectorProps {
   fieldKey?: string;

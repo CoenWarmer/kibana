@@ -9,11 +9,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { uniq } from 'lodash';
 import { i18n } from '@kbn/i18n';
 import type { EuiSelectableOption, EuiSelectableProps } from '@elastic/eui';
-import { FilterGroup } from '../../../../data_management/schema_editor/filters/filter_group';
-import type { FieldTypeOption } from '../../../../data_management/schema_editor/constants';
-import { FIELD_TYPE_MAP } from '../../../../data_management/schema_editor/constants';
-import type { TControlsChangeHandler } from '../../../../data_management/schema_editor/hooks/use_controls';
-import { useSchemaEditorContext } from '../../../../data_management/schema_editor/schema_editor_context';
+import { FilterGroup } from '../../../../../data_management/schema_editor/filters/filter_group';
+import type { FieldTypeOption } from '../../../../../data_management/schema_editor/constants';
+import { FIELD_TYPE_MAP } from '../../../../../data_management/schema_editor/constants';
+import type { TControlsChangeHandler } from '../../../../../data_management/schema_editor/hooks/use_controls';
+import { useSchemaEditorContext } from '../../../../../data_management/schema_editor/schema_editor_context';
 
 const BUTTON_LABEL = i18n.translate(
   'xpack.streams.streamDetailSchemaEditor.fieldTypeFilterGroupButtonLabel',

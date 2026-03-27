@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export { formatMillisecondsInUnit, parseInterval, toMilliseconds } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+export { formatMillisecondsInUnit, parseInterval, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
 
 /**
  * Extract the index from an ArrayItem path like `_meta.downsampleSteps[3]`.

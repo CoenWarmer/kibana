@@ -7,10 +7,10 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { DataLifecycleTimeline } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_timeline';
-import type { LifecyclePhase } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
-import { buildDslSegments } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
-import type { TimelineSegment } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
+import { DataLifecycleTimeline } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_timeline';
+import type { LifecyclePhase } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_types';
+import { buildDslSegments } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
+import type { TimelineSegment } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_segments';
 import type { PhaseName } from '@kbn/streams-schema';
 
 describe('DataLifecycleTimeline', () => {

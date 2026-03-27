@@ -6,8 +6,8 @@
  */
 
 import type { IlmPolicyPhases } from '@kbn/streams-schema';
-import type { IlmPhasesFlyoutFormInternal, PreservedTimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { parseInterval, toMilliseconds } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
+import type { IlmPhasesFlyoutFormInternal, PreservedTimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import { parseInterval, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
 
 export const createIlmPhasesFlyoutDeserializer = () => {
   return (phases: IlmPolicyPhases): IlmPhasesFlyoutFormInternal => {

@@ -9,7 +9,7 @@ import React, { useCallback } from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiButton, EuiCallOut, EuiFlexGroup, EuiFlexItem, EuiSpacer, EuiText } from '@elastic/eui';
 import { useAbortController } from '@kbn/react-hooks';
-import { useKibana } from '../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../hooks/use_kibana';
 
 export function MissingDataStreamCallout({
   streamName,

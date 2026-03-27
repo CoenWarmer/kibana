@@ -7,8 +7,8 @@
 
 import { EuiSpacer } from '@elastic/eui';
 import React from 'react';
-import { IgnoreFailureToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { IgnoreFailureToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
 
 export const DropProcessorForm = () => {
   return (

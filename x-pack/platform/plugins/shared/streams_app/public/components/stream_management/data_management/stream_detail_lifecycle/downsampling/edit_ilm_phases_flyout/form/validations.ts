@@ -9,8 +9,8 @@ import { i18n } from '@kbn/i18n';
 import type { ValidationFunc } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { fieldValidators } from '@kbn/es-ui-shared-plugin/static/forms/helpers';
 
-import type { DownsamplePhase, PreservedTimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
-import { toMilliseconds } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
+import type { DownsamplePhase, PreservedTimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import { toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
 
 const { emptyField, isInteger } = fieldValidators;
 

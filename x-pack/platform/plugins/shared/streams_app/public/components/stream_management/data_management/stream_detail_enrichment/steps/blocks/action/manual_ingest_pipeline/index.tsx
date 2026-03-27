@@ -7,10 +7,10 @@
 
 import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
-import { JsonEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/manual_ingest_pipeline/json_editor';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { JsonEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/manual_ingest_pipeline/json_editor';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { IgnoreFailureToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
 
 export const ManualIngestPipelineProcessorForm = () => {
   return (

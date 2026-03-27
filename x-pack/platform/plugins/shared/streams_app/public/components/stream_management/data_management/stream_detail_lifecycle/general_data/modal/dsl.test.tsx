@@ -8,7 +8,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
-import { DslField } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal/dsl';
+import { DslField } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/dsl';
 
 // Helper render with i18n provider
 const renderI18n = (ui: React.ReactElement) => render(<I18nProvider>{ui}</I18nProvider>);

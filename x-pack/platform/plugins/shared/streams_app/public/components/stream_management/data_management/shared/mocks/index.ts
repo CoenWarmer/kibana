@@ -15,4 +15,4 @@ export {
   mockMappedField,
   mockUnmappedField,
   mockInheritedField,
-} from '../../../../data_management/shared/mocks/stream_definitions';
+} from '../../../../../data_management/shared/mocks/stream_definitions';

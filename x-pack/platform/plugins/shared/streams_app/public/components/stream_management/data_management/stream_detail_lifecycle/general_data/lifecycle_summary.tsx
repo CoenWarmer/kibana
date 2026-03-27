@@ -11,17 +11,17 @@ import { isDslLifecycle, isIlmLifecycle } from '@kbn/streams-schema';
 import type { PhaseName } from '@kbn/streams-schema';
 import { i18n } from '@kbn/i18n';
 import { EuiButton, EuiToolTip } from '@elastic/eui';
-import type { DataStreamStats } from '../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { DataLifecycleSummary } from '../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_summary';
-import { useUpdateStreamLifecycle } from '../../../../data_management/stream_detail_lifecycle/hooks/use_update_stream_lifecycle';
-import { useIlmLifecycleSummary } from '../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_lifecycle_summary';
-import { useDslLifecycleSummary } from '../../../../data_management/stream_detail_lifecycle/hooks/use_dsl_lifecycle_summary';
-import { MAX_DOWNSAMPLE_STEPS } from '../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
+import type { DataStreamStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { DataLifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/data_lifecycle_summary';
+import { useUpdateStreamLifecycle } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_update_stream_lifecycle';
+import { useIlmLifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_lifecycle_summary';
+import { useDslLifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_dsl_lifecycle_summary';
+import { MAX_DOWNSAMPLE_STEPS } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
 import type {
   IlmPhaseSelectOption,
   IlmPhaseSelectRenderButtonProps,
-} from '../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
-import { IlmPhaseSelect } from '../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+} from '../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+import { IlmPhaseSelect } from '../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
 
 const addPhaseButtonLabel = i18n.translate(
   'xpack.streams.dataLifecycleSummary.addPhaseButtonLabel',

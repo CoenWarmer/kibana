@@ -8,11 +8,11 @@
 import type { Streams } from '@kbn/streams-schema';
 import React from 'react';
 import type { TimeState } from '@kbn/es-query';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { ChartBarSeries, ChartBarPhasesSeries } from '../../../../data_management/stream_detail_lifecycle/common/chart_components';
-import { IngestionRatePanel } from '../../../../data_management/stream_detail_lifecycle/common/ingestion_rate_panel';
-import type { StreamAggregations } from '../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import type { CalculatedStats } from '../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { ChartBarSeries, ChartBarPhasesSeries } from '../../../../../data_management/stream_detail_lifecycle/common/chart_components';
+import { IngestionRatePanel } from '../../../../../data_management/stream_detail_lifecycle/common/ingestion_rate_panel';
+import type { StreamAggregations } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
+import type { CalculatedStats } from '../../../../../data_management/stream_detail_lifecycle/helpers/get_calculated_stats';
 
 export function IngestionRate({
   definition,

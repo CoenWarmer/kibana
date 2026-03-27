@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
-import { CreatePolicyModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/create_new_policy_modal/create_new_policy_modal';
+import { CreatePolicyModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/create_new_policy_modal/create_new_policy_modal';
 import { renderWithI18n } from '@kbn/test-jest-helpers';
 
 describe('CreatePolicyModal', () => {

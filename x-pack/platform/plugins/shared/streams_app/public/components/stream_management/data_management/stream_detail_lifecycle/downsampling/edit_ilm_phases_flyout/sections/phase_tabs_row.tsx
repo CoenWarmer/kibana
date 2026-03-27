@@ -20,9 +20,9 @@ import {
   useEuiOverflowScroll,
 } from '@elastic/eui';
 
-import { IlmPhaseSelect } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
-import { PHASE_LABELS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
-import { useStyles } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/use_styles';
+import { IlmPhaseSelect } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+import { PHASE_LABELS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { useStyles } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/use_styles';
 
 export interface PhaseTabsRowProps {
   enabledPhases: PhaseName[];

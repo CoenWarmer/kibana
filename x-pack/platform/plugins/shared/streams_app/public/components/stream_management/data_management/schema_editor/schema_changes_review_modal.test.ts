@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import { getChanges } from '../../../data_management/schema_editor/schema_changes_review_modal';
-import type { SchemaEditorField } from '../../../data_management/schema_editor/types';
+import { getChanges } from '../../../../data_management/schema_editor/schema_changes_review_modal';
+import type { SchemaEditorField } from '../../../../data_management/schema_editor/types';
 import {
   createMockMappedField,
   createMockUnmappedField,
   createMockInheritedField,
-} from '../../../data_management/shared/mocks';
+} from '../../../../data_management/shared/mocks';
 
 describe('getChanges', () => {
   describe('filtering doc-only fields', () => {

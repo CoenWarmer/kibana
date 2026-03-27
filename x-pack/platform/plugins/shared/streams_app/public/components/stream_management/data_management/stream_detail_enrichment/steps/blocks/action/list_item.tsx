@@ -23,16 +23,16 @@ import { isActionBlock } from '@kbn/streamlang';
 import { useSelector } from '@xstate/react';
 import React from 'react';
 import type { ActionBlockProps } from '.';
-import { useStreamEnrichmentSelector } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectValidationErrors } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { ConditionDisplay } from '../../../../../../data_management/shared';
-import { getStepPanelColour } from '../../../../../../data_management/stream_detail_enrichment/utils';
-import { BlockDisableOverlay } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/block_disable_overlay';
-import { StepContextMenu } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/context_menu';
-import { ProcessorMetricBadges } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_metrics';
-import { ProcessorStatusIndicator } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_status_indicator';
-import { getStepDescription } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils';
-import { DragHandle } from '../../../../../../data_management/stream_detail_enrichment/steps/draggable_step_wrapper';
+import { useStreamEnrichmentSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectValidationErrors } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import { ConditionDisplay } from '../../../../../../../data_management/shared';
+import { getStepPanelColour } from '../../../../../../../data_management/stream_detail_enrichment/utils';
+import { BlockDisableOverlay } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/block_disable_overlay';
+import { StepContextMenu } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/context_menu';
+import { ProcessorMetricBadges } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_metrics';
+import { ProcessorStatusIndicator } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_status_indicator';
+import { getStepDescription } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils';
+import { DragHandle } from '../../../../../../../data_management/stream_detail_enrichment/steps/draggable_step_wrapper';
 
 export const ActionBlockListItem = (props: ActionBlockProps) => {
   const { euiTheme } = useEuiTheme();

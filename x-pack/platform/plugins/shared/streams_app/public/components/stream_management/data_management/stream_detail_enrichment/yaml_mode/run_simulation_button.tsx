@@ -11,8 +11,8 @@ import { i18n } from '@kbn/i18n';
 import {
   useStreamEnrichmentEvents,
   useYamlModeSelector,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { useSimulatorSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/use_stream_enrichment';
+} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { useSimulatorSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/use_stream_enrichment';
 
 export const RunSimulationButton = () => {
   const canRunSimulation = useYamlModeSelector((state) => {

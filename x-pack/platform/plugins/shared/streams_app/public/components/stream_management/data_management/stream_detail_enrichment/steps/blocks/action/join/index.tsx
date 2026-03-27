@@ -9,12 +9,12 @@ import React from 'react';
 import { EuiComboBox, EuiFieldText, EuiFormRow, EuiSpacer } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { useController } from 'react-hook-form';
-import { useEnrichmentFieldSuggestions } from '../../../../../../../../hooks/use_field_suggestions';
-import { JoinTargetFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/join/target_field';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import type { JoinFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { useEnrichmentFieldSuggestions } from '../../../../../../../../../hooks/use_field_suggestions';
+import { JoinTargetFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/join/target_field';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import type { JoinFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 export const JoinProcessorForm = () => {
   const { field: delimiterField } = useController<JoinFormState, 'delimiter'>({

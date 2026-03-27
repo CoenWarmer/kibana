@@ -28,18 +28,18 @@ import { css } from '@emotion/css';
 import { v4 } from 'uuid';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { useBoolean } from '@kbn/react-hooks';
-import { useKibana } from '../../../../hooks/use_kibana';
-import { useOnboardingApi } from '../../../../hooks/use_onboarding_api';
-import type { AIFeatures } from '../../../../hooks/use_ai_features';
-import { GeneratedFlowForm } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/generated_flow_form';
-import { ManualFlowForm } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/manual_flow_form/manual_flow_form';
-import type { Flow, SaveData } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/types';
-import { defaultQuery } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/utils/default_query';
-import { StreamsAppSearchBar } from '../../../streams_app_search_bar';
-import { validateEsqlQuery } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
-import { useStreamsAppFetch } from '../../../../hooks/use_streams_app_fetch';
-import { useTaskPolling } from '../../../../hooks/use_task_polling';
-import { SignificantEventsGenerationPanel } from '../../../stream_detail_significant_events_view/generation_panel';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useOnboardingApi } from '../../../../../hooks/use_onboarding_api';
+import type { AIFeatures } from '../../../../../hooks/use_ai_features';
+import { GeneratedFlowForm } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/generated_flow_form';
+import { ManualFlowForm } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/manual_flow_form/manual_flow_form';
+import type { Flow, SaveData } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/types';
+import { defaultQuery } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/utils/default_query';
+import { StreamsAppSearchBar } from '../../../../streams_app_search_bar';
+import { validateEsqlQuery } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import { useTaskPolling } from '../../../../../hooks/use_task_polling';
+import { SignificantEventsGenerationPanel } from '../../../../stream_detail_significant_events_view/generation_panel';
 
 const defaultTask: TaskResult<OnboardingResult> = {
   status: TaskStatus.NotStarted,

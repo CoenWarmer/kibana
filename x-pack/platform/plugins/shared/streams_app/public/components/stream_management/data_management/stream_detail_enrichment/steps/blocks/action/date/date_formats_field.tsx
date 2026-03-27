@@ -12,7 +12,7 @@ import { EuiButtonEmpty, EuiComboBox, EuiFormRow } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { FormattedMessage } from '@kbn/i18n-react';
 import { isEmpty } from 'lodash';
-import type { DateFormState, ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import type { DateFormState, ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 export const DateFormatsField = ({ onGenerate }: { onGenerate?: () => void }) => {
   const { field, fieldState } = useController<ProcessorFormState, 'formats'>({

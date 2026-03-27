@@ -9,11 +9,11 @@ export {
   interactiveModeMachine,
   type InteractiveModeActorRef,
   type InteractiveModeSnapshot,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/interactive_mode_machine';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/interactive_mode_machine';
 export type {
   InteractiveModeContext,
   InteractiveModeInput,
   InteractiveModeEvent,
   InteractiveModeToParentEvent,
   InteractiveModeParentRef,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';

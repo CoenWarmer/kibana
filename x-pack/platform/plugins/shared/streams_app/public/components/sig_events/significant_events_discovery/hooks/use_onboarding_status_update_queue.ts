@@ -9,7 +9,7 @@ import type { OnboardingResult, TaskResult } from '@kbn/streams-schema';
 import { TaskStatus } from '@kbn/streams-schema';
 import pMap from 'p-map';
 import { useCallback, useRef } from 'react';
-import { useOnboardingApi } from '../../../../hooks/use_onboarding_api';
+import { useOnboardingApi } from '../../../../../hooks/use_onboarding_api';
 
 type StreamOnboardingStatusUpdateCallback = (
   streamName: string,

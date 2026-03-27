@@ -24,13 +24,13 @@ import {
 } from '@elastic/eui';
 import { useAbortController } from '@kbn/react-hooks';
 import { useUnsavedChangesPrompt } from '@kbn/unsaved-changes-prompt';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { getFormattedError } from '../../../../../util/errors';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
-import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
-import { Row, RowMetadata } from '../../../../data_management/stream_detail_management/advanced_view/row';
-import { parseDuration } from '../../../../data_management/stream_detail_lifecycle/helpers/helpers';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { getFormattedError } from '../../../../../../util/errors';
+import { useStreamsAppRouter } from '../../../../../../hooks/use_streams_app_router';
+import { useStreamDetail } from '../../../../../../hooks/use_stream_detail';
+import { useStreamsPrivileges } from '../../../../../../hooks/use_streams_privileges';
+import { Row, RowMetadata } from '../../../../../data_management/stream_detail_management/advanced_view/row';
+import { parseDuration } from '../../../../../data_management/stream_detail_lifecycle/helpers/helpers';
 
 interface Setting {
   invalid: boolean;

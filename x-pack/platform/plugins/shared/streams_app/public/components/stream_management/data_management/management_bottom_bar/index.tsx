@@ -15,7 +15,7 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { useDiscardConfirm } from '../../../../hooks/use_discard_confirm';
+import { useDiscardConfirm } from '../../../../../hooks/use_discard_confirm';
 
 interface ManagementBottomBarProps {
   confirmButtonText?: string;

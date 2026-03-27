@@ -12,14 +12,14 @@ import { i18n } from '@kbn/i18n';
 import { stableStringify } from '@kbn/std';
 import { EuiCallOut, EuiFlexGroup, EuiIconTip } from '@elastic/eui';
 import type { Streams } from '@kbn/streams-schema';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { getFormattedError } from '../../../../../util/errors';
-import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
-import { PreviewTable } from '../../../../data_management/shared/preview_table';
-import { LoadingPanel } from '../../../../loading_panel';
-import type { SchemaField, TypedMappedSchemaField } from '../../../../data_management/schema_editor/types';
-import { isSchemaFieldTyped } from '../../../../data_management/schema_editor/types';
-import { convertToFieldDefinitionConfig } from '../../../../data_management/schema_editor/utils';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { getFormattedError } from '../../../../../../util/errors';
+import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import { PreviewTable } from '../../../../../data_management/shared/preview_table';
+import { LoadingPanel } from '../../../../../loading_panel';
+import type { SchemaField, TypedMappedSchemaField } from '../../../../../data_management/schema_editor/types';
+import { isSchemaFieldTyped } from '../../../../../data_management/schema_editor/types';
+import { convertToFieldDefinitionConfig } from '../../../../../data_management/schema_editor/utils';
 
 interface SamplePreviewTableProps {
   stream: Streams.ingest.all.Definition;

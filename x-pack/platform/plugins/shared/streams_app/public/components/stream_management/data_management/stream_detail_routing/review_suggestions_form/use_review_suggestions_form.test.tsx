@@ -6,9 +6,9 @@
  */
 
 import { act, renderHook } from '@testing-library/react';
-import { useReviewSuggestionsForm } from '../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+import { useReviewSuggestionsForm } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
 import type { Condition } from '@kbn/streamlang';
-import { useFetchErrorToast } from '../../../../../hooks/use_fetch_error_toast';
+import { useFetchErrorToast } from '../../../../../../hooks/use_fetch_error_toast';
 
 jest.mock('react-use/lib/useUpdateEffect', () => {
   return (cb: () => void, deps: unknown[]) => {

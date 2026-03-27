@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { getTimeUnitLabel } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
-import type { PreservedTimeUnit, TimeUnit } from '../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
+import { getTimeUnitLabel } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
+import type { PreservedTimeUnit, TimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared/time_unit_types';
 
 export interface TimeUnitSelectOption {
   value: PreservedTimeUnit;

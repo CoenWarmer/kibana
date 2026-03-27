@@ -8,7 +8,7 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithI18n } from '@kbn/test-jest-helpers';
-import { OverrideSettingsModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/override_settings_modal/override_settings_modal';
+import { OverrideSettingsModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/override_settings_modal/override_settings_modal';
 
 describe('OverrideSettingsModal', () => {
   it('renders title and body text', () => {

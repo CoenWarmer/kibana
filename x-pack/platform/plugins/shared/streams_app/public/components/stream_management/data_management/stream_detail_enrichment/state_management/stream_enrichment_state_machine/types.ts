@@ -19,17 +19,17 @@ import type {
 } from '@kbn/streamlang';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
 import type { Streams } from '@kbn/streams-schema';
-import type { EnrichmentDataSource, EnrichmentUrlState } from '../../../../../../../common/url_schema';
-import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
-import type { MappedSchemaField } from '../../../../../data_management/schema_editor/types';
-import type { DataSourceActorRef, DataSourceToParentEvent } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { InteractiveModeActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
+import type { EnrichmentDataSource, EnrichmentUrlState } from '../../../../../../../../common/url_schema';
+import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
+import type { MappedSchemaField } from '../../../../../../data_management/schema_editor/types';
+import type { DataSourceActorRef, DataSourceToParentEvent } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { InteractiveModeActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
 import type {
   PreviewDocsFilterOption,
   SimulationActorRef,
   SimulationContext,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import type { YamlModeActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import type { YamlModeActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine';
 
 export interface StreamPrivileges {
   manage: boolean;

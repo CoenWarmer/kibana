@@ -18,7 +18,7 @@ import {
 import type { Feature, Streams } from '@kbn/streams-schema';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/react';
-import { StreamFeaturesTable } from '../../../stream_detail_systems/stream_features/stream_features_table';
+import { StreamFeaturesTable } from '../../../../stream_detail_systems/stream_features/stream_features_table';
 
 const getUnderlineOnHoverStyle = (textDecoration: 'underline' | 'none') => css`
   &:hover,

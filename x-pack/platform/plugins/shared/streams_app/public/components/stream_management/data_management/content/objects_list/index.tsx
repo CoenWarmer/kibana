@@ -15,8 +15,8 @@ import { ROOT_STREAM_ID } from '@kbn/content-packs-schema';
 import { getSegments, isChildOf } from '@kbn/streams-schema';
 import { EuiCheckbox, EuiFlexGroup, EuiSpacer } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import { StreamTree } from '../../../../data_management/content/objects_list/tree';
-import { containsAssets, containsMappings } from '../../../../data_management/content/helpers';
+import { StreamTree } from '../../../../../data_management/content/objects_list/tree';
+import { containsAssets, containsMappings } from '../../../../../data_management/content/helpers';
 
 export function ContentPackObjectsList({
   objects,

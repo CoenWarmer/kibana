@@ -18,8 +18,8 @@ import {
   EuiTitle,
   useGeneratedHtmlId,
 } from '@elastic/eui';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { SearchableSnapshotRepositoryField } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { SearchableSnapshotRepositoryField } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
 
 export interface SearchableSnapshotFieldSectionProps {
   form: FormHook<IlmPolicyPhases, IlmPhasesFlyoutFormInternal>;

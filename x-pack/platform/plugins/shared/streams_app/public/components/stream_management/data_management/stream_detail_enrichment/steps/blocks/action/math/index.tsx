@@ -7,11 +7,11 @@
 
 import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { MathExpressionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_editor';
-import { MathTargetFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/target_field';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { MathExpressionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_editor';
+import { MathTargetFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/target_field';
 
 export const MathProcessorForm = () => {
   return (

@@ -11,12 +11,12 @@ import {
   type StreamlangStepWithUIAttributes,
 } from '@kbn/streamlang';
 import type { GrokCollection } from '@kbn/grok-ui';
-import type { DataSourceSimulationMode } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { SampleDocumentWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
-import type { StepActorRef, StepInput, StepParentActor } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import { isStepUnderEdit } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
+import type { DataSourceSimulationMode } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { SampleDocumentWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/types';
+import type { StepActorRef, StepInput, StepParentActor } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import { isStepUnderEdit } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import type { InteractiveModeContext } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
+import { collectDescendantStepIds } from '../../../../../../data_management/stream_detail_enrichment/state_management/utils';
 
 export type StepSpawner = (
   src: 'stepMachine',

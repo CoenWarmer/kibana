@@ -12,7 +12,7 @@ import type { UnmanagedElasticsearchAssetDetails } from '@kbn/streams-plugin/ser
 import type { IndexManagementLocatorParams } from '@kbn/index-management-shared-types';
 import type { LocatorPublic } from '@kbn/share-plugin/public';
 import type { HealthStatus } from '@elastic/elasticsearch/lib/api/types';
-import { ManagedBadge } from '../../../data_management/stream_detail_management/managed_badge';
+import { ManagedBadge } from '../../../../data_management/stream_detail_management/managed_badge';
 
 interface DataStreamDetailsProps {
   dataStream: UnmanagedElasticsearchAssetDetails['dataStream'] | undefined;

@@ -11,7 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { monaco } from '@kbn/monaco';
 import type { ProcessorSuggestionsResponse } from '@kbn/streams-plugin/common';
 import { I18nProvider } from '@kbn/i18n-react';
-import { JsonEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/manual_ingest_pipeline/json_editor';
+import { JsonEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/manual_ingest_pipeline/json_editor';
 
 // Minimal stub for the CodeEditor to avoid mounting Monaco
 jest.mock('@kbn/code-editor', () => ({

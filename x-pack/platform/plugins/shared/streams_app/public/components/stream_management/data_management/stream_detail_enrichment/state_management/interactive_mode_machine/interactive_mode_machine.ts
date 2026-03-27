@@ -27,36 +27,36 @@ import {
   type ActorRefFrom,
   type SnapshotFrom,
 } from 'xstate';
-import { getDefaultGrokProcessor, stepConverter } from '../../../../../data_management/stream_detail_enrichment/utils';
-import { selectPreviewRecords } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
-import { stepMachine } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import type { StepParentActor } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/types';
-import { hasErrorsInParentSnapshot } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import { getDefaultGrokProcessor, stepConverter } from '../../../../../../data_management/stream_detail_enrichment/utils';
+import { selectPreviewRecords } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { stepMachine } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import type { StepParentActor } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/types';
+import { hasErrorsInParentSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 import {
   findInsertIndex,
   insertAtIndex,
   reorderSteps,
   reorderStepsByDragDrop,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import { selectWhetherAnyProcessorBeforePersisted } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import { collectDescendantStepIds } from '../../../../../../data_management/stream_detail_enrichment/state_management/utils';
+import { selectWhetherAnyProcessorBeforePersisted } from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
 import {
   createNotifySuggestionFailureNotifier,
   createSuggestPipelineActor,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/suggest_pipeline_actor';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/suggest_pipeline_actor';
 import type {
   InteractiveModeContext,
   InteractiveModeEvent,
   InteractiveModeInput,
   InteractiveModeMachineDeps,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/types';
 import {
   getActiveDataSourceSamplesFromParent,
   getStepsForSimulation,
   spawnStep,
   type StepSpawner,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/utils';
-import { isNoSuggestionsError } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/utils';
+import { isNoSuggestionsError } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
 
 export type InteractiveModeActorRef = ActorRefFrom<typeof interactiveModeMachine>;
 export type InteractiveModeSnapshot = SnapshotFrom<typeof interactiveModeMachine>;

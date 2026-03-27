@@ -17,7 +17,7 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/react';
-import { AssetImage } from '../../../../asset_image';
+import { AssetImage } from '../../../../../asset_image';
 
 interface ProcessingPanelProps {
   message: string;

@@ -17,8 +17,8 @@ import {
   EuiTitle,
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import { AssetImage } from '../../asset_image';
-import type { Flow } from '../../stream_detail_significant_events_view/add_significant_event_flyout/types';
+import { AssetImage } from '../../../asset_image';
+import type { Flow } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/types';
 
 export function SignificantEventsGenerationPanel({
   onGenerateSuggestionsClick,

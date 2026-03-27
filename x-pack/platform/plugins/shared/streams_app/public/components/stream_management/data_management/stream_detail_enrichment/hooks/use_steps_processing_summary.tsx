@@ -7,13 +7,13 @@
 
 import { isActionBlock } from '@kbn/streamlang';
 import { useMemo } from 'react';
-import { selectWhetherAnyProcessorBeforePersisted } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
+import { selectWhetherAnyProcessorBeforePersisted } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
 import {
   useInteractiveModeSelector,
   useSimulatorSelector,
   useStreamEnrichmentSelector,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { getActiveSimulationMode } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { getActiveSimulationMode } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
 
 export type StepsProcessingSummaryMap = Map<string, StepProcessingStatus>;
 type StepProcessingStatus =

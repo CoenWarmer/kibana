@@ -7,7 +7,7 @@
 
 import { renderHook } from '@testing-library/react';
 import type { EffectiveFailureStore, Streams } from '@kbn/streams-schema';
-import { useFailureStoreConfig, transformFailureStoreConfig } from '../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
+import { useFailureStoreConfig, transformFailureStoreConfig } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_config';
 
 jest.mock('./use_failure_store_default_retention', () => ({
   useFailureStoreDefaultRetention: jest.fn(() => ({ value: undefined })),

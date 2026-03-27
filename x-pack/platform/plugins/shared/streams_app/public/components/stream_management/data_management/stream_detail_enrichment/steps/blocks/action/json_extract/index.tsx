@@ -24,11 +24,11 @@ import { css } from '@emotion/react';
 import { useController, useFieldArray, useFormContext } from 'react-hook-form';
 import { capitalize } from 'lodash';
 import { jsonExtractTypes } from '@kbn/streamlang';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import type { JsonExtractFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import type { JsonExtractFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 const typeOptions = jsonExtractTypes.map((type) => ({
   value: type,

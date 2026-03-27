@@ -13,11 +13,11 @@ import type {
 } from '@kbn/streamlang';
 import type { StreamlangConditionBlock, StreamlangDSL } from '@kbn/streamlang/types/streamlang';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
-import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
-import type { DataSourceActorRef, DataSourceSimulationMode } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { SimulationActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import type { StepActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import type { StreamPrivileges } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
+import type { DataSourceActorRef, DataSourceSimulationMode } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { SimulationActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import type { StepActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import type { StreamPrivileges } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
 
 export interface InteractiveModeMachineDeps {
   streamsRepositoryClient: StreamsRepositoryClient;

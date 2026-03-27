@@ -7,11 +7,11 @@
 import React from 'react';
 import type { Streams } from '@kbn/streams-schema';
 import type { TimeState } from '@kbn/es-query';
-import { FailureStoreChartBarSeries, ChartBarPhasesSeries } from '../../../../data_management/stream_detail_lifecycle/common/chart_components';
-import { IngestionRatePanel } from '../../../../data_management/stream_detail_lifecycle/common/ingestion_rate_panel';
-import type { StreamAggregations } from '../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
-import type { EnhancedFailureStoreStats } from '../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
-import { useKibana } from '../../../../../hooks/use_kibana';
+import { FailureStoreChartBarSeries, ChartBarPhasesSeries } from '../../../../../data_management/stream_detail_lifecycle/common/chart_components';
+import { IngestionRatePanel } from '../../../../../data_management/stream_detail_lifecycle/common/ingestion_rate_panel';
+import type { StreamAggregations } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ingestion_rate';
+import type { EnhancedFailureStoreStats } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_data_stream_stats';
+import { useKibana } from '../../../../../../hooks/use_kibana';
 
 export function FailureStoreIngestionRate({
   definition,

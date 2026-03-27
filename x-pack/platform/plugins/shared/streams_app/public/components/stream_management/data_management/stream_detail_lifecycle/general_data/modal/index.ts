@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { EditLifecycleModal } from '../../../../../data_management/stream_detail_lifecycle/general_data/modal/modal';
+export { EditLifecycleModal } from '../../../../../../data_management/stream_detail_lifecycle/general_data/modal/modal';

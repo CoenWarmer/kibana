@@ -17,7 +17,7 @@ import { css } from '@emotion/css';
 import React from 'react';
 import type { TickFormatter } from '@elastic/charts';
 import { i18n } from '@kbn/i18n';
-import type { FormattedChangePoint } from '../../../../significant_events_discovery/utils/change_point';
+import type { FormattedChangePoint } from '../../../../../significant_events_discovery/utils/change_point';
 
 const MAX_VISIBLE_CHANGES = 5;
 

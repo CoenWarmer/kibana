@@ -12,7 +12,7 @@ import {
   isInheritFailureStore,
 } from '@kbn/streams-schema/src/models/ingest/failure_store';
 import type { FailureStoreFormData } from '@kbn/failure-store-modal';
-import { useFailureStoreDefaultRetention } from '../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_default_retention';
+import { useFailureStoreDefaultRetention } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_failure_store_default_retention';
 
 export function transformFailureStoreConfig(update: FailureStoreFormData) {
   const failureStoreEnabled = update.failureStoreEnabled ?? false;

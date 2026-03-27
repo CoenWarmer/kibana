@@ -19,12 +19,12 @@ import { TaskStatus } from '@kbn/streams-schema';
 import React, { useEffect, useRef, useState } from 'react';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import type { Insight } from '@kbn/streams-schema';
-import { useInsightsDiscoveryApi } from '../../../../../hooks/sig_events/use_insights_discovery_api';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useTaskPolling } from '../../../../../hooks/use_task_polling';
-import { getFormattedError } from '../../../../../util/errors';
-import { FeedbackButtons } from '../../../../significant_events_discovery/components/insights/feedback_buttons';
-import { InsightCard } from '../../../../significant_events_discovery/components/insights/insight_card';
+import { useInsightsDiscoveryApi } from '../../../../../../hooks/sig_events/use_insights_discovery_api';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { useTaskPolling } from '../../../../../../hooks/use_task_polling';
+import { getFormattedError } from '../../../../../../util/errors';
+import { FeedbackButtons } from '../../../../../significant_events_discovery/components/insights/feedback_buttons';
+import { InsightCard } from '../../../../../significant_events_discovery/components/insights/insight_card';
 
 export function Summary({ count }: { count: number }) {
   const {

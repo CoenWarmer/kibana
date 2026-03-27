@@ -11,25 +11,25 @@ export type {
   DslStepMetaFields,
   DslStepsFlyoutFormInternal,
   DslStepsFlyoutFormOutput,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
 
-export { getDslStepsFlyoutFormSchema } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/schema';
-export { createDslStepsFlyoutDeserializer } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/deserializer';
-export { createDslStepsFlyoutSerializer } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/serializer';
+export { getDslStepsFlyoutFormSchema } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/schema';
+export { createDslStepsFlyoutDeserializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/deserializer';
+export { createDslStepsFlyoutSerializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/serializer';
 
-export { MAX_DOWNSAMPLE_STEPS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/constants';
+export { MAX_DOWNSAMPLE_STEPS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/constants';
 export {
   parseInterval,
   toMilliseconds,
   formatMillisecondsInUnit,
   getStepIndexFromArrayItemPath,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/utils';
 
-export { AfterField, FixedIntervalField } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/fields';
+export { AfterField, FixedIntervalField } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/fields';
 
 export {
   OnStepFieldErrorsChangeProvider,
   useDslStepsFlyoutTabErrors,
   useOnStepFieldErrorsChange,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
-export type { OnStepFieldErrorsChange, StepFieldKey } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';
+export type { OnStepFieldErrorsChange, StepFieldKey } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/error_tracking';

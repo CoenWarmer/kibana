@@ -11,14 +11,14 @@ import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/react';
 import { Streams } from '@kbn/streams-schema';
 import { uniq } from 'lodash';
-import { AssetImage } from '../../../asset_image';
-import { SchemaEditor } from '../../../data_management/schema_editor';
-import type { SchemaEditorField } from '../../../data_management/schema_editor/types';
+import { AssetImage } from '../../../../asset_image';
+import { SchemaEditor } from '../../../../data_management/schema_editor';
+import type { SchemaEditorField } from '../../../../data_management/schema_editor/types';
 import {
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { isSelectableField } from '../../../data_management/schema_editor/schema_editor_table';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { isSelectableField } from '../../../../data_management/schema_editor/schema_editor_table';
 
 interface DetectedFieldsEditorProps {
   schemaEditorFields: SchemaEditorField[];

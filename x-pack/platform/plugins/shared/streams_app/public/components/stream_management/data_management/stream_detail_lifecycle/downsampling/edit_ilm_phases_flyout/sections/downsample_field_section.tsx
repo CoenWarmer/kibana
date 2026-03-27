@@ -21,16 +21,16 @@ import {
   useGeneratedHtmlId,
   EuiLink,
 } from '@elastic/eui';
-import type { DownsamplePhase, IlmPhasesFlyoutFormInternal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { DOWNSAMPLE_PHASES } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
-import { DownsampleIntervalField } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import type { DownsamplePhase, IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { DOWNSAMPLE_PHASES } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
+import { DownsampleIntervalField } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form';
 import {
   downsamplingHelpText,
   getDoubledDurationFromPrevious,
   type PreservedTimeUnit,
-} from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
-import { TIME_UNIT_OPTIONS } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
-import { useKibana } from '../../../../../../../hooks/use_kibana';
+} from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+import { TIME_UNIT_OPTIONS } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
 
 export interface DownsampleFieldSectionProps {
   form: FormHook<IlmPolicyPhases, IlmPhasesFlyoutFormInternal>;

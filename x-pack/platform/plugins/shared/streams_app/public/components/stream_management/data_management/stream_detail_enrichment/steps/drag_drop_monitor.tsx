@@ -11,7 +11,7 @@ import {
   extractInstruction,
   type Instruction,
 } from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-item';
-import type { InteractiveModeContext } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
+import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
 
 interface DragDropMonitorProps {
   stepRefs: InteractiveModeContext['stepRefs'];

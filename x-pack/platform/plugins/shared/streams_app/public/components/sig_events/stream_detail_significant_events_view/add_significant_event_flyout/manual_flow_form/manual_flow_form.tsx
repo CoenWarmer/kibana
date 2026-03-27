@@ -19,11 +19,11 @@ import type { StreamQuery, Streams } from '@kbn/streams-schema';
 import { useDebouncedValue } from '@kbn/react-hooks';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StreamsESQLEditor, validatePrefix } from '../../../../esql_query_editor';
-import { PreviewDataSparkPlot } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/preview_data_spark_plot';
-import { SeveritySelector } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/severity_selector';
-import { validateTitle, validateEsqlQuery } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
-import { getValidPrefixes } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/get_valid_prefixes';
+import { StreamsESQLEditor, validatePrefix } from '../../../../../esql_query_editor';
+import { PreviewDataSparkPlot } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/preview_data_spark_plot';
+import { SeveritySelector } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/severity_selector';
+import { validateTitle, validateEsqlQuery } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
+import { getValidPrefixes } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/get_valid_prefixes';
 
 interface ManualFlowFormProps {
   definition: Streams.all.Definition;

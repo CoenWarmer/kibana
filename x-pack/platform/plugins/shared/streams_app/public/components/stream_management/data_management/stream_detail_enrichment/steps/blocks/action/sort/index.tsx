@@ -9,12 +9,12 @@ import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiSpacer, EuiFormRow, EuiSelect } from '@elastic/eui';
 import { useController } from 'react-hook-form';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { SortTargetFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/sort/target_field';
-import type { SortFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { SortTargetFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/sort/target_field';
+import type { SortFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 const SORT_ORDER_OPTIONS = [
   {

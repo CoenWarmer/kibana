@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { appendProcessorConfig } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/append';
-import { renameProcessorConfig } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/rename';
-import { removeByPrefixProcessorConfig } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/remove_by_prefix';
-import { removeProcessorConfig } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/remove';
+import { appendProcessorConfig } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/append';
+import { renameProcessorConfig } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/rename';
+import { removeByPrefixProcessorConfig } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/remove_by_prefix';
+import { removeProcessorConfig } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/config_driven/configs/remove';
 
 export const configDrivenProcessors = {
   rename: renameProcessorConfig,

@@ -8,11 +8,11 @@
 import React from 'react';
 import { EuiFlexItem, EuiFlexGroup, EuiSearchBar, EuiButton, EuiFilterGroup } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import { FieldStatusFilterGroup } from '../../../data_management/schema_editor/filters/status_filter_group';
-import { FieldTypeFilterGroup } from '../../../data_management/schema_editor/filters/type_filter_group';
-import type { TControls } from '../../../data_management/schema_editor/hooks/use_controls';
-import type { SchemaEditorProps } from '../../../data_management/schema_editor/types';
-import { AddFieldButton } from '../../../data_management/schema_editor/flyout/add_field_flyout';
+import { FieldStatusFilterGroup } from '../../../../data_management/schema_editor/filters/status_filter_group';
+import { FieldTypeFilterGroup } from '../../../../data_management/schema_editor/filters/type_filter_group';
+import type { TControls } from '../../../../data_management/schema_editor/hooks/use_controls';
+import type { SchemaEditorProps } from '../../../../data_management/schema_editor/types';
+import { AddFieldButton } from '../../../../data_management/schema_editor/flyout/add_field_flyout';
 
 interface ControlsProps {
   controls: TControls;

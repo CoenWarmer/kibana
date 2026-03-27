@@ -8,7 +8,7 @@
 import { EuiFlexGroup, EuiFlexItem, EuiLink, EuiText, EuiToolTip } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { useKibana } from '../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../hooks/use_kibana';
 
 export function AIFeaturesDisabledCallout({ couldBeEnabled }: { couldBeEnabled: boolean }) {
   const {

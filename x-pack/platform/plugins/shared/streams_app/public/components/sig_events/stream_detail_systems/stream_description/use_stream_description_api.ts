@@ -12,10 +12,10 @@ import { i18n } from '@kbn/i18n';
 import { useAbortController } from '@kbn/react-hooks';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { isHttpFetchError } from '@kbn/server-route-repository-client';
-import { getLast24HoursTimeRange } from '../../../../util/time_range';
-import { getFormattedError } from '../../../../util/errors';
-import { useUpdateStreams } from '../../../../hooks/use_update_streams';
-import { useKibana } from '../../../../hooks/use_kibana';
+import { getLast24HoursTimeRange } from '../../../../../util/time_range';
+import { getFormattedError } from '../../../../../util/errors';
+import { useUpdateStreams } from '../../../../../hooks/use_update_streams';
+import { useKibana } from '../../../../../hooks/use_kibana';
 
 export const useStreamDescriptionApi = ({
   definition,

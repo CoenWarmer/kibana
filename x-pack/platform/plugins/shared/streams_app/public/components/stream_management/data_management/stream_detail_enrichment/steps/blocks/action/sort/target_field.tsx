@@ -9,7 +9,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { EuiFieldText, EuiFormRow } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import type { SortFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import type { SortFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 export const SortTargetFieldSelector = () => {
   const {

@@ -7,12 +7,12 @@
 
 import React from 'react';
 import { EuiSpacer } from '@elastic/eui';
-import { GrokPatternsEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/grok/grok_patterns_editor';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
-import { GrokPatternDefinition } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/grok/grok_pattern_definition';
+import { GrokPatternsEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/grok/grok_patterns_editor';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { IgnoreFailureToggle, IgnoreMissingToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { GrokPatternDefinition } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/grok/grok_pattern_definition';
 
 export const GrokProcessorForm = () => {
   return (

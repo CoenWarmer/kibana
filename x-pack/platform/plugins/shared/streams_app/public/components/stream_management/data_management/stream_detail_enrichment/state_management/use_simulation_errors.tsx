@@ -6,7 +6,7 @@
  */
 
 import { useMemo } from 'react';
-import { useSimulatorSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { useSimulatorSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
 
 export type SimulationErrors = ReturnType<typeof useSimulationErrors>['errors'];
 

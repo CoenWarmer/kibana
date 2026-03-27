@@ -8,13 +8,13 @@
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { lastValueFrom } from 'rxjs';
 import type { useAbortController } from '@kbn/react-hooks';
-import { useFetchErrorToast } from '../../../../../../../../hooks/use_fetch_error_toast';
-import { NoSuggestionsError, isNoSuggestionsError } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
+import { useFetchErrorToast } from '../../../../../../../../../hooks/use_fetch_error_toast';
+import { NoSuggestionsError, isNoSuggestionsError } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
 import {
   usePatternSuggestionDependencies,
   prepareSamplesForPatternExtraction,
   extractMessagesFromField,
-} from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/pattern_suggestion_helpers';
+} from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/pattern_suggestion_helpers';
 
 export const SUGGESTED_DISSECT_PROCESSOR_ID = 'dissect-processor';
 

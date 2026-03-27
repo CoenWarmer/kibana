@@ -9,8 +9,8 @@ import React, { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { isConditionComplete } from '@kbn/streamlang';
 import { i18n } from '@kbn/i18n';
-import type { ProcessorFormState } from '../../../../../../data_management/stream_detail_enrichment/types';
-import { ProcessorConditionEditorWrapper } from '../../../../../../data_management/stream_detail_enrichment/processor_condition_editor';
+import type { ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorConditionEditorWrapper } from '../../../../../../../data_management/stream_detail_enrichment/processor_condition_editor';
 
 export const ProcessorConditionEditor = () => {
   const { field } = useController<ProcessorFormState, 'where'>({

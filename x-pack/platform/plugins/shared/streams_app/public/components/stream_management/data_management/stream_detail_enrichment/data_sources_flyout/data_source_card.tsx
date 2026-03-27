@@ -26,13 +26,13 @@ import { isEmpty } from 'lodash';
 import { flattenObjectNestedLast } from '@kbn/object-utils';
 import type { FlattenRecord } from '@kbn/streams-schema';
 import { css } from '@emotion/react';
-import { useDiscardConfirm } from '../../../../../hooks/use_discard_confirm';
-import type { DataSourceActorRef } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { useDataSourceSelector } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { AssetImage } from '../../../../asset_image';
-import { PreviewTable } from '../../../../data_management/shared/preview_table';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
-import { useStreamEnrichmentEvents } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { useDiscardConfirm } from '../../../../../../hooks/use_discard_confirm';
+import type { DataSourceActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { useDataSourceSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { AssetImage } from '../../../../../asset_image';
+import { PreviewTable } from '../../../../../data_management/shared/preview_table';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { useStreamEnrichmentEvents } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
 
 interface DataSourceCardProps {
   readonly dataSourceRef: DataSourceActorRef;

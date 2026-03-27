@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export { yamlModeMachine, type YamlModeActorRef, type YamlModeSnapshot } from '../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/yaml_mode_machine';
-export type { YamlModeContext, YamlModeInput, YamlModeEvent } from '../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/types';
+export { yamlModeMachine, type YamlModeActorRef, type YamlModeSnapshot } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/yaml_mode_machine';
+export type { YamlModeContext, YamlModeInput, YamlModeEvent } from '../../../../../../data_management/stream_detail_enrichment/state_management/yaml_mode_machine/types';

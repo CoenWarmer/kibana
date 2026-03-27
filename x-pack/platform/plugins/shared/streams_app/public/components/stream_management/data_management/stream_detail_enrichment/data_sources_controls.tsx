@@ -20,14 +20,14 @@ import { css } from '@emotion/react';
 import {
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { getActiveDataSourceRef } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import type { EnrichmentDataSourceWithUIAttributes } from '../../../data_management/stream_detail_enrichment/types';
-import { DATA_SOURCES_I18N } from '../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { getActiveDataSourceRef } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import type { EnrichmentDataSourceWithUIAttributes } from '../../../../data_management/stream_detail_enrichment/types';
+import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
 import {
   CompleteSimulationBadge,
   PartialSimulationBadge,
-} from '../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
+} from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
 
 const DataSourcesFlyout = dynamic(() =>
   import('./data_sources_flyout').then((mod) => ({ default: mod.DataSourcesFlyout }))

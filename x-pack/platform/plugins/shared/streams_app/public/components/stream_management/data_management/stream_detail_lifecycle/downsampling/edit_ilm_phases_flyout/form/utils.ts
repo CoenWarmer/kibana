@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export { formatMillisecondsInUnit, parseInterval, toMilliseconds } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+export { formatMillisecondsInUnit, parseInterval, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
 
 export function getRelativeBoundsInMs<P extends string>(
   orderedPhases: ReadonlyArray<P>,

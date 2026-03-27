@@ -8,7 +8,7 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { LifecycleSummary } from '../../../../data_management/stream_detail_lifecycle/general_data/lifecycle_summary';
+import { LifecycleSummary } from '../../../../../data_management/stream_detail_lifecycle/general_data/lifecycle_summary';
 import { Streams, type IngestStreamLifecycle } from '@kbn/streams-schema';
 
 // Mock the hooks
@@ -41,7 +41,7 @@ jest.mock('../../../../hooks/use_kibana', () => ({
   }),
 }));
 
-import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
 
 jest.mock('../../../../hooks/use_streams_app_fetch', () => ({
   useStreamsAppFetch: jest.fn(() => ({

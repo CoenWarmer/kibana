@@ -8,9 +8,9 @@
 import { cloneDeep } from 'lodash';
 import type { IlmPolicyPhases } from '@kbn/streams-schema';
 
-import { createIlmPhasesFlyoutDeserializer } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/deserializer';
-import { createIlmPhasesFlyoutSerializer } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/serializer';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import { createIlmPhasesFlyoutDeserializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/deserializer';
+import { createIlmPhasesFlyoutSerializer } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/serializer';
+import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
 
 const unknownValue = { some: 'value' };
 

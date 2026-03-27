@@ -13,8 +13,8 @@ import React from 'react';
 import {
   selectCurrentRule,
   useStreamsRoutingSelector,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import type { RoutingDefinitionWithUIAttributes } from '../../../../data_management/stream_detail_routing/types';
+} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import type { RoutingDefinitionWithUIAttributes } from '../../../../../data_management/stream_detail_routing/types';
 
 type BtnMode = '+' | '-';
 type FilterOperator = Extract<OperatorKeys, 'eq' | 'neq' | 'exists'>;

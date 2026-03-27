@@ -6,7 +6,7 @@
  */
 
 import { emptyAssets, type Streams } from '@kbn/streams-schema';
-import type { SchemaField } from '../../../../data_management/schema_editor/types';
+import type { SchemaField } from '../../../../../data_management/schema_editor/types';
 
 // Mock stream definitions for reuse in tests
 export const createMockClassicStreamDefinition = (

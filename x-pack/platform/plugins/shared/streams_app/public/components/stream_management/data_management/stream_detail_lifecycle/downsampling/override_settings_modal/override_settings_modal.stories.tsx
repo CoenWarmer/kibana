@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { EuiOverlayMask } from '@elastic/eui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { OverrideSettingsModal } from '../../../../../data_management/stream_detail_lifecycle/downsampling/override_settings_modal/override_settings_modal';
+import { OverrideSettingsModal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/override_settings_modal/override_settings_modal';
 
 const meta: Meta<typeof OverrideSettingsModal> = {
   component: OverrideSettingsModal,

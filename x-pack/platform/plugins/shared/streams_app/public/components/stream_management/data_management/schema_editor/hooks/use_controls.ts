@@ -7,7 +7,7 @@
 
 import { useReducer } from 'react';
 import { EuiSearchBar } from '@elastic/eui';
-import type { SchemaFieldStatus, MappedSchemaField } from '../../../../data_management/schema_editor/types';
+import type { SchemaFieldStatus, MappedSchemaField } from '../../../../../data_management/schema_editor/types';
 
 const defaultControls = {
   query: EuiSearchBar.Query.MATCH_ALL,

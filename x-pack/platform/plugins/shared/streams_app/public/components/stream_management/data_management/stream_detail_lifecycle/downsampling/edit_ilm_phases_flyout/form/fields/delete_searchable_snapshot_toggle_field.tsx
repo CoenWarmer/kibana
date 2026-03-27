@@ -11,7 +11,7 @@ import type { IlmPolicyPhases, PhaseName } from '@kbn/streams-schema';
 import { EuiCheckbox, EuiFlexGroup, EuiFlexItem, EuiIconTip } from '@elastic/eui';
 import type { FormHook } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { useFormData } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import type { IlmPhasesFlyoutFormInternal } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
 
 export interface DeleteSearchableSnapshotToggleFieldProps {
   form: FormHook<IlmPolicyPhases, IlmPhasesFlyoutFormInternal>;

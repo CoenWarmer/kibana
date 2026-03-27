@@ -22,13 +22,13 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { NestedView } from '../../../../nested_view';
-import { ConditionPanel } from '../../../../data_management/shared';
+import { NestedView } from '../../../../../nested_view';
+import { ConditionPanel } from '../../../../../data_management/shared';
 import {
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import { type PartitionSuggestion } from '../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
+} from '../../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import { type PartitionSuggestion } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/use_review_suggestions_form';
 
 export function BulkCreateStreamsConfirmationModal({
   suggestions,

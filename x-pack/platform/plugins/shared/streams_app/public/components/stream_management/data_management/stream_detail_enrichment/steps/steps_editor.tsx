@@ -23,23 +23,23 @@ import { FormattedMessage } from '@kbn/i18n-react';
 import { flattenObjectNestedLast } from '@kbn/object-utils';
 import type { FlattenRecord } from '@kbn/streams-schema';
 import { validationErrorTypeLabels } from '@kbn/streamlang';
-import { useAIFeatures } from '../../../../../hooks/use_ai_features';
-import { useStreamDetail } from '../../../../../hooks/use_stream_detail';
-import { GenerateSuggestionButton } from '../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { AdditionalChargesCallout } from '../../../../data_management/shared/additional_charges_callout';
-import { NoStepsEmptyPrompt } from '../../../../data_management/stream_detail_enrichment/empty_prompts';
-import { PipelineSuggestion } from '../../../../data_management/stream_detail_enrichment/pipeline_suggestions/pipeline_suggestion';
+import { useAIFeatures } from '../../../../../../hooks/use_ai_features';
+import { useStreamDetail } from '../../../../../../hooks/use_stream_detail';
+import { GenerateSuggestionButton } from '../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
+import { AdditionalChargesCallout } from '../../../../../data_management/shared/additional_charges_callout';
+import { NoStepsEmptyPrompt } from '../../../../../data_management/stream_detail_enrichment/empty_prompts';
+import { PipelineSuggestion } from '../../../../../data_management/stream_detail_enrichment/pipeline_suggestions/pipeline_suggestion';
 import {
   useSimulatorSelector,
   useStreamEnrichmentSelector,
   useStreamEnrichmentEvents,
   useInteractiveModeSelector,
-} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectValidationErrors } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { getActiveDataSourceRef } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { hasValidMessageFieldsForSuggestion } from '../../../../data_management/stream_detail_enrichment/utils';
-import { RootSteps } from '../../../../data_management/stream_detail_enrichment/steps/root_steps';
-import { SuggestionLoadingPrompt } from '../../../../data_management/shared/suggestion_loading_prompt';
+} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectValidationErrors } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import { getActiveDataSourceRef } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import { hasValidMessageFieldsForSuggestion } from '../../../../../data_management/stream_detail_enrichment/utils';
+import { RootSteps } from '../../../../../data_management/stream_detail_enrichment/steps/root_steps';
+import { SuggestionLoadingPrompt } from '../../../../../data_management/shared/suggestion_loading_prompt';
 
 interface ErrorPanelsProps {
   showBottomBar: boolean;

@@ -29,7 +29,7 @@ import {
   operatorToHumanReadableNameMap,
 } from '@kbn/streamlang';
 import { css } from '@emotion/css';
-import { ConditionEditor } from '../../../data_management/shared/condition_editor';
+import { ConditionEditor } from '../../../../data_management/shared/condition_editor';
 
 export const ConditionPanel = ({
   condition,

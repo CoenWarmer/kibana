@@ -7,7 +7,7 @@
 
 import type { IlmPolicyPhases, PhaseName } from '@kbn/streams-schema';
 import { isEqual } from 'lodash';
-import type { DeleteContext, EsIlmPolicyPhases } from '../../../../data_management/stream_detail_lifecycle/hooks/ilm_policy_phase_helpers';
+import type { DeleteContext, EsIlmPolicyPhases } from '../../../../../data_management/stream_detail_lifecycle/hooks/ilm_policy_phase_helpers';
 
 type ModalType = 'delete' | 'edit' | 'createPolicy' | null;
 

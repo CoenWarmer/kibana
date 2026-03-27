@@ -26,47 +26,47 @@ import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import useLocalStorage from 'react-use/lib/useLocalStorage';
 import { useGrokExpressions, GrokExpressionsProvider, GrokSampleWithContext } from '@kbn/grok-ui';
-import { useDocViewerSetup } from '../../../../hooks/use_doc_viewer_setup';
-import { useDocumentExpansion } from '../../../../hooks/use_document_expansion';
-import { useStreamDataViewFieldTypes } from '../../../../hooks/use_stream_data_view_field_types';
-import { getPercentageFormatter } from '../../../../util/formatters';
-import { MemoPreviewTable, PreviewFlyout, type PreviewTableMode } from '../../../data_management/shared';
-import { RowSelectionContext } from '../../../data_management/shared/preview_table';
-import { toDataTableRecordWithIndex } from '../../../data_management/stream_detail_routing/utils';
-import { DOC_VIEW_DIFF_ID, DocViewerContext } from '../../../data_management/stream_detail_enrichment/doc_viewer_diff';
+import { useDocViewerSetup } from '../../../../../hooks/use_doc_viewer_setup';
+import { useDocumentExpansion } from '../../../../../hooks/use_document_expansion';
+import { useStreamDataViewFieldTypes } from '../../../../../hooks/use_stream_data_view_field_types';
+import { getPercentageFormatter } from '../../../../../util/formatters';
+import { MemoPreviewTable, PreviewFlyout, type PreviewTableMode } from '../../../../data_management/shared';
+import { RowSelectionContext } from '../../../../data_management/shared/preview_table';
+import { toDataTableRecordWithIndex } from '../../../../data_management/stream_detail_routing/utils';
+import { DOC_VIEW_DIFF_ID, DocViewerContext } from '../../../../data_management/stream_detail_enrichment/doc_viewer_diff';
 import {
   createOriginalGrokFieldValuesMap,
   getGrokFieldDisplayValue,
   grokExpressionOverwritesSourceField,
   hasPrecedingProcessorTouchedField,
-} from '../../../data_management/stream_detail_enrichment/processor_outcome_preview_helpers';
+} from '../../../../data_management/stream_detail_enrichment/processor_outcome_preview_helpers';
 import {
   NoPreviewDocumentsEmptyPrompt,
   NoProcessingDataAvailableEmptyPrompt,
-} from '../../../data_management/stream_detail_enrichment/empty_prompts';
-import { useDataSourceSelector } from '../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { selectDraftProcessor } from '../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
-import type { PreviewDocsFilterOption } from '../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+} from '../../../../data_management/stream_detail_enrichment/empty_prompts';
+import { useDataSourceSelector } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { selectDraftProcessor } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine/selectors';
+import type { PreviewDocsFilterOption } from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 import {
   getAllFieldsInOrder,
   getOriginalSampleDocument,
   getSourceField,
   getTableColumns,
   previewDocsFilterOptions,
-} from '../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+} from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 import {
   selectHasSimulatedRecords,
   selectOriginalPreviewRecords,
   selectPreviewRecords,
-} from '../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
-import { isStepUnderEdit } from '../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+} from '../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { isStepUnderEdit } from '../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
 import {
   useSimulatorSelector,
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectIsInteractiveMode } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { getActiveDataSourceRef } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectIsInteractiveMode } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import { getActiveDataSourceRef } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
 
 export const ProcessorOutcomePreview = () => {
   const samples = useSimulatorSelector((snapshot) => snapshot.context.samples);

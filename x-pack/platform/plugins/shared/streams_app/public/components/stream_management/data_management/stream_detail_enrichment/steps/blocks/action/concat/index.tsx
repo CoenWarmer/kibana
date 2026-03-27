@@ -7,11 +7,11 @@
 
 import { EuiSpacer } from '@elastic/eui';
 import React from 'react';
-import { ConcatTargetField } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/concat/concat_target_field';
-import { ConcatFromBuilder } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/concat/concat_from_builder';
-import { ProcessorConditionEditor } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
-import { FieldsAccordion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
-import { IgnoreMissingToggle, IgnoreFailureToggle } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
+import { ConcatTargetField } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/concat/concat_target_field';
+import { ConcatFromBuilder } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/concat/concat_from_builder';
+import { ProcessorConditionEditor } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_condition_editor';
+import { FieldsAccordion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/optional_fields_accordion';
+import { IgnoreMissingToggle, IgnoreFailureToggle } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/ignore_toggles';
 
 export const ConcatProcessorForm = () => {
   return (

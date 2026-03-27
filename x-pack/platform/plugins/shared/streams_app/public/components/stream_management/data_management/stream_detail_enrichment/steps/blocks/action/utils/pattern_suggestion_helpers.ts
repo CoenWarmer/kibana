@@ -9,17 +9,17 @@ import { flattenObjectNestedLast } from '@kbn/object-utils';
 import type { StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
 import type { FlattenRecord } from '@kbn/streams-schema';
-import { useKibana } from '../../../../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../../../../hooks/use_kibana';
 import type {
   PreviewDocsFilterOption,
   SampleDocumentWithUIAttributes,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+} from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 import {
   selectOriginalPreviewRecords,
   selectPreviewRecords,
-} from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
-import { simulateProcessing } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_runner_actor';
-import { useSimulatorSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { simulateProcessing } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/simulation_runner_actor';
+import { useSimulatorSelector } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
 
 /**
  * Prepares samples for pattern extraction by:

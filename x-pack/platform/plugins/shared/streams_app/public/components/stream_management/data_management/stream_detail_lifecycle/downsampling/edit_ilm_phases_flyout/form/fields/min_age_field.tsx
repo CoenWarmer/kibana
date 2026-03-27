@@ -17,11 +17,11 @@ import {
 } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 import { EuiFieldNumber, EuiFlexGroup, EuiFlexItem, EuiFormRow, EuiSelect } from '@elastic/eui';
 
-import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
-import { getRelativeBoundsInMs, toMilliseconds } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
-import { useOnFieldErrorsChange } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/error_tracking';
-import { getPhaseDurationMs } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/get_phase_duration_ms';
-import type { PreservedTimeUnit, TimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
+import { getBoundsHelpTextValues, getUnitSelectOptions } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/shared';
+import { getRelativeBoundsInMs, toMilliseconds } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/utils';
+import { useOnFieldErrorsChange } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/error_tracking';
+import { getPhaseDurationMs } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/get_phase_duration_ms';
+import type { PreservedTimeUnit, TimeUnit } from '../../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/form/types';
 
 export interface MinAgeFieldProps {
   phaseName: PhaseName | undefined;

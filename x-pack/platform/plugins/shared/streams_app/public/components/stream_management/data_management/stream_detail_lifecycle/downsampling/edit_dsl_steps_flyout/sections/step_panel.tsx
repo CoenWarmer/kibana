@@ -10,9 +10,9 @@ import { i18n } from '@kbn/i18n';
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import type { ArrayItem } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
 
-import type { TimeUnit } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import { AfterField, FixedIntervalField } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
-import { useStyles } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
+import type { TimeUnit } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
+import { AfterField, FixedIntervalField } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form';
+import { useStyles } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/use_styles';
 
 export interface StepPanelProps {
   item: ArrayItem;

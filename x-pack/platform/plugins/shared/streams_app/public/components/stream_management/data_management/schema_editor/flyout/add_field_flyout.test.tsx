@@ -9,12 +9,12 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nProvider } from '@kbn/i18n-react';
-import { AddFieldFlyout } from '../../../../data_management/schema_editor/flyout/add_field_flyout';
+import { AddFieldFlyout } from '../../../../../data_management/schema_editor/flyout/add_field_flyout';
 import {
   createMockClassicStreamDefinition,
   createMockWiredStreamDefinition,
-} from '../../../../data_management/shared/mocks';
-import { SchemaEditorContextProvider } from '../../../../data_management/schema_editor/schema_editor_context';
+} from '../../../../../data_management/shared/mocks';
+import { SchemaEditorContextProvider } from '../../../../../data_management/schema_editor/schema_editor_context';
 
 jest.mock('../../../../hooks/use_kibana', () => ({
   useKibana: () => ({

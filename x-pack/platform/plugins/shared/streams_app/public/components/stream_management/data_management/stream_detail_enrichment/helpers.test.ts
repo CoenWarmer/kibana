@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { shouldSuggestProcessorKey, detectProcessorContext } from '../../../data_management/stream_detail_enrichment/helpers';
+import { shouldSuggestProcessorKey, detectProcessorContext } from '../../../../data_management/stream_detail_enrichment/helpers';
 import type { monaco } from '@kbn/monaco';
 
 describe('helpers', () => {

@@ -25,11 +25,11 @@ import type { ListStreamDetail } from '@kbn/streams-plugin/server/routes/interna
 import { Streams, TaskStatus } from '@kbn/streams-schema';
 import type { OnboardingResult, TaskResult } from '@kbn/streams-schema';
 import React, { useState } from 'react';
-import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
-import { useStreamsTour } from '../../../../streams_tour';
-import { KnowledgeIndicatorsColumn } from '../../../../significant_events_discovery/components/streams_view/knowledge_indicators_column';
-import { QueriesColumn } from '../../../../significant_events_discovery/components/streams_view/queries_column';
-import { SignificantEventsColumn } from '../../../../significant_events_discovery/components/streams_view/significant_events_column';
+import { useStreamsAppRouter } from '../../../../../../hooks/use_streams_app_router';
+import { useStreamsTour } from '../../../../../streams_tour';
+import { KnowledgeIndicatorsColumn } from '../../../../../significant_events_discovery/components/streams_view/knowledge_indicators_column';
+import { QueriesColumn } from '../../../../../significant_events_discovery/components/streams_view/queries_column';
+import { SignificantEventsColumn } from '../../../../../significant_events_discovery/components/streams_view/significant_events_column';
 import {
   ACTIONS_COLUMN_HEADER,
   KNOWLEDGE_INDICATORS_COLUMN_HEADER,
@@ -41,8 +41,8 @@ import {
   SIGNIFICANT_EVENTS_COLUMN_HEADER,
   STOP_STREAM_ONBOARDING_BUTTON_LABEL,
   STREAMS_TABLE_CAPTION_ARIA_LABEL,
-} from '../../../../significant_events_discovery/components/streams_view/translations';
-import type { SortableField, TableRow } from '../../../../significant_events_discovery/components/streams_view/utils';
+} from '../../../../../significant_events_discovery/components/streams_view/translations';
+import type { SortableField, TableRow } from '../../../../../significant_events_discovery/components/streams_view/utils';
 import {
   asTrees,
   buildStreamRows,
@@ -50,7 +50,7 @@ import {
   filterCollapsedStreamRows,
   filterStreamsByQuery,
   shouldComposeTree,
-} from '../../../../significant_events_discovery/components/streams_view/utils';
+} from '../../../../../significant_events_discovery/components/streams_view/utils';
 
 export function StreamsTreeTable({
   loading,

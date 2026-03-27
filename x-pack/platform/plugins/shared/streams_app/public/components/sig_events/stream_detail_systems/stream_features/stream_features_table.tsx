@@ -16,15 +16,15 @@ import {
   EuiPanel,
 } from '@elastic/eui';
 import type { Feature, Streams } from '@kbn/streams-schema';
-import { FeatureDetailsFlyout } from '../../../stream_detail_systems/stream_features/feature_details_flyout';
-import { DeleteFeatureModal } from '../../../stream_detail_systems/stream_features/delete_feature_modal';
+import { FeatureDetailsFlyout } from '../../../../stream_detail_systems/stream_features/feature_details_flyout';
+import { DeleteFeatureModal } from '../../../../stream_detail_systems/stream_features/delete_feature_modal';
 import {
   useStreamFeaturesTable,
   TABLE_CAPTION_LABEL,
   CLEAR_SELECTION,
   type FeaturesTableMode,
-} from '../../../stream_detail_systems/stream_features/use_stream_features_table';
-import { TableTitle } from '../../../stream_detail_systems/table_title';
+} from '../../../../stream_detail_systems/stream_features/use_stream_features_table';
+import { TableTitle } from '../../../../stream_detail_systems/table_title';
 
 interface StreamFeaturesTableProps {
   definition: Streams.all.Definition;

@@ -10,8 +10,8 @@ import type { IToasts } from '@kbn/core/public';
 import type { DataPublicPluginStart } from '@kbn/data-plugin/public';
 import type { SampleDocument } from '@kbn/streams-schema';
 import type { StreamsRepositoryClient } from '@kbn/streams-plugin/public/api';
-import type { StreamsTelemetryClient } from '../../../../../../telemetry/client';
-import type { EnrichmentDataSourceWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/types';
+import type { StreamsTelemetryClient } from '../../../../../../../telemetry/client';
+import type { EnrichmentDataSourceWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/types';
 
 export interface DataSourceMachineDeps {
   data: DataPublicPluginStart;

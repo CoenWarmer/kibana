@@ -6,7 +6,7 @@
  */
 
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { useSchemaFields, getDefinitionFields } from '../../../../data_management/schema_editor/hooks/use_schema_fields';
+import { useSchemaFields, getDefinitionFields } from '../../../../../data_management/schema_editor/hooks/use_schema_fields';
 import type { Streams } from '@kbn/streams-schema';
 
 // Mock the Kibana hook
@@ -89,7 +89,7 @@ import {
   createMockWiredStreamDefinition,
   createMockMappedField,
   createMockUnmappedField,
-} from '../../../../data_management/shared/mocks';
+} from '../../../../../data_management/shared/mocks';
 
 describe('useSchemaFields', () => {
   beforeEach(() => {

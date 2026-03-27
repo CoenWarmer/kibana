@@ -23,8 +23,8 @@ import React from 'react';
 import { i18n } from '@kbn/i18n';
 import useToggle from 'react-use/lib/useToggle';
 import { css } from '@emotion/react';
-import { getPercentageFormatter } from '../../../../../../../util/formatters';
-import type { ProcessorMetrics } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import { getPercentageFormatter } from '../../../../../../../../util/formatters';
+import type { ProcessorMetrics } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 
 type ProcessorMetricBadgesProps = ProcessorMetrics;
 

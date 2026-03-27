@@ -22,16 +22,16 @@ import { useWatch } from 'react-hook-form';
 import type { DissectProcessor } from '@kbn/streamlang';
 import type { APIReturnType } from '@kbn/streams-plugin/public/api';
 import { useAbortController } from '@kbn/react-hooks';
-import { isNoSuggestionsError } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
-import { useStreamDetail } from '../../../../../../../../hooks/use_stream_detail';
-import { selectPreviewRecords } from '../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
-import { useSimulatorSelector } from '../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import type { ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
-import { AdditionalChargesCallout } from '../../../../../../../data_management/shared/additional_charges_callout';
-import { GenerateSuggestionButton } from '../../../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
-import { useDissectPatternSuggestion } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/dissect/use_dissect_pattern_suggestion';
-import type { AIFeatures } from '../../../../../../../../hooks/use_ai_features';
-import { registerDissectSuggestion, clearDissectSuggestion } from '../../../../../../../data_management/stream_detail_enrichment/dev_console_helpers';
+import { isNoSuggestionsError } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/utils/no_suggestions_error';
+import { useStreamDetail } from '../../../../../../../../../hooks/use_stream_detail';
+import { selectPreviewRecords } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine/selectors';
+import { useSimulatorSelector } from '../../../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import type { ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { AdditionalChargesCallout } from '../../../../../../../../data_management/shared/additional_charges_callout';
+import { GenerateSuggestionButton } from '../../../../../../../../data_management/stream_detail_routing/review_suggestions_form/generate_suggestions_button';
+import { useDissectPatternSuggestion } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/dissect/use_dissect_pattern_suggestion';
+import type { AIFeatures } from '../../../../../../../../../hooks/use_ai_features';
+import { registerDissectSuggestion, clearDissectSuggestion } from '../../../../../../../../data_management/stream_detail_enrichment/dev_console_helpers';
 
 export const DissectPatternAISuggestions = ({
   aiFeatures,

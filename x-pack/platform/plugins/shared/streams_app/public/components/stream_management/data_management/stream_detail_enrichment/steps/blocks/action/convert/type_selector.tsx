@@ -12,7 +12,7 @@ import { i18n } from '@kbn/i18n';
 import { convertTypes } from '@kbn/streamlang/types/formats';
 import { FieldNameWithIcon } from '@kbn/react-field';
 import { capitalize } from 'lodash';
-import type { ConvertFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
+import type { ConvertFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
 
 const typeSelectorOptions = convertTypes.map((type) => ({
   value: type,

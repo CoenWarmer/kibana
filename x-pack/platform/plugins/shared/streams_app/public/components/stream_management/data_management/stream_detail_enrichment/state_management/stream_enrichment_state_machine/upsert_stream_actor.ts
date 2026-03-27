@@ -14,11 +14,11 @@ import type { APIReturnType } from '@kbn/streams-plugin/public/api';
 import type { FieldDefinition, Streams } from '@kbn/streams-schema';
 import type { ErrorActorEvent } from 'xstate';
 import { fromPromise } from 'xstate';
-import type { ConfigurationMode } from '../../../../../../telemetry/types';
-import { getFormattedError } from '../../../../../../util/errors';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import { buildUpsertStreamRequestPayload } from '../../../../../data_management/stream_detail_enrichment/utils';
-import type { StreamEnrichmentServiceDependencies } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+import type { ConfigurationMode } from '../../../../../../../telemetry/types';
+import { getFormattedError } from '../../../../../../../util/errors';
+import { getStreamTypeFromDefinition } from '../../../../../../../util/get_stream_type_from_definition';
+import { buildUpsertStreamRequestPayload } from '../../../../../../data_management/stream_detail_enrichment/utils';
+import type { StreamEnrichmentServiceDependencies } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
 
 export type UpsertStreamResponse = APIReturnType<'PUT /api/streams/{name}/_ingest 2023-10-31'>;
 

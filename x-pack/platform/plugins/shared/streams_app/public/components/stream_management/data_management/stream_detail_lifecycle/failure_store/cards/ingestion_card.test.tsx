@@ -8,7 +8,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
-import { IngestionCard } from '../../../../../data_management/stream_detail_lifecycle/failure_store/cards/ingestion_card';
+import { IngestionCard } from '../../../../../../data_management/stream_detail_lifecycle/failure_store/cards/ingestion_card';
 
 const makeStats = (bytesPerDay: number, perDayDocs: number = 100) => ({
   bytesPerDoc: 10,

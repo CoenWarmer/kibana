@@ -9,7 +9,7 @@ import React from 'react';
 import { i18n } from '@kbn/i18n';
 import { EuiFlexGroup, EuiFlexItem, EuiLink, EuiText, EuiTitle } from '@elastic/eui';
 import type { UnmanagedElasticsearchAssetDetails } from '@kbn/streams-plugin/server/lib/streams/stream_crud';
-import { ManagedBadge } from '../../../data_management/stream_detail_management/managed_badge';
+import { ManagedBadge } from '../../../../data_management/stream_detail_management/managed_badge';
 
 interface IndexTemplateDetailsProps {
   indexTemplate: UnmanagedElasticsearchAssetDetails['indexTemplate'] | undefined;

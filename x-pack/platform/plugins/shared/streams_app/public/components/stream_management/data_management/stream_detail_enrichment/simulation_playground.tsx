@@ -20,18 +20,18 @@ import {
   EuiTabs,
   EuiToolTip,
 } from '@elastic/eui';
-import { ProcessorOutcomePreview } from '../../../data_management/stream_detail_enrichment/processor_outcome_preview';
+import { ProcessorOutcomePreview } from '../../../../data_management/stream_detail_enrichment/processor_outcome_preview';
 import {
   useSimulatorSelector,
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { DetectedFieldsEditor } from '../../../data_management/stream_detail_enrichment/detected_fields_editor';
-import type { SchemaEditorField } from '../../../data_management/schema_editor/types';
-import { DataSourcesControls } from '../../../data_management/stream_detail_enrichment/data_sources_controls';
-import { getActiveDataSourceRef } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
-import { useDataSourceSelector } from '../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { selectWhetherThereAreOutdatedDocumentsInSimulation } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { DetectedFieldsEditor } from '../../../../data_management/stream_detail_enrichment/detected_fields_editor';
+import type { SchemaEditorField } from '../../../../data_management/schema_editor/types';
+import { DataSourcesControls } from '../../../../data_management/stream_detail_enrichment/data_sources_controls';
+import { getActiveDataSourceRef } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/utils';
+import { useDataSourceSelector } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { selectWhetherThereAreOutdatedDocumentsInSimulation } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
 
 export const SimulationPlayground = ({
   schemaEditorFields,

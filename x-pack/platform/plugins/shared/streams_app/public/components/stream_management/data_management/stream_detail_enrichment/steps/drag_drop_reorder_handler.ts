@@ -6,7 +6,7 @@
  */
 
 import type { Instruction } from '@atlaskit/pragmatic-drag-and-drop-hitbox/list-item';
-import type { InteractiveModeContext } from '../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
+import type { InteractiveModeContext } from '../../../../../data_management/stream_detail_enrichment/state_management/interactive_mode_machine';
 
 /**
  * Handles drag-drop reorder by converting Atlassian's drag-drop instructions

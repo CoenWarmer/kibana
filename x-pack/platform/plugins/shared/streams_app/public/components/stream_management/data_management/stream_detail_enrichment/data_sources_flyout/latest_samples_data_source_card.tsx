@@ -7,9 +7,9 @@
 
 import React from 'react';
 import { EuiCallOut, EuiSpacer } from '@elastic/eui';
-import type { DataSourceActorRef } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { DataSourceCard } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import type { DataSourceActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { DataSourceCard } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
 
 interface LatestSamplesDataSourceCardProps {
   readonly dataSourceRef: DataSourceActorRef;

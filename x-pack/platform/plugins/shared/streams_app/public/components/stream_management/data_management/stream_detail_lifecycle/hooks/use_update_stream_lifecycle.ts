@@ -9,7 +9,7 @@ import type { Streams } from '@kbn/streams-schema';
 import { type IngestStreamLifecycle } from '@kbn/streams-schema';
 import { useAbortController } from '@kbn/react-hooks';
 import { omit } from 'lodash';
-import { useKibana } from '../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../hooks/use_kibana';
 
 export const useUpdateStreamLifecycle = (definition: Streams.ingest.all.GetResponse) => {
   const {

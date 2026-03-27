@@ -6,17 +6,17 @@
  */
 
 import { default as React, useMemo } from 'react';
-import { useEnrichmentFieldSuggestions } from '../../../../hooks/use_field_suggestions';
-import { useStreamDataViewFieldTypes } from '../../../../hooks/use_stream_data_view_field_types';
-import { useEnrichmentValueSuggestions } from '../../../../hooks/use_value_suggestions';
+import { useEnrichmentFieldSuggestions } from '../../../../../hooks/use_field_suggestions';
+import { useStreamDataViewFieldTypes } from '../../../../../hooks/use_stream_data_view_field_types';
+import { useEnrichmentValueSuggestions } from '../../../../../hooks/use_value_suggestions';
 import {
   getFilterConditionField,
   getFilterConditionOperator,
   isArrayOperator,
-} from '../../../../util/condition';
-import type { ConditionEditorProps } from '../../../data_management/shared/condition_editor';
-import { ConditionEditor } from '../../../data_management/shared/condition_editor';
-import { useSimulatorSelector } from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/use_stream_enrichment';
+} from '../../../../../util/condition';
+import type { ConditionEditorProps } from '../../../../data_management/shared/condition_editor';
+import { ConditionEditor } from '../../../../data_management/shared/condition_editor';
+import { useSimulatorSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/use_stream_enrichment';
 
 export type ProcessorConditionEditorProps = Omit<
   ConditionEditorProps,

@@ -10,9 +10,9 @@ import { useEuiTheme } from '@elastic/eui';
 import React, { useMemo } from 'react';
 import { i18n } from '@kbn/i18n';
 import type { TickFormatter } from '@elastic/charts';
-import { type SparkPlotAnnotation, SparkPlot } from '../../../../spark_plot';
-import type { FormattedChangePoint } from '../../../../significant_events_discovery/utils/change_point';
-import { getAnnotationFromFormattedChangePoint } from '../../../../significant_events_discovery/utils/get_annotation_from_formatted_change_point';
+import { type SparkPlotAnnotation, SparkPlot } from '../../../../../spark_plot';
+import type { FormattedChangePoint } from '../../../../../significant_events_discovery/utils/change_point';
+import { getAnnotationFromFormattedChangePoint } from '../../../../../significant_events_discovery/utils/get_annotation_from_formatted_change_point';
 
 interface Props {
   id: string;

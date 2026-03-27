@@ -9,7 +9,7 @@ import { dynamic } from '@kbn/shared-ux-utility';
 import type { Streams } from '@kbn/streams-schema';
 import { isRootStreamDefinition } from '@kbn/streams-schema';
 
-import { RootStreamEmptyPrompt } from '../../../data_management/stream_detail_enrichment/empty_prompts';
+import { RootStreamEmptyPrompt } from '../../../../data_management/stream_detail_enrichment/empty_prompts';
 
 const StreamDetailEnrichmentContent = dynamic(() =>
   import(/* webpackChunkName: "management_enrichment" */ './page_content').then((mod) => ({

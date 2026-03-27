@@ -18,14 +18,14 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/react';
-import { useStreamsAppParams } from '../../../../hooks/use_streams_app_params';
-import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
-import { AssetImage } from '../../../asset_image';
-import { ProcessingPanel } from '../../../data_management/stream_detail_enrichment/pipeline_suggestions/processing_panel';
+import { useStreamsAppParams } from '../../../../../hooks/use_streams_app_params';
+import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { AssetImage } from '../../../../asset_image';
+import { ProcessingPanel } from '../../../../data_management/stream_detail_enrichment/pipeline_suggestions/processing_panel';
 import {
   useInteractiveModeSelector,
   useStreamEnrichmentEvents,
-} from '../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+} from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
 
 interface ProcessingButtonsManualProps {
   center?: boolean;

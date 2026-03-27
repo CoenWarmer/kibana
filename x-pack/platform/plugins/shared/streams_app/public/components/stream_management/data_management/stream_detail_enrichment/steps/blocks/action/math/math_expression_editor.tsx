@@ -25,14 +25,14 @@ import { LanguageDocumentationPopover } from '@kbn/language-documentation';
 import { Markdown } from '@kbn/shared-ux-markdown';
 import { monaco } from '@kbn/monaco';
 import { validateMathExpression, getMathExpressionLanguageDocSections } from '@kbn/streamlang';
-import type { ProcessorFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
-import { useEnrichmentFieldSuggestions } from '../../../../../../../../hooks/use_field_suggestions';
+import type { ProcessorFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { useEnrichmentFieldSuggestions } from '../../../../../../../../../hooks/use_field_suggestions';
 // Import to register the math language with Monaco
-import { STREAMS_MATH_LANGUAGE_ID } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_tokenization';
+import { STREAMS_MATH_LANGUAGE_ID } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_tokenization';
 import {
   registerMathCompletionProvider,
   registerMathSignatureHelpProvider,
-} from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_completion';
+} from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/math/math_expression_completion';
 
 export const MathExpressionEditor: React.FC = () => {
   const { euiTheme } = useEuiTheme();

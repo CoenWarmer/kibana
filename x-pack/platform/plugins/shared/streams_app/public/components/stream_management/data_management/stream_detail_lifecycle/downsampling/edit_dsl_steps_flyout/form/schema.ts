@@ -6,7 +6,7 @@
  */
 
 import type { FormSchema } from '@kbn/es-ui-shared-plugin/static/forms/hook_form_lib';
-import type { DslStepsFlyoutFormInternal } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
+import type { DslStepsFlyoutFormInternal } from '../../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_dsl_steps_flyout/form/types';
 
 /**
  * Minimal schema for the DSL steps flyout.

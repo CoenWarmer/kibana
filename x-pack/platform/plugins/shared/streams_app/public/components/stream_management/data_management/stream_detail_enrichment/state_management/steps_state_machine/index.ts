@@ -5,6 +5,6 @@
  * 2.0.
  */
 
-export * from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/steps_state_machine';
-export type * from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/types';
-export * from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/utils';
+export * from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/steps_state_machine';
+export type * from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/types';
+export * from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine/utils';

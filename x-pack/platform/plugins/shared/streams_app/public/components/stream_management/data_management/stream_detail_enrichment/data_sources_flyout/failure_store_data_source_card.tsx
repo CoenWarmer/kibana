@@ -9,12 +9,12 @@ import React from 'react';
 import { EuiButtonGroup, EuiFlexGroup, EuiFlexItem, EuiSpacer } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import type { TimeRange } from '@kbn/es-query';
-import type { DataSourceActorRef } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import { DataSourceCard } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
-import { UncontrolledStreamsAppSearchBar } from '../../../../streams_app_search_bar/uncontrolled_streams_app_bar';
-import { useDataSourceSelector } from '../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { FailureStoreDataSourceWithUIAttributes } from '../../../../data_management/stream_detail_enrichment/types';
+import type { DataSourceActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import { DataSourceCard } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { UncontrolledStreamsAppSearchBar } from '../../../../../streams_app_search_bar/uncontrolled_streams_app_bar';
+import { useDataSourceSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { FailureStoreDataSourceWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/types';
 
 interface FailureStoreDataSourceCardProps {
   readonly dataSourceRef: DataSourceActorRef;

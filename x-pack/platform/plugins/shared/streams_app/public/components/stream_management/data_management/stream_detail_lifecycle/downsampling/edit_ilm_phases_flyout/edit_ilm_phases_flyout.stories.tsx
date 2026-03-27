@@ -10,9 +10,9 @@ import { action } from '@storybook/addon-actions';
 import React, { useMemo, useState } from 'react';
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiSpacer } from '@elastic/eui';
 import type { IlmPolicyPhases, PhaseName } from '@kbn/streams-schema';
-import { EditIlmPhasesFlyout } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/edit_ilm_phases_flyout';
-import { IlmPhaseSelect } from '../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
-import { ILM_PHASE_ORDER } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
+import { EditIlmPhasesFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/edit_ilm_phases_flyout';
+import { IlmPhaseSelect } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/ilm_phase_select/ilm_phase_select';
+import { ILM_PHASE_ORDER } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/constants';
 
 const getInitialSelectedPhase = (phases: IlmPolicyPhases): PhaseName | undefined =>
   ILM_PHASE_ORDER.find((p) => Boolean((phases as Record<string, unknown>)[p]));

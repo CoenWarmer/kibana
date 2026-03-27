@@ -21,9 +21,9 @@ import {
   useEuiTheme,
 } from '@elastic/eui';
 import { capitalize } from 'lodash';
-import { formatBytes } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
-import { LifecyclePhaseButton } from '../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_phase_button';
-import { isZeroAge } from '../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
+import { formatBytes } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_bytes';
+import { LifecyclePhaseButton } from '../../../../../../data_management/stream_detail_lifecycle/common/data_lifecycle/lifecycle_phase_button';
+import { isZeroAge } from '../../../../../../data_management/stream_detail_lifecycle/helpers/format_size_units';
 
 interface BaseLifecyclePhaseProps {
   color?: string;

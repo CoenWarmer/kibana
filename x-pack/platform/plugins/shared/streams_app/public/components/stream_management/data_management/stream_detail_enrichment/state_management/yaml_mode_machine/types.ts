@@ -7,8 +7,8 @@
 
 import type { AdditiveChangesResult, StreamlangStepWithUIAttributes } from '@kbn/streamlang';
 import type { StreamlangDSL } from '@kbn/streamlang/types/streamlang';
-import type { StreamPrivileges } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
-import type { DataSourceSimulationMode } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { StreamPrivileges } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+import type { DataSourceSimulationMode } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
 
 interface YamlModeParentSnapshot {
   context: {

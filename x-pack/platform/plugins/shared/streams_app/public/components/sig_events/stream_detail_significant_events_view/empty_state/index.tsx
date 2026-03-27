@@ -8,7 +8,7 @@
 import { EuiEmptyPrompt, EuiFlexGroup, EuiFlexItem, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { SignificantEventsGenerationPanel } from '../../../stream_detail_significant_events_view/generation_panel';
+import { SignificantEventsGenerationPanel } from '../../../../stream_detail_significant_events_view/generation_panel';
 
 export function EmptyState({
   onManualEntryClick,

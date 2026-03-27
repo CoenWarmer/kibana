@@ -18,20 +18,20 @@ import type { EuiButtonPropsForButton } from '@elastic/eui/src/components/button
 import { i18n } from '@kbn/i18n';
 import { useBoolean } from '@kbn/react-hooks';
 import React from 'react';
-import { StreamDeleteModal } from '../../../stream_delete_modal';
-import { RequestPreviewFlyout } from '../../../data_management/request_preview_flyout';
-import { buildRequestPreviewCodeContent } from '../../../data_management/shared/utils';
+import { StreamDeleteModal } from '../../../../stream_delete_modal';
+import { RequestPreviewFlyout } from '../../../../data_management/request_preview_flyout';
+import { buildRequestPreviewCodeContent } from '../../../../data_management/shared/utils';
 import {
   selectCurrentRule,
   useStreamRoutingEvents,
   useStreamsRoutingSelector,
-} from '../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
-import type { RoutingDefinitionWithUIAttributes } from '../../../data_management/stream_detail_routing/types';
+} from '../../../../data_management/stream_detail_routing/state_management/stream_routing_state_machine';
+import type { RoutingDefinitionWithUIAttributes } from '../../../../data_management/stream_detail_routing/types';
 import {
   buildRoutingForkRequestPayload,
   buildRoutingSaveRequestPayload,
   routingConverter,
-} from '../../../data_management/stream_detail_routing/utils';
+} from '../../../../data_management/stream_detail_routing/utils';
 
 interface AddRoutingRuleControlsProps {
   isStreamNameValid: boolean;

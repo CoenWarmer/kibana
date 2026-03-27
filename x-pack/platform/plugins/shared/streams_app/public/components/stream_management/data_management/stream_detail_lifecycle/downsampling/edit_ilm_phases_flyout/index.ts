@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export { EditIlmPhasesFlyout } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/edit_ilm_phases_flyout';
-export type { EditIlmPhasesFlyoutProps } from '../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/types';
+export { EditIlmPhasesFlyout } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/edit_ilm_phases_flyout';
+export type { EditIlmPhasesFlyoutProps } from '../../../../../../data_management/stream_detail_lifecycle/downsampling/edit_ilm_phases_flyout/types';

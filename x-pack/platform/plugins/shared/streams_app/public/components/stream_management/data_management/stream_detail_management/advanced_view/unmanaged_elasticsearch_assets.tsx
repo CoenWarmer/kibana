@@ -10,16 +10,16 @@ import type { Streams } from '@kbn/streams-schema';
 import { EuiFlexGroup, EuiFlexItem, EuiHorizontalRule } from '@elastic/eui';
 import type { IndexManagementLocatorParams } from '@kbn/index-management-shared-types';
 import { usePerformanceContext } from '@kbn/ebt-tools';
-import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
-import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { MissingDataStreamCallout } from '../../../../data_management/stream_detail_management/missing_data_stream_callout';
-import { ComponentTemplatePanel } from '../../../../data_management/stream_detail_management/component_template_panel';
-import { IndexTemplateDetails } from '../../../../data_management/stream_detail_management/index_template_details';
-import { IngestPipelineDetails } from '../../../../data_management/stream_detail_management/ingest_pipeline_details';
-import { DataStreamDetails } from '../../../../data_management/stream_detail_management/data_stream_details';
-import { IndexConfiguration } from '../../../../data_management/stream_detail_management/advanced_view/index_configuration';
-import { Row, RowMetadata } from '../../../../data_management/stream_detail_management/advanced_view/row';
+import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
+import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import { useKibana } from '../../../../../../hooks/use_kibana';
+import { MissingDataStreamCallout } from '../../../../../data_management/stream_detail_management/missing_data_stream_callout';
+import { ComponentTemplatePanel } from '../../../../../data_management/stream_detail_management/component_template_panel';
+import { IndexTemplateDetails } from '../../../../../data_management/stream_detail_management/index_template_details';
+import { IngestPipelineDetails } from '../../../../../data_management/stream_detail_management/ingest_pipeline_details';
+import { DataStreamDetails } from '../../../../../data_management/stream_detail_management/data_stream_details';
+import { IndexConfiguration } from '../../../../../data_management/stream_detail_management/advanced_view/index_configuration';
+import { Row, RowMetadata } from '../../../../../data_management/stream_detail_management/advanced_view/row';
 
 export function UnmanagedElasticsearchAssets({
   definition,

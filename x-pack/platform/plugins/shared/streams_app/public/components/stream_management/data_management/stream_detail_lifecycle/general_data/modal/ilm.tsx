@@ -20,8 +20,8 @@ import {
   EuiFlexItem,
 } from '@elastic/eui';
 import type { IngestStreamLifecycleAll } from '@kbn/streams-schema/src/models/ingest/lifecycle';
-import { getFormattedError } from '../../../../../../util/errors';
-import { useIlmPhasesColorAndDescription } from '../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
+import { getFormattedError } from '../../../../../../../util/errors';
+import { useIlmPhasesColorAndDescription } from '../../../../../../data_management/stream_detail_lifecycle/hooks/use_ilm_phases_color_and_description';
 
 export interface PhaseProps {
   description: string;

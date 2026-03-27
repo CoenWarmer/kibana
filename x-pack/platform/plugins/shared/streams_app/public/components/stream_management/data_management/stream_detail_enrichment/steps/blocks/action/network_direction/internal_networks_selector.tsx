@@ -19,8 +19,8 @@ import {
 import { i18n } from '@kbn/i18n';
 import React, { Fragment, useState, type ReactNode } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import type { NetworkDirectionFormState } from '../../../../../../../data_management/stream_detail_enrichment/types';
-import { ProcessorFieldSelector } from '../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
+import type { NetworkDirectionFormState } from '../../../../../../../../data_management/stream_detail_enrichment/types';
+import { ProcessorFieldSelector } from '../../../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/processor_field_selector';
 
 interface InternalNetworksFieldInputProps {
   index: number;

@@ -16,21 +16,21 @@ import type {
   FailureStoreDataSource,
   KqlSamplesDataSource,
   LatestSamplesDataSource,
-} from '../../../../../../../common/url_schema';
-import { CUSTOM_SAMPLES_DATA_SOURCE_STORAGE_KEY_PREFIX } from '../../../../../../../common/url_schema/common';
-import { getStreamTypeFromDefinition } from '../../../../../../util/get_stream_type_from_definition';
-import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
-import { dataSourceConverter } from '../../../../../data_management/stream_detail_enrichment/utils';
-import type { DataSourceActorRef, DataSourceSimulationMode } from '../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
-import type { SampleDocumentWithUIAttributes } from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+} from '../../../../../../../../common/url_schema';
+import { CUSTOM_SAMPLES_DATA_SOURCE_STORAGE_KEY_PREFIX } from '../../../../../../../../common/url_schema/common';
+import { getStreamTypeFromDefinition } from '../../../../../../../util/get_stream_type_from_definition';
+import { DATA_SOURCES_I18N } from '../../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { dataSourceConverter } from '../../../../../../data_management/stream_detail_enrichment/utils';
+import type { DataSourceActorRef, DataSourceSimulationMode } from '../../../../../../data_management/stream_detail_enrichment/state_management/data_source_state_machine';
+import type { SampleDocumentWithUIAttributes } from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
 import {
   convertToFieldDefinition,
   getMappedSchemaFields,
   getUnmappedSchemaFields,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
-import type { StepActorRef } from '../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import type { StreamEnrichmentContextType } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/simulation_state_machine';
+import type { StepActorRef } from '../../../../../../data_management/stream_detail_enrichment/state_management/steps_state_machine';
+import { collectDescendantStepIds } from '../../../../../../data_management/stream_detail_enrichment/state_management/utils';
+import type { StreamEnrichmentContextType } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/types';
 
 export const defaultLatestSamplesDataSource: LatestSamplesDataSource = {
   type: 'latest-samples',

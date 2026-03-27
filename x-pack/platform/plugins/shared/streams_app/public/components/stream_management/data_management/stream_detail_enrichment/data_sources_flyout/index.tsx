@@ -19,11 +19,11 @@ import {
   useGeneratedHtmlId,
 } from '@elastic/eui';
 import { FormattedMessage } from '@kbn/i18n-react';
-import { useStreamEnrichmentSelector } from '../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { DATA_SOURCES_I18N } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
-import { AddDataSourcesContextMenu } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/add_data_sources_context_menu';
-import { DataSource } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source';
-import { CompleteSimulationBadge, PartialSimulationBadge } from '../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
+import { useStreamEnrichmentSelector } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { DATA_SOURCES_I18N } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/translations';
+import { AddDataSourcesContextMenu } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/add_data_sources_context_menu';
+import { DataSource } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source';
+import { CompleteSimulationBadge, PartialSimulationBadge } from '../../../../../data_management/stream_detail_enrichment/data_sources_flyout/data_source_card';
 
 interface DataSourcesFlyoutProps {
   onClose: () => void;

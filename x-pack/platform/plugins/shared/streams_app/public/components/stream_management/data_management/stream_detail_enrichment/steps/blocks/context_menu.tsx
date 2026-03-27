@@ -17,24 +17,24 @@ import { isActionBlock, isConditionBlock } from '@kbn/streamlang';
 import { useSelector } from '@xstate/react';
 import React from 'react';
 import useToggle from 'react-use/lib/useToggle';
-import { useDiscardConfirm } from '../../../../../../hooks/use_discard_confirm';
-import { useConditionFilteringEnabled } from '../../../../../data_management/stream_detail_enrichment/hooks/use_condition_filtering_enabled';
+import { useDiscardConfirm } from '../../../../../../../hooks/use_discard_confirm';
+import { useConditionFilteringEnabled } from '../../../../../../data_management/stream_detail_enrichment/hooks/use_condition_filtering_enabled';
 import {
   useInteractiveModeSelector,
   useStreamEnrichmentEvents,
   useStreamEnrichmentSelector,
-} from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
-import { selectStreamType } from '../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
-import { collectDescendantStepIds } from '../../../../../data_management/stream_detail_enrichment/state_management/utils';
-import type { StepConfigurationProps } from '../../../../../data_management/stream_detail_enrichment/steps/steps_list';
-import { EditStepDescriptionModal } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/action/edit_step_description_modal';
-import { deleteProcessorPromptOptions } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/action/prompt_options';
+} from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine';
+import { selectStreamType } from '../../../../../../data_management/stream_detail_enrichment/state_management/stream_enrichment_state_machine/selectors';
+import { collectDescendantStepIds } from '../../../../../../data_management/stream_detail_enrichment/state_management/utils';
+import type { StepConfigurationProps } from '../../../../../../data_management/stream_detail_enrichment/steps/steps_list';
+import { EditStepDescriptionModal } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/edit_step_description_modal';
+import { deleteProcessorPromptOptions } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/prompt_options';
 import {
   ADD_DESCRIPTION_MENU_LABEL,
   EDIT_DESCRIPTION_MENU_LABEL,
   REMOVE_DESCRIPTION_MENU_LABEL,
-} from '../../../../../data_management/stream_detail_enrichment/steps/blocks/action/translations';
-import { deleteConditionPromptOptions } from '../../../../../data_management/stream_detail_enrichment/steps/blocks/where/prompt_options';
+} from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/translations';
+import { deleteConditionPromptOptions } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/where/prompt_options';
 
 const moveUpItemText = i18n.translate(
   'xpack.streams.streamDetailView.managementTab.enrichment.moveUpItemButtonText',
