@@ -31,9 +31,9 @@ import { upperFirst } from 'lodash';
 import type { Feature } from '@kbn/streams-schema';
 import { useBoolean } from '@kbn/react-hooks';
 import React from 'react';
-import { InfoPanel } from '../../../../info_panel';
-import { DeleteFeatureModal } from '../../../../stream_detail_systems/stream_features/delete_feature_modal';
-import { getConfidenceColor } from '../../../../stream_detail_systems/stream_features/use_stream_features_table';
+import { InfoPanel } from '../../../info_panel';
+import { DeleteFeatureModal } from './delete_feature_modal';
+import { getConfidenceColor } from './use_stream_features_table';
 
 interface FeatureDetailsFlyoutProps {
   feature: Feature;

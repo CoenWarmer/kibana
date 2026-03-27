@@ -22,17 +22,17 @@ import { TaskStatus } from '@kbn/streams-schema';
 import pMap from 'p-map';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
-import type { TableRow } from '../../../../../significant_events_discovery/components/streams_view/utils';
-import { useAIFeatures } from '../../../../../../hooks/use_ai_features';
-import { useIndexPatternsConfig } from '../../../../../../hooks/use_index_patterns_config';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useInsightsDiscoveryApi } from '../../../../../../hooks/sig_events/use_insights_discovery_api';
-import { useOnboardingApi } from '../../../../../../hooks/use_onboarding_api';
-import { useStreamsAppRouter } from '../../../../../../hooks/use_streams_app_router';
-import { useTaskPolling } from '../../../../../../hooks/use_task_polling';
-import { getFormattedError } from '../../../../../../util/errors';
-import { StreamsAppSearchBar } from '../../../../../streams_app_search_bar';
-import { useOnboardingStatusUpdateQueue } from '../../../../../significant_events_discovery/hooks/use_onboarding_status_update_queue';
+import type { TableRow } from './utils';
+import { useAIFeatures } from '../../../../../hooks/use_ai_features';
+import { useIndexPatternsConfig } from '../../../../../hooks/use_index_patterns_config';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useInsightsDiscoveryApi } from '../../../../hooks/sig_events/use_insights_discovery_api';
+import { useOnboardingApi } from '../../../../../hooks/use_onboarding_api';
+import { useStreamsAppRouter } from '../../../../../hooks/use_streams_app_router';
+import { useTaskPolling } from '../../../../../hooks/use_task_polling';
+import { getFormattedError } from '../../../../../util/errors';
+import { StreamsAppSearchBar } from '../../../../streams_app_search_bar';
+import { useOnboardingStatusUpdateQueue } from '../../hooks/use_onboarding_status_update_queue';
 import {
   DISCOVER_INSIGHTS_BUTTON_LABEL,
   getInsightsCompleteToastTitle,
@@ -43,9 +43,9 @@ import {
   ONBOARDING_SCHEDULING_FAILURE_TITLE,
   RUN_BULK_STREAM_ONBOARDING_BUTTON_LABEL,
   STREAMS_TABLE_SEARCH_ARIA_LABEL,
-} from '../../../../../significant_events_discovery/components/streams_view/translations';
-import { StreamsTreeTable } from '../../../../../significant_events_discovery/components/streams_view/tree_table';
-import { useFetchStreams } from '../../../../../significant_events_discovery/hooks/use_fetch_streams';
+} from './translations';
+import { StreamsTreeTable } from './tree_table';
+import { useFetchStreams } from '../../hooks/use_fetch_streams';
 
 const datePickerStyle = css`
   .euiFormControlLayout,

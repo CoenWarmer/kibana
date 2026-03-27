@@ -37,12 +37,12 @@ import {
 import { css } from '@emotion/react';
 import { i18n } from '@kbn/i18n';
 import React, { useEffect, useMemo, useState } from 'react';
-import { StreamsESQLEditor } from '../../../../../esql_query_editor';
-import type { SignificantEventItem } from '../../../../../../hooks/sig_events/use_fetch_significant_events';
-import { InfoPanel } from '../../../../../info_panel';
-import { SparkPlot } from '../../../../../spark_plot';
-import { SeveritySelector } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/severity_selector';
-import { SeverityBadge } from '../../../../../significant_events_discovery/components/severity_badge/severity_badge';
+import { StreamsESQLEditor } from '../../../../esql_query_editor';
+import type { SignificantEventItem } from '../../../../hooks/sig_events/use_fetch_significant_events';
+import { InfoPanel } from '../../../../info_panel';
+import { SparkPlot } from '../../../../spark_plot';
+import { SeveritySelector } from '../../../stream_detail_significant_events_view/add_significant_event_flyout/common/severity_selector';
+import { SeverityBadge } from '../severity_badge/severity_badge';
 import {
   BACKED_STATUS_COLUMN,
   IMPACT_COLUMN,
@@ -54,9 +54,9 @@ import {
   PROMOTED_BADGE_LABEL,
   PROMOTED_TOOLTIP_CONTENT,
   STREAM_COLUMN,
-} from '../../../../../significant_events_discovery/components/queries_table/translations';
-import { formatLastOccurredAt } from '../../../../../significant_events_discovery/components/queries_table/utils';
-import { AssetImage } from '../../../../../asset_image';
+} from './translations';
+import { formatLastOccurredAt } from './utils';
+import { AssetImage } from '../../../../asset_image';
 
 interface QueryDetailsFlyoutProps {
   item: SignificantEventItem;

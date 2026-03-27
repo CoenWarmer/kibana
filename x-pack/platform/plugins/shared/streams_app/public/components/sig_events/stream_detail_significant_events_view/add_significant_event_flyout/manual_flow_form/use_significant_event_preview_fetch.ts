@@ -10,8 +10,8 @@ import type { AbsoluteTimeRange } from '@kbn/es-query';
 import type { AbortableAsyncState } from '@kbn/react-hooks';
 import type { SignificantEventsPreviewResponse } from '@kbn/streams-schema';
 import moment from 'moment';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
 
 export function useSignificantEventPreviewFetch({
   name,

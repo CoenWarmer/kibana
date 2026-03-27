@@ -18,10 +18,10 @@ import { i18n } from '@kbn/i18n';
 import type { StreamQuery, Streams } from '@kbn/streams-schema';
 import React, { useCallback, useEffect, useState, type ReactNode } from 'react';
 import type { DataView } from '@kbn/data-views-plugin/public';
-import { PreviewDataSparkPlot } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/preview_data_spark_plot';
-import { validateEsqlQuery } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
-import { GeneratedEventPreview } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/generated_event_preview';
-import { SeverityBadge } from '../../../../../significant_events_discovery/components/severity_badge/severity_badge';
+import { PreviewDataSparkPlot } from '../common/preview_data_spark_plot';
+import { validateEsqlQuery } from '../common/validate_query';
+import { GeneratedEventPreview } from './generated_event_preview';
+import { SeverityBadge } from '../../../significant_events_discovery/components/severity_badge/severity_badge';
 
 interface Props {
   definition: Streams.all.Definition;

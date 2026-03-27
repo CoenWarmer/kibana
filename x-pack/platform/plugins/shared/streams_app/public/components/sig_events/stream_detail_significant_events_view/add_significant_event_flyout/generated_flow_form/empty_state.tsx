@@ -8,7 +8,7 @@
 import { EuiFlexGroup, EuiSpacer, EuiTitle, EuiText } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { AssetImage } from '../../../../../asset_image';
+import { AssetImage } from '../../../../asset_image';
 
 export function AiFlowEmptyState() {
   return (

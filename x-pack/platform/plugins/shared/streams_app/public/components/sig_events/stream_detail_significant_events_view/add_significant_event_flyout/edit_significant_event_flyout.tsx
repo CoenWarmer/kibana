@@ -8,13 +8,13 @@
 import { i18n } from '@kbn/i18n';
 import React from 'react';
 import type { StreamQuery, Streams } from '@kbn/streams-schema';
-import { useSignificantEventsApi } from '../../../../../hooks/sig_events/use_significant_events_api';
-import { useOnboardingApi } from '../../../../../hooks/use_onboarding_api';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import type { AIFeatures } from '../../../../../hooks/use_ai_features';
-import { AddSignificantEventFlyout } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/add_significant_event_flyout';
-import type { Flow, SaveData } from '../../../../stream_detail_significant_events_view/add_significant_event_flyout/types';
-import { getStreamTypeFromDefinition } from '../../../../../util/get_stream_type_from_definition';
+import { useSignificantEventsApi } from '../../../hooks/sig_events/use_significant_events_api';
+import { useOnboardingApi } from '../../../../hooks/use_onboarding_api';
+import { useKibana } from '../../../../hooks/use_kibana';
+import type { AIFeatures } from '../../../../hooks/use_ai_features';
+import { AddSignificantEventFlyout } from './add_significant_event_flyout';
+import type { Flow, SaveData } from './types';
+import { getStreamTypeFromDefinition } from '../../../../util/get_stream_type_from_definition';
 
 export const EditSignificantEventFlyout = ({
   queryToEdit,

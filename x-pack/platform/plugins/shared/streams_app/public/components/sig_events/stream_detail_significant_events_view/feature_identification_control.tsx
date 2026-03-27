@@ -11,9 +11,9 @@ import { EuiButton, EuiButtonEmpty, EuiCallOut, EuiFlexGroup, EuiFlexItem } from
 import { useBoolean } from '@kbn/react-hooks';
 import { i18n } from '@kbn/i18n';
 import { TaskStatus, type Streams } from '@kbn/streams-schema';
-import type { AIFeatures } from '../../../../hooks/use_ai_features';
-import { useStreamFeaturesApi } from '../../../../hooks/sig_events/use_stream_features_api';
-import { useTaskPolling } from '../../../../hooks/use_task_polling';
+import type { AIFeatures } from '../../../hooks/use_ai_features';
+import { useStreamFeaturesApi } from '../../hooks/sig_events/use_stream_features_api';
+import { useTaskPolling } from '../../../hooks/use_task_polling';
 
 interface FeatureIdentificationControlProps {
   definition: Streams.all.Definition;

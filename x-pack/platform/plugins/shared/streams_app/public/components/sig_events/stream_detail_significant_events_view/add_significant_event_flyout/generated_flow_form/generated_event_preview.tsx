@@ -22,11 +22,11 @@ import {
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { css } from '@emotion/css';
-import { PreviewDataSparkPlot } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/preview_data_spark_plot';
-import { StreamsESQLEditor, validatePrefix } from '../../../../../esql_query_editor';
-import { validateQuery } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/validate_query';
-import { SeveritySelector } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/severity_selector';
-import { getValidPrefixes } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/get_valid_prefixes';
+import { PreviewDataSparkPlot } from '../common/preview_data_spark_plot';
+import { StreamsESQLEditor, validatePrefix } from '../../../../esql_query_editor';
+import { validateQuery } from '../common/validate_query';
+import { SeveritySelector } from '../common/severity_selector';
+import { getValidPrefixes } from '../common/get_valid_prefixes';
 
 interface GeneratedEventPreviewProps {
   definition: Streams.all.Definition;

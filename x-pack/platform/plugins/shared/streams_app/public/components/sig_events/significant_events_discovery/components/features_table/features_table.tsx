@@ -23,17 +23,17 @@ import { upperFirst } from 'lodash';
 import React, { useState, useCallback, useMemo } from 'react';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { useBoolean } from '@kbn/react-hooks';
-import { useFetchFeatures } from '../../../../../../hooks/sig_events/use_fetch_features';
-import { useDiscoveryFeaturesApi } from '../../../../../../hooks/sig_events/use_discovery_features_api';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { LoadingPanel } from '../../../../../loading_panel';
-import { FeatureDetailsFlyout } from '../../../../../stream_detail_systems/stream_features/feature_details_flyout';
-import { DeleteFeatureModal } from '../../../../../stream_detail_systems/stream_features/delete_feature_modal';
+import { useFetchFeatures } from '../../../../hooks/sig_events/use_fetch_features';
+import { useDiscoveryFeaturesApi } from '../../../../hooks/sig_events/use_discovery_features_api';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { LoadingPanel } from '../../../../loading_panel';
+import { FeatureDetailsFlyout } from '../../../stream_detail_systems/stream_features/feature_details_flyout';
+import { DeleteFeatureModal } from '../../../stream_detail_systems/stream_features/delete_feature_modal';
 import {
   getConfidenceColor,
   CLEAR_SELECTION,
   DELETE_SELECTED,
-} from '../../../../../stream_detail_systems/stream_features/use_stream_features_table';
+} from '../../../stream_detail_systems/stream_features/use_stream_features_table';
 
 const featureKey = (feature: Feature) => `${feature.id}::${feature.stream_name}`;
 

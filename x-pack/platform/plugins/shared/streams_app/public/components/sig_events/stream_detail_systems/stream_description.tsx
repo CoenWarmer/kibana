@@ -17,10 +17,10 @@ import {
 import { i18n } from '@kbn/i18n';
 import type { Streams } from '@kbn/streams-schema';
 import React from 'react';
-import { useStreamDescriptionApi } from '../../../stream_detail_systems/stream_description/use_stream_description_api';
-import { Row } from '../../../stream_management/data_management/stream_detail_management/advanced_view/row';
-import type { AIFeatures } from '../../../../hooks/use_ai_features';
-import { DescriptionGenerationControl } from '../../../stream_detail_systems/stream_description/description_generation_control';
+import { useStreamDescriptionApi } from './stream_description/use_stream_description_api';
+import { Row } from '../../stream_management/data_management/stream_detail_management/advanced_view/row';
+import type { AIFeatures } from '../../../hooks/use_ai_features';
+import { DescriptionGenerationControl } from './stream_description/description_generation_control';
 
 export interface AISummaryProps {
   definition: Streams.all.GetResponse;

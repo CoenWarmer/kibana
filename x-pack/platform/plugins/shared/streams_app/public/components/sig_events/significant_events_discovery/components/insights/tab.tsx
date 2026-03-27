@@ -16,9 +16,9 @@ import {
   EuiTitle,
 } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
-import { Summary } from '../../../../../significant_events_discovery/components/insights/summary';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
+import { Summary } from './summary';
 
 export function InsightsTab() {
   const {

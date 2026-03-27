@@ -27,9 +27,9 @@ import {
 import { useAbortController } from '@kbn/react-hooks';
 import { i18n } from '@kbn/i18n';
 import { DEFAULT_INDEX_PATTERNS } from '@kbn/streams-schema';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useGenAIConnectors } from '../../../../../../hooks/use_genai_connectors';
-import { useStreamsAppFetch } from '../../../../../../hooks/use_streams_app_fetch';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useGenAIConnectors } from '../../../../../hooks/use_genai_connectors';
+import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
 
 const NOT_SET_VALUE = '';
 

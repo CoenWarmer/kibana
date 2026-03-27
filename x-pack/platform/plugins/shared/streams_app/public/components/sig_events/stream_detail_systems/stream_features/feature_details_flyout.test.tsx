@@ -9,7 +9,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { I18nProvider } from '@kbn/i18n-react';
 import type { Feature } from '@kbn/streams-schema';
-import { FeatureDetailsFlyout } from '../../../../stream_detail_systems/stream_features/feature_details_flyout';
+import { FeatureDetailsFlyout } from './feature_details_flyout';
 
 function createMinimalFeature(overrides: Partial<Feature> = {}): Feature {
   return {

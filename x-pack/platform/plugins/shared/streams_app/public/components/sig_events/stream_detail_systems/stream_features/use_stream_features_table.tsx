@@ -21,8 +21,8 @@ import {
 import type { Feature, Streams } from '@kbn/streams-schema';
 import { i18n } from '@kbn/i18n';
 import { upperFirst } from 'lodash';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useStreamFeaturesApi } from '../../../../../hooks/sig_events/use_stream_features_api';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { useStreamFeaturesApi } from '../../../hooks/sig_events/use_stream_features_api';
 
 export type FeaturesTableMode = 'active' | 'excluded';
 

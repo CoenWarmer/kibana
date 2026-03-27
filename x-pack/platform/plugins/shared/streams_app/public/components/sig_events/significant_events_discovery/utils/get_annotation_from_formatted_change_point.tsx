@@ -8,8 +8,8 @@ import React from 'react';
 import type { EuiThemeComputed } from '@elastic/eui';
 import { EuiIcon } from '@elastic/eui';
 import type { TickFormatter } from '@elastic/charts';
-import type { FormattedChangePoint } from '../../../../significant_events_discovery/utils/change_point';
-import { ChangePointSummary } from '../../../../significant_events_discovery/components/change_point_summary/change_point_summary';
+import type { FormattedChangePoint } from './change_point';
+import { ChangePointSummary } from '../components/change_point_summary/change_point_summary';
 
 export function getAnnotationFromFormattedChangePoint({
   theme,

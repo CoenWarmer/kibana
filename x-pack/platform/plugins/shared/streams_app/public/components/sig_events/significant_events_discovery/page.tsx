@@ -9,19 +9,19 @@ import { EuiBadge, EuiFlexGroup, EuiFlexItem, EuiLoadingElastic, useEuiTheme } f
 import { css } from '@emotion/react';
 import { i18n } from '@kbn/i18n';
 import React from 'react';
-import { useStreamsAppBreadcrumbs } from '../../../../hooks/use_streams_app_breadcrumbs';
-import { useStreamsAppParams } from '../../../../hooks/use_streams_app_params';
-import { useStreamsAppRouter } from '../../../../hooks/use_streams_app_router';
-import { useStreamsPrivileges } from '../../../../hooks/use_streams_privileges';
-import { useUnbackedQueriesCount } from '../../../../hooks/sig_events/use_unbacked_queries_count';
-import { FeedbackButton } from '../../../feedback_button';
-import { RedirectTo } from '../../../redirect_to';
-import { StreamsAppPageTemplate } from '../../../streams_app_page_template';
-import { FeaturesTable } from '../../../significant_events_discovery/components/features_table/features_table';
-import { QueriesTable } from '../../../significant_events_discovery/components/queries_table/queries_table';
-import { StreamsView } from '../../../significant_events_discovery/components/streams_view/streams_view';
-import { InsightsTab } from '../../../significant_events_discovery/components/insights/tab';
-import { SettingsTab } from '../../../significant_events_discovery/components/settings/tab';
+import { useStreamsAppBreadcrumbs } from '../../../hooks/use_streams_app_breadcrumbs';
+import { useStreamsAppParams } from '../../../hooks/use_streams_app_params';
+import { useStreamsAppRouter } from '../../../hooks/use_streams_app_router';
+import { useStreamsPrivileges } from '../../../hooks/use_streams_privileges';
+import { useUnbackedQueriesCount } from '../../hooks/sig_events/use_unbacked_queries_count';
+import { FeedbackButton } from '../../feedback_button';
+import { RedirectTo } from '../../redirect_to';
+import { StreamsAppPageTemplate } from '../../streams_app_page_template';
+import { FeaturesTable } from './components/features_table/features_table';
+import { QueriesTable } from './components/queries_table/queries_table';
+import { StreamsView } from './components/streams_view/streams_view';
+import { InsightsTab } from './components/insights/tab';
+import { SettingsTab } from './components/settings/tab';
 
 const discoveryTabs = [
   'streams',

@@ -12,7 +12,7 @@ import {
   getIndexPatternsForStream,
   normalizeEsqlQuery,
 } from '@kbn/streams-schema';
-import type { ValidPrefixes } from '../../../../../esql_query_editor';
+import type { ValidPrefixes } from '../../../../esql_query_editor';
 
 const getDefaultQueryFrom = (definition: Streams.all.Definition) =>
   BasicPrettyPrinter.print(

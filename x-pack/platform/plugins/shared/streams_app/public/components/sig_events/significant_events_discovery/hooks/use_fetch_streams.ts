@@ -8,9 +8,9 @@
 import type { QueryFunctionContext } from '@kbn/react-query';
 import { useQuery } from '@kbn/react-query';
 import type { ListStreamDetail } from '@kbn/streams-plugin/server/routes/internal/streams/crud/route';
-import { useFetchErrorToast } from '../../../../../hooks/use_fetch_error_toast';
-import { useKibana } from '../../../../../hooks/use_kibana';
-import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { useFetchErrorToast } from '../../../../hooks/use_fetch_error_toast';
+import { useKibana } from '../../../../hooks/use_kibana';
+import { useTimefilter } from '../../../../hooks/use_timefilter';
 
 interface StreamsFetchResult {
   streams: ListStreamDetail[];

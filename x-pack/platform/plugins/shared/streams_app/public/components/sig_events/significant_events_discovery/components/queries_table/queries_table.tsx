@@ -32,25 +32,25 @@ import {
   DISCOVERY_QUERIES_QUERY_KEY,
   useFetchDiscoveryQueries,
   type SignificantEventQueryRow,
-} from '../../../../../../hooks/sig_events/use_fetch_discovery_queries';
+} from '../../../../hooks/sig_events/use_fetch_discovery_queries';
 import {
   DISCOVERY_QUERIES_OCCURRENCES_QUERY_KEY,
   useFetchDiscoveryQueriesOccurrences,
-} from '../../../../../../hooks/sig_events/use_fetch_discovery_queries_occurrences';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useQueriesApi } from '../../../../../../hooks/sig_events/use_queries_api';
+} from '../../../../hooks/sig_events/use_fetch_discovery_queries_occurrences';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useQueriesApi } from '../../../../hooks/sig_events/use_queries_api';
 import {
   UNBACKED_QUERIES_COUNT_QUERY_KEY,
   useUnbackedQueriesCount,
-} from '../../../../../../hooks/sig_events/use_unbacked_queries_count';
-import { getFormattedError } from '../../../../../../util/errors';
-import { LoadingPanel } from '../../../../../loading_panel';
-import { SparkPlot } from '../../../../../spark_plot';
-import { StreamsAppSearchBar } from '../../../../../streams_app_search_bar';
-import { SeverityBadge } from '../../../../../significant_events_discovery/components/severity_badge/severity_badge';
-import { useFetchStreams } from '../../../../../significant_events_discovery/hooks/use_fetch_streams';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
-import { buildDiscoverParams } from '../../../../../significant_events_discovery/utils/discover_helpers';
+} from '../../../../hooks/sig_events/use_unbacked_queries_count';
+import { getFormattedError } from '../../../../../util/errors';
+import { LoadingPanel } from '../../../../loading_panel';
+import { SparkPlot } from '../../../../spark_plot';
+import { StreamsAppSearchBar } from '../../../../streams_app_search_bar';
+import { SeverityBadge } from '../severity_badge/severity_badge';
+import { useFetchStreams } from '../../hooks/use_fetch_streams';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { buildDiscoverParams } from '../../utils/discover_helpers';
 import {
   ACTIONS_COLUMN_TITLE,
   BACKED_STATUS_COLUMN,
@@ -84,10 +84,10 @@ import {
   getEventsCount,
   getPromoteAllCalloutTitle,
   getPromoteAllSuccessToast,
-} from '../../../../../significant_events_discovery/components/queries_table/translations';
-import { PromoteAction } from '../../../../../significant_events_discovery/components/queries_table/promote_action';
-import { QueryDetailsFlyout } from '../../../../../significant_events_discovery/components/queries_table/query_details_flyout';
-import { formatLastOccurredAt } from '../../../../../significant_events_discovery/components/queries_table/utils';
+} from './translations';
+import { PromoteAction } from './promote_action';
+import { QueryDetailsFlyout } from './query_details_flyout';
+import { formatLastOccurredAt } from './utils';
 
 const DEFAULT_PAGINATION = { index: 0, size: 10 };
 const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;

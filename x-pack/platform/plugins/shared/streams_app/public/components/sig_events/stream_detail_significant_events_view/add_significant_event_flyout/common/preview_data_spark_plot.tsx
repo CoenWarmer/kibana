@@ -21,12 +21,12 @@ import React, { useMemo } from 'react';
 import { useEuiTheme } from '@elastic/eui';
 import { DISCOVER_APP_LOCATOR, type DiscoverAppLocatorParams } from '@kbn/discover-plugin/common';
 import type { AbsoluteTimeRange } from '@kbn/es-query';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useTimefilter } from '../../../../../../hooks/use_timefilter';
-import { SparkPlot } from '../../../../../spark_plot';
-import { useSignificantEventPreviewFetch } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/manual_flow_form/use_significant_event_preview_fetch';
-import { useSparkplotDataFromSigEvents } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/manual_flow_form/use_spark_plot_data_from_sig_events';
-import { AssetImage } from '../../../../../asset_image';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useTimefilter } from '../../../../../hooks/use_timefilter';
+import { SparkPlot } from '../../../../spark_plot';
+import { useSignificantEventPreviewFetch } from '../manual_flow_form/use_significant_event_preview_fetch';
+import { useSparkplotDataFromSigEvents } from '../manual_flow_form/use_spark_plot_data_from_sig_events';
+import { AssetImage } from '../../../../asset_image';
 
 export function PreviewDataSparkPlot({
   query,

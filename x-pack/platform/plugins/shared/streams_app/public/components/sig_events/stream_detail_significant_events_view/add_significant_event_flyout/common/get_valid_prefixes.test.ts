@@ -6,7 +6,7 @@
  */
 
 import type { Streams } from '@kbn/streams-schema';
-import { getValidPrefixes } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/common/get_valid_prefixes';
+import { getValidPrefixes } from './get_valid_prefixes';
 
 const makeClassicDefinition = (name: string): Streams.ClassicStream.Definition => ({
   type: 'classic',

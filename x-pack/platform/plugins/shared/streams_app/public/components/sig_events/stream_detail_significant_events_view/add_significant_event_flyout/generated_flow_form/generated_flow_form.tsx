@@ -11,9 +11,9 @@ import type { Streams } from '@kbn/streams-schema';
 import React, { useEffect, useState } from 'react';
 import type { DataView } from '@kbn/data-views-plugin/public';
 import { i18n } from '@kbn/i18n';
-import { SignificantEventsGeneratedTable } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/significant_events_generated_table';
-import { AiFlowEmptyState } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/empty_state';
-import { AiFlowWaitingForGeneration } from '../../../../../stream_detail_significant_events_view/add_significant_event_flyout/generated_flow_form/waiting_for_generation';
+import { SignificantEventsGeneratedTable } from './significant_events_generated_table';
+import { AiFlowEmptyState } from './empty_state';
+import { AiFlowWaitingForGeneration } from './waiting_for_generation';
 
 interface Props {
   isGenerating: boolean;

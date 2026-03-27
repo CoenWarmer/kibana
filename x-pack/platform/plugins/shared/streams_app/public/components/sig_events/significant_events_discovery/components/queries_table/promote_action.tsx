@@ -8,12 +8,12 @@
 import React from 'react';
 import { EuiToolTip, EuiButtonIcon } from '@elastic/eui';
 import { useQueryClient, useMutation } from '@kbn/react-query';
-import { DISCOVERY_QUERIES_QUERY_KEY } from '../../../../../../hooks/sig_events/use_fetch_discovery_queries';
-import { useFetchErrorToast } from '../../../../../../hooks/use_fetch_error_toast';
-import { type SignificantEventItem } from '../../../../../../hooks/sig_events/use_fetch_significant_events';
-import { useKibana } from '../../../../../../hooks/use_kibana';
-import { useQueriesApi } from '../../../../../../hooks/sig_events/use_queries_api';
-import { PROMOTE_QUERY_ACTION_TITLE, getPromoteQuerySuccessToast } from '../../../../../significant_events_discovery/components/queries_table/translations';
+import { DISCOVERY_QUERIES_QUERY_KEY } from '../../../../hooks/sig_events/use_fetch_discovery_queries';
+import { useFetchErrorToast } from '../../../../../hooks/use_fetch_error_toast';
+import { type SignificantEventItem } from '../../../../hooks/sig_events/use_fetch_significant_events';
+import { useKibana } from '../../../../../hooks/use_kibana';
+import { useQueriesApi } from '../../../../hooks/sig_events/use_queries_api';
+import { PROMOTE_QUERY_ACTION_TITLE, getPromoteQuerySuccessToast } from './translations';
 
 export function PromoteAction({ item }: { item: SignificantEventItem }) {
   const queryClient = useQueryClient();
