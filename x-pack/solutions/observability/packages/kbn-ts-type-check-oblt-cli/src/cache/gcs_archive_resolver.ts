@@ -21,7 +21,6 @@ import {
 } from './utils';
 import { isCacheServerAvailable } from './cache_server_client';
 import { detectStaleArtifacts } from './detect_stale_artifacts';
-import { buildReverseDependencyMap, computeEffectiveRebuildSet } from './dependency_graph';
 import { getChangedInvalidationFiles } from './artifacts_state';
 import { calculateFileHashes } from './utils';
 
@@ -394,9 +393,19 @@ export async function resolveBestGcsSha(
 }
 
 /**
- * Computes the effective rebuild count — directly stale projects plus all their
- * transitive dependents — relative to the given archive SHA. Used to tell the
- * user how many projects tsc will still need to process after a GCS restore.
+ * Estimates how many projects tsc will rebuild after restoring from the given
+ * archive — shown to the user in the "N projects to rebuild" display.
+ *
+ * Returns the count of DIRECTLY stale projects (source files changed between
+ * the archive SHA and HEAD). We intentionally do NOT expand to transitive
+ * dependents here, because TypeScript only propagates rebuilds when the
+ * exported API (.d.ts) changes. Most commits change implementation, not public
+ * types, so the transitive closure is a large overcount in practice.
+ *
+ * The Phase-3 restoration DECISION uses a separate transitive-closure
+ * computation (inline in resolveRestoreStrategy) — this function is only for
+ * the user-visible estimate.
+ *
  * Returns undefined if the staleness check fails (e.g. SHA not in local history).
  */
 export async function computeEffectiveRebuildCountFromSha(
@@ -409,8 +418,7 @@ export async function computeEffectiveRebuildCountFromSha(
       toCommit: 'HEAD',
       sourceConfigPaths: tsProjects.map((p) => p.path),
     });
-    const reverseDeps = buildReverseDependencyMap(tsProjects);
-    return computeEffectiveRebuildSet(stale, reverseDeps).size;
+    return stale.size;
   } catch {
     return undefined;
   }
