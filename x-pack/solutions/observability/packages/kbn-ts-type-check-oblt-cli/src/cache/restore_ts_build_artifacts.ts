@@ -41,6 +41,7 @@ import {
   resolveNonInvalidatedArchive,
   resolveGcsMatchedShas,
   computeEffectiveRebuildCountFromSha,
+  estimatedTotalRebuildCount,
   logArchiveFallback,
 } from './gcs_archive_resolver';
 
@@ -140,7 +141,8 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    await logArchiveFallback(log, currentSha, validArchive, effectiveRebuildCount);
+    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     return {
       shouldRestore: true,
       bestSha: validArchive.sha,
@@ -177,7 +179,8 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    await logArchiveFallback(log, currentSha, validArchive, effectiveRebuildCount);
+    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     return {
       shouldRestore: true,
       bestSha: validArchive.sha,
@@ -236,7 +239,8 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    await logArchiveFallback(log, currentSha, validArchive, effectiveRebuildCount);
+    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     log.info(
       `[Cache check] Found compatible GCS archive at ${validArchive.sha.slice(
         0,
@@ -342,14 +346,20 @@ export async function resolveRestoreStrategy(
     gcsEffectiveCount = 0;
   }
 
-  if (gcsEffectiveCount < effectiveRebuildSet.size) {
-    await logArchiveFallback(log, currentSha, validGcsArchive, gcsEffectiveCount);
+  // Add project-graph staleness overhead for PR archives. Each package added
+  // to the project graph since the archive was built causes ~STALENESS_WEIGHT
+  // extra normalisation rebuilds on first use. This ensures we don't restore a
+  // PR archive whose normalisation cost exceeds the local rebuild cost.
+  const gcsAdjustedCount = estimatedTotalRebuildCount(validGcsArchive, gcsEffectiveCount);
+
+  if (gcsAdjustedCount < effectiveRebuildSet.size) {
+    await logArchiveFallback(log, currentSha, validGcsArchive, gcsAdjustedCount);
     log.info(
       `[Cache check] Having archive for ${validGcsArchive.sha.slice(
         0,
         12
       )} would reduce rebuild count ` +
-        `from ${effectiveRebuildSet.size} to ${gcsEffectiveCount} — will restore.`
+        `from ${effectiveRebuildSet.size} to ${gcsAdjustedCount} — will restore.`
     );
 
     const staleProjects = validGcsArchive.prNumber
@@ -371,7 +381,7 @@ export async function resolveRestoreStrategy(
       0,
       12
     )}) would not reduce the rebuild ` +
-      `count (${gcsEffectiveCount} vs ${effectiveRebuildSet.size} locally) — skipping restore.`
+      `count (${gcsAdjustedCount} vs ${effectiveRebuildSet.size} locally) — skipping restore.`
   );
   log.info(
     `[Cache check] tsc will rebuild ${effectiveRebuildSet.size} project(s) incrementally ` +

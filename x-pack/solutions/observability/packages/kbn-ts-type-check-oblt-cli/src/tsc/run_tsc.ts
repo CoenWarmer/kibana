@@ -195,17 +195,49 @@ async function runTscWithProgress({
     rl.on('line', (line) => tracker.processLine(line));
   }
 
+  // Collect stderr to detect tsc crashes caused by incompatible .tsbuildinfo files
+  // (e.g. after a TypeScript version bump or new project-reference entries).
+  const stderrLines: string[] = [];
   if (child.stderr) {
     const rl = createInterface({ input: child.stderr });
-    rl.on('line', (line) => tracker.addStderrLine(line));
+    rl.on('line', (line) => {
+      tracker.addStderrLine(line);
+      stderrLines.push(line);
+    });
   }
 
   const result = await child;
 
+  // Detect the specific tsc crash that occurs when .tsbuildinfo files contain
+  // data incompatible with the current TypeScript version or project graph.
+  // This manifests as "Cannot read properties of undefined (reading 'forEach')"
+  // inside createBuilderProgramUsingIncrementalBuildInfo.
+  const isTsBuildInfoCrash =
+    result.exitCode !== 0 &&
+    stderrLines.some(
+      (l) =>
+        l.includes('createBuilderProgramUsingIncrementalBuildInfo') ||
+        (l.includes('Cannot read properties of undefined') && l.includes('forEach'))
+    );
+
   tracker.stop();
+
+  if (isTsBuildInfoCrash) {
+    tracker.printErrors();
+    const { builtProjects, builtProjectTimings } = tracker.getSummary();
+    logRebuiltProjects(log, type, builtProjects, builtProjectTimings);
+    log.warning(
+      '[TypeCheck] tsc crashed while reading incremental build state (.tsbuildinfo). ' +
+        'This usually means the TypeScript version changed or new project references were added ' +
+        'that conflict with cached build artifacts.'
+    );
+    log.warning('[TypeCheck] Run with --clean-cache to remove stale artifacts and retry.');
+    return false;
+  }
+
   tracker.printErrors();
 
-  const { totalProjects, completedProjects, builtProjects, skippedProjects, elapsed } =
+  const { totalProjects, completedProjects, builtProjects, skippedProjects, elapsed, builtProjectTimings } =
     tracker.getSummary();
 
   if (result.killed || result.signal) {
@@ -222,5 +254,41 @@ async function runTscWithProgress({
     );
   }
 
+  logRebuiltProjects(log, type, builtProjects, builtProjectTimings);
+
   return result.exitCode === 0;
+}
+
+function logRebuiltProjects(
+  log: SomeDevLog,
+  type: string,
+  builtProjects: number,
+  builtProjectTimings: Array<{ name: string; path: string; ms: number }>
+) {
+  if (builtProjects === 0) return;
+
+  const prefix = `[TypeCheck] [${type}]`;
+  const formatMs = (ms: number) => `${(ms / 1000).toFixed(1)}s`;
+
+  // Detect duplicate short names so we can show a disambiguating parent segment.
+  const nameCounts = new Map<string, number>();
+  for (const { name } of builtProjectTimings) {
+    nameCounts.set(name, (nameCounts.get(name) ?? 0) + 1);
+  }
+  const displayName = ({ name, path }: { name: string; path: string }) => {
+    if ((nameCounts.get(name) ?? 0) > 1) {
+      const parts = path.replace(/\\/g, '/').split('/');
+      const idx = parts.indexOf(name);
+      return idx >= 1 ? `${parts[idx - 1]}/${name}` : path;
+    }
+    return name;
+  };
+
+  // Header line with total count.
+  log.info(`${prefix} Rebuilt ${builtProjects} project(s):`);
+
+  // One project per line to avoid line-length truncation in log transports.
+  for (const t of builtProjectTimings) {
+    log.info(`${prefix}   ${displayName(t)} (${formatMs(t.ms)})`);
+  }
 }

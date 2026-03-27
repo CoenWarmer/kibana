@@ -26,6 +26,71 @@ import { getChangedInvalidationFiles } from './artifacts_state';
 import { calculateFileHashes } from './utils';
 
 /**
+ * Estimated additional rebuilds caused per package added to the project graph
+ * since a PR archive was built. Each new package tends to be referenced by
+ * several existing packages, causing normalisation rebuilds on first restore.
+ */
+const STALENESS_WEIGHT = 15;
+
+/**
+ * Packages added/removed from the project graph (kibana.jsonc files) between
+ * the archive commit and HEAD. Only populated for PR archives — commit archives
+ * are always built from the final squash-merge state and are complete.
+ */
+interface ProjectGraphDiff {
+  /** Packages whose kibana.jsonc was added after the archive was built.
+   *  Each added package causes extra normalisation rebuilds on first restore
+   *  because the archive's .tsbuildinfo doesn't reference it yet. */
+  added: string[];
+  /** Packages whose kibana.jsonc was removed after the archive was built. */
+  removed: string[];
+}
+
+/**
+ * Returns the packages added/removed from the project graph between the archive
+ * commit and HEAD. Runs git diff on kibana.jsonc files only — fast local op.
+ */
+async function getProjectGraphDiff(archiveSha: string): Promise<ProjectGraphDiff> {
+  try {
+    const { stdout } = await execa(
+      'git',
+      ['diff', '--name-status', archiveSha, 'HEAD', '--', '**/kibana.jsonc'],
+      { cwd: REPO_ROOT }
+    );
+    const added: string[] = [];
+    const removed: string[] = [];
+    for (const line of stdout
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean)) {
+      const [status, ...rest] = line.split(/\s+/);
+      const file = rest.join(' ');
+      if (status === 'A') added.push(file);
+      else if (status === 'D') removed.push(file);
+    }
+    return { added, removed };
+  } catch {
+    // Archive SHA not in local git store or other failure — treat as unknown.
+    return { added: [], removed: [] };
+  }
+}
+
+/**
+ * Returns the estimated total rebuild count after restoring from an archive,
+ * combining source-file staleness (from git diff) with project-graph staleness
+ * (normalisation rebuilds caused by packages added since the archive was built).
+ * Use this instead of the raw git-diff count when comparing archive costs.
+ */
+export function estimatedTotalRebuildCount(
+  archive: BestGcsArchive,
+  sourceStaleCount: number
+): number {
+  const normalisationOverhead =
+    (archive.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
+  return sourceStaleCount + normalisationOverhead;
+}
+
+/**
  * A resolved GCS archive reference, from either commits/<sha>/ or prs/<prNumber>/.
  */
 export interface BestGcsArchive {
@@ -51,6 +116,12 @@ export interface BestGcsArchive {
    *  commit's yarn.lock may have been updated on main after the PR CI ran, making
    *  the git diff unreliable for PR archives. */
   prBuildFileHashes?: Record<string, string>;
+  /** Packages added/removed from the project graph since the PR archive was built.
+   *  PR CI runs on the PR branch which may predate recently added packages, so the
+   *  archive's .tsbuildinfo files won't reference those new packages. This causes
+   *  normalisation rebuilds on first restore proportional to how many packages
+   *  were added. Not set for commit archives (always built from the current state). */
+  projectGraphDiff?: ProjectGraphDiff;
 }
 
 /**
@@ -133,17 +204,21 @@ async function resolvePrFallbackMatches(
       const prNumber = await extractPrNumberFromCommitMessage(mainSha);
       if (!prNumber) return undefined;
 
-      const [tipSha, prBuildFileHashes] = await Promise.all([
+      const [tipSha, prBuildFileHashes, projectGraphDiff] = await Promise.all([
         gcsFs.getPrArchiveTipSha(prNumber),
         gcsFs.getPrArchiveFileHashes(prNumber),
+        getProjectGraphDiff(mainSha), // fast local git diff — runs in parallel with GCS calls
       ]);
       if (!tipSha) return undefined;
 
       log.verbose(
-        `[Cache] PR archive found for main commit ${mainSha.slice(0, 12)} (PR #${prNumber})`
+        `[Cache] PR archive found for main commit ${mainSha.slice(0, 12)} (PR #${prNumber})` +
+          (projectGraphDiff.added.length > 0
+            ? ` — ${projectGraphDiff.added.length} package(s) added to graph since built`
+            : '')
       );
 
-      return { sha: mainSha, prNumber, prTipSha: tipSha, prBuildFileHashes };
+      return { sha: mainSha, prNumber, prTipSha: tipSha, prBuildFileHashes, projectGraphDiff };
     })
   );
 
@@ -297,10 +372,18 @@ export async function resolveBestGcsSha(
     );
 
     if (prFallbacks.length > 0) {
-      // Pick the most recent PR match: smallest index in mainShas = most recent.
-      const bestPr = prFallbacks.reduce((best, curr) =>
-        mainShas.indexOf(curr.sha) < mainShas.indexOf(best.sha) ? curr : best
-      );
+      // Pick the PR archive with the lowest estimated total rebuild cost.
+      // Cost combines recency (position in mainShas) with project-graph staleness
+      // (packages added after the archive was built × STALENESS_WEIGHT).
+      // A slightly older archive with 0 added packages can be cheaper than
+      // the most recent archive with many added packages.
+      const bestPr = prFallbacks.reduce((best, curr) => {
+        const bestIdx = mainShas.indexOf(best.sha);
+        const currIdx = mainShas.indexOf(curr.sha);
+        const bestCost = bestIdx + (best.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
+        const currCost = currIdx + (curr.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
+        return currCost < bestCost ? curr : best;
+      });
       // Carry the best commit archive as a fallback in case the PR archive is
       // invalidated by a node_modules change (different yarn.lock than HEAD).
       return commitMatched.length > 0 ? { ...bestPr, fallbackCommitSha: commitMatched[0] } : bestPr;
@@ -382,6 +465,26 @@ export async function logArchiveFallback(
     `[Cache check] No GCS archive for HEAD (${currentSha.slice(0, 12)}) — ` +
       `restoring from ${archiveLabel}${suffix}.`
   );
+
+  // For PR archives with stale project graphs, warn that first-run rebuilds will
+  // exceed the source-file staleness estimate. The extra rebuilds are a one-time
+  // normalisation cost that disappears on the second run.
+  const { added = [], removed = [] } = archive.projectGraphDiff ?? {};
+  if (added.length > 0 || removed.length > 0) {
+    const stalenessParts: string[] = [];
+    if (added.length > 0)
+      stalenessParts.push(`${added.length} package${added.length === 1 ? '' : 's'} added`);
+    if (removed.length > 0)
+      stalenessParts.push(`${removed.length} package${removed.length === 1 ? '' : 's'} removed`);
+    log.warning(
+      `[Cache] PR archive has a stale project graph (${stalenessParts.join(', ')} since it was built). ` +
+        `Expect ~${added.length * STALENESS_WEIGHT}+ extra normalisation rebuilds on first use ` +
+        `(one-time cost — gone on the second run).`
+    );
+    if (added.length > 0) {
+      log.verbose(`[Cache] New packages not in PR archive: ${added.join(', ')}`);
+    }
+  }
 }
 
 /**

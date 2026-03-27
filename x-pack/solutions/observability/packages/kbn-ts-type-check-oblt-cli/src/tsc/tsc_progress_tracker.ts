@@ -39,6 +39,11 @@ export class TscProgressTracker {
   private parsingProjectList = false;
   private barStarted = false;
   private readonly errorLines: string[] = [];
+  private readonly builtProjectTimings: Array<{ name: string; path: string; ms: number }> = [];
+  /** Wall-clock time when the current "Building project" started, or null if none in progress. */
+  private currentBuildStart: number | null = null;
+  private currentBuildName: string | null = null;
+  private currentBuildPath: string | null = null;
   private readonly startTime = Date.now();
   private timer: ReturnType<typeof setInterval> | null = null;
 
@@ -59,6 +64,20 @@ export class TscProgressTracker {
         clearOnComplete: true,
       });
     }
+  }
+
+  /** Close the in-progress build timer, recording elapsed ms for the current project. */
+  private closeBuildTimer() {
+    if (this.currentBuildStart !== null && this.currentBuildName !== null) {
+      this.builtProjectTimings.push({
+        name: this.currentBuildName,
+        path: this.currentBuildPath ?? this.currentBuildName,
+        ms: Date.now() - this.currentBuildStart,
+      });
+    }
+    this.currentBuildStart = null;
+    this.currentBuildName = null;
+    this.currentBuildPath = null;
   }
 
   private formatElapsed(): string {
@@ -136,12 +155,18 @@ export class TscProgressTracker {
     // Track per-project progress.
     const buildingMatch = plain.match(/Building project '([^']+)'/);
     if (buildingMatch) {
+      // Close the previous build's timer before starting a new one.
+      this.closeBuildTimer();
+      this.currentBuildName = extractProjectName(buildingMatch[1]);
+      this.currentBuildPath = buildingMatch[1];
+      this.currentBuildStart = Date.now();
+
       this.completedProjects++;
       this.builtProjects++;
       if (this.bar && this.barStarted) {
         this.bar.update(this.completedProjects, {
           elapsed: this.formatElapsed(),
-          project: extractProjectName(buildingMatch[1]),
+          project: this.currentBuildName,
           status: 'checking',
           built: this.builtProjects,
           skipped: this.skippedProjects,
@@ -152,6 +177,9 @@ export class TscProgressTracker {
 
     const upToDateMatch = plain.match(/Project '([^']+)' is up to date/);
     if (upToDateMatch) {
+      // An up-to-date project means the previous build (if any) has finished.
+      this.closeBuildTimer();
+
       this.completedProjects++;
       this.skippedProjects++;
       if (this.bar && this.barStarted) {
@@ -198,6 +226,8 @@ export class TscProgressTracker {
       clearInterval(this.timer);
       this.timer = null;
     }
+    // Close the last in-progress build (tsc doesn't emit a trailing line after the final project).
+    this.closeBuildTimer();
     if (this.bar && this.barStarted) {
       this.bar.update(this.totalProjects, { elapsed: this.formatElapsed() });
       this.bar.stop();
@@ -219,6 +249,7 @@ export class TscProgressTracker {
       skippedProjects: this.skippedProjects,
       errorCount: this.errorCount,
       elapsed: this.formatElapsed(),
+      builtProjectTimings: [...this.builtProjectTimings],
     };
   }
 }
