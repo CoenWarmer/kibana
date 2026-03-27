@@ -63857,11 +63857,7 @@ paths:
       summary: Export stream content
       tags:
         - streams
-<<<<<<< HEAD
-      x-state: Technical Preview; added in 9.1
-=======
       x-state: Technical Preview; added in 9.1.0
->>>>>>> ab24b48483453f62b52ae9945321ac737c00708d
       x-metaTags:
         - content: Kibana
           name: product_name
