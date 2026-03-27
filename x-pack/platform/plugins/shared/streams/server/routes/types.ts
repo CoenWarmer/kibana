@@ -25,7 +25,7 @@ import type { IPatternExtractionService } from '../lib/pattern_extraction/patter
 import type { TaskClient } from '../lib/tasks/task_client';
 import type { StreamsTaskType } from '../lib/tasks/task_definitions';
 import type { InsightClient } from '../lib/sig_events/insights/client/insight_client';
-import type { ModelSettingsConfigClient } from '../lib/saved_objects/significant_events/model_settings_config_service';
+import type { ModelSettingsConfigClient } from '../lib/sig_events/saved_objects/model_settings_config_service';
 
 export type GetScopedClients = ({
   request,

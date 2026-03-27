@@ -13,7 +13,7 @@ import {
 import { z } from '@kbn/zod/v4';
 import { catchError, from as fromRxjs, map } from 'rxjs';
 import { STREAMS_API_PRIVILEGES } from '../../../../common/constants';
-import { PromptsConfigService } from '../../../lib/saved_objects/significant_events/prompts_config_service';
+import { PromptsConfigService } from '../../../lib/sig_events/saved_objects/prompts_config_service';
 import { generateSignificantEventDefinitions } from '../../../lib/sig_events/generate_significant_events';
 import { previewSignificantEvents } from '../../../lib/sig_events/preview_significant_events';
 import { readSignificantEventsFromAlertsIndices } from '../../../lib/sig_events/read_significant_events_from_alerts_indices';

@@ -6,8 +6,8 @@
  */
 
 import { z } from '@kbn/zod/v4';
-import type { PromptsConfigAttributes } from '../../../../lib/saved_objects/significant_events/prompts_config_service';
-import { PromptsConfigService } from '../../../../lib/saved_objects/significant_events/prompts_config_service';
+import type { PromptsConfigAttributes } from '../../../../lib/sig_events/saved_objects/prompts_config_service';
+import { PromptsConfigService } from '../../../../lib/sig_events/saved_objects/prompts_config_service';
 import { StatusError } from '../../../../lib/streams/errors/status_error';
 import { createServerRoute } from '../../../create_server_route';
 import { STREAMS_API_PRIVILEGES } from '../../../../../common/constants';

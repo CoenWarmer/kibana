@@ -17,7 +17,7 @@ import { formatInferenceProviderError } from '../../../routes/utils/create_conne
 import { resolveConnectorId } from '../../../routes/utils/resolve_connector_id';
 import type { TaskContext } from '.';
 import type { TaskParams } from '../types';
-import { PromptsConfigService } from '../../saved_objects/significant_events/prompts_config_service';
+import { PromptsConfigService } from '../../sig_events/saved_objects/prompts_config_service';
 import { cancellableTask } from '../cancellable_task';
 import { generateSignificantEventDefinitions } from '../../significant_events/generate_significant_events';
 import { isDefinitionNotFoundError } from '../../streams/errors/definition_not_found_error';

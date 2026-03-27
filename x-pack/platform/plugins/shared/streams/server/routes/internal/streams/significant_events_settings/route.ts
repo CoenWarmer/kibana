@@ -6,7 +6,7 @@
  */
 
 import { z } from '@kbn/zod/v4';
-import type { ModelSettings } from '../../../../lib/saved_objects/significant_events/model_settings_config_service';
+import type { ModelSettings } from '../../../../lib/sig_events/saved_objects/model_settings_config_service';
 import { getConfiguredIndexPatterns } from '../../../../lib/sig_events/helpers/get_configured_index_patterns';
 import { createServerRoute } from '../../../create_server_route';
 import { assertSignificantEventsAccess } from '../../../utils/assert_significant_events_access';
