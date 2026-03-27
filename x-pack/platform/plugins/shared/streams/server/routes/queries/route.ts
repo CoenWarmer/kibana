@@ -13,7 +13,7 @@ import { QueryNotFoundError } from '../../lib/streams/errors/query_not_found_err
 import {
   EsqlQueryValidationError,
   validateEsqlQueryForStreamOrThrow,
-} from '../../lib/significant_events/validate_esql_query';
+} from '../../lib/sig_events/validate_esql_query';
 import { createServerRoute } from '../create_server_route';
 import { assertEnterpriseLicense } from '../utils/assert_enterprise_license';
 

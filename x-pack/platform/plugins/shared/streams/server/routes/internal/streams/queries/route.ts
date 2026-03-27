@@ -7,12 +7,12 @@
 
 import { z } from '@kbn/zod/v4';
 import type { QueriesGetResponse, QueriesOccurrencesGetResponse } from '@kbn/streams-schema';
-import { sortForQueriesTable } from '../../../../lib/significant_events/utils';
+import { sortForQueriesTable } from '../../../../lib/sig_events/utils';
 import { STREAMS_API_PRIVILEGES } from '../../../../../common/constants';
 import { createServerRoute } from '../../../create_server_route';
 import { assertSignificantEventsAccess } from '../../../utils/assert_significant_events_access';
 import { queryStatusSchema, toRuleUnbackedFilter } from '../../../utils/query_status';
-import { readSignificantEventsFromAlertsIndices } from '../../../../lib/significant_events/read_significant_events_from_alerts_indices';
+import { readSignificantEventsFromAlertsIndices } from '../../../../lib/sig_events/read_significant_events_from_alerts_indices';
 
 const dateFromString = z.string().transform((input) => new Date(input));
 

@@ -53,7 +53,7 @@ import { ProcessorSuggestionsService } from './lib/streams/ingest_pipelines/proc
 import { registerStreamsSavedObjects } from './lib/saved_objects/register_saved_objects';
 import { ModelSettingsConfigService } from './lib/saved_objects/significant_events/model_settings_config_service';
 import { TaskService } from './lib/tasks/task_service';
-import { InsightService } from './lib/significant_events/insights/client/insight_service';
+import { InsightService } from './lib/sig_events/insights/client/insight_service';
 import { baseFields } from './lib/streams/component_templates/logs_layer';
 import { ecsBaseFields } from './lib/streams/component_templates/logs_ecs_layer';
 import { PatternExtractionService } from './lib/pattern_extraction/pattern_extraction_service';
