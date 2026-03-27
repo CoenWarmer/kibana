@@ -8,11 +8,11 @@
 import React from 'react';
 import type { Streams } from '@kbn/streams-schema';
 import { EuiSpacer } from '@elastic/eui';
-import { StreamDescription } from '../../../stream_detail_systems/stream_description';
+import { StreamDescription } from '../../../../sig_events/stream_detail_systems/stream_description';
 import { DeleteStreamPanel } from './delete_stream';
 import { useStreamsPrivileges } from '../../../../../hooks/use_streams_privileges';
 import { UnmanagedElasticsearchAssets } from './unmanaged_elasticsearch_assets';
-import { StreamDiscoveryConfiguration } from '../../../stream_detail_systems/stream_discovery_configuration';
+import { StreamDiscoveryConfiguration } from '../../../../sig_events/stream_detail_systems/stream_discovery_configuration';
 import { useAIFeatures } from '../../../../../hooks/use_ai_features';
 
 export function ClassicAdvancedView({
