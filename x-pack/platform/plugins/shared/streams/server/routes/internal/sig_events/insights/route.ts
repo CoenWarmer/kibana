@@ -18,8 +18,8 @@ import { STREAMS_API_PRIVILEGES } from '../../../../../common/constants';
 import type {
   InsightsDiscoveryTaskParams,
   InsightsDiscoveryTaskResult,
-} from '../../../../lib/tasks/task_definitions/insights_discovery';
-import { STREAMS_INSIGHTS_DISCOVERY_TASK_TYPE } from '../../../../lib/tasks/task_definitions/insights_discovery';
+} from '../../../../lib/sig_events/tasks/insights_discovery';
+import { STREAMS_INSIGHTS_DISCOVERY_TASK_TYPE } from '../../../../lib/sig_events/tasks/insights_discovery';
 import { taskActionSchema } from '../../../../lib/tasks/task_action_schema';
 import { createServerRoute } from '../../../create_server_route';
 import { assertSignificantEventsAccess } from '../../../utils/assert_significant_events_access';

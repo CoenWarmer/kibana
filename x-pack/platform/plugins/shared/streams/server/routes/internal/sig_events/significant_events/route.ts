@@ -17,7 +17,7 @@ import {
   getSignificantEventsQueriesGenerationTaskId,
   SIGNIFICANT_EVENTS_QUERIES_GENERATION_TASK_TYPE,
   type SignificantEventsQueriesGenerationTaskParams,
-} from '../../../../lib/tasks/task_definitions/significant_events_queries_generation';
+} from '../../../../lib/sig_events/tasks/significant_events_queries_generation';
 import { taskActionSchema } from '../../../../lib/tasks/task_action_schema';
 import { createServerRoute } from '../../../create_server_route';
 import { assertSignificantEventsAccess } from '../../../utils/assert_significant_events_access';

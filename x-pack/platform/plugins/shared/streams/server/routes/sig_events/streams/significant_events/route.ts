@@ -12,16 +12,16 @@ import {
 } from '@kbn/streams-schema';
 import { z } from '@kbn/zod/v4';
 import { catchError, from as fromRxjs, map } from 'rxjs';
-import { STREAMS_API_PRIVILEGES } from '../../../../common/constants';
-import { PromptsConfigService } from '../../../lib/sig_events/saved_objects/prompts_config_service';
-import { generateSignificantEventDefinitions } from '../../../lib/sig_events/generate_significant_events';
-import { previewSignificantEvents } from '../../../lib/sig_events/preview_significant_events';
-import { readSignificantEventsFromAlertsIndices } from '../../../lib/sig_events/read_significant_events_from_alerts_indices';
-import { createServerRoute } from '../../create_server_route';
-import { assertSignificantEventsAccess } from '../../utils/assert_significant_events_access';
-import { createConnectorSSEError } from '../../utils/create_connector_sse_error';
-import { getRequestAbortSignal } from '../../utils/get_request_abort_signal';
-import { resolveConnectorId } from '../../utils/resolve_connector_id';
+import { STREAMS_API_PRIVILEGES } from '../../../../../common/constants';
+import { PromptsConfigService } from '../../../../lib/sig_events/saved_objects/prompts_config_service';
+import { generateSignificantEventDefinitions } from '../../../../lib/sig_events/generate_significant_events';
+import { previewSignificantEvents } from '../../../../lib/sig_events/preview_significant_events';
+import { readSignificantEventsFromAlertsIndices } from '../../../../lib/sig_events/read_significant_events_from_alerts_indices';
+import { createServerRoute } from '../../../create_server_route';
+import { assertSignificantEventsAccess } from '../../../utils/assert_significant_events_access';
+import { createConnectorSSEError } from '../../../utils/create_connector_sse_error';
+import { getRequestAbortSignal } from '../../../utils/get_request_abort_signal';
+import { resolveConnectorId } from '../../../utils/resolve_connector_id';
 
 // Make sure strings are expected for input, but still converted to a
 // Date, without breaking the OpenAPI generator

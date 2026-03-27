@@ -8,14 +8,14 @@ import type { ErrorCause } from '@elastic/elasticsearch/lib/api/types';
 import type { StreamQuery } from '@kbn/streams-schema';
 import { streamQuerySchema, upsertStreamQueryRequestSchema } from '@kbn/streams-schema';
 import { z } from '@kbn/zod/v4';
-import { STREAMS_API_PRIVILEGES } from '../../../common/constants';
-import { QueryNotFoundError } from '../../lib/streams/errors/query_not_found_error';
+import { STREAMS_API_PRIVILEGES } from '../../../../common/constants';
+import { QueryNotFoundError } from '../../../lib/streams/errors/query_not_found_error';
 import {
   EsqlQueryValidationError,
   validateEsqlQueryForStreamOrThrow,
-} from '../../lib/sig_events/validate_esql_query';
-import { createServerRoute } from '../create_server_route';
-import { assertEnterpriseLicense } from '../utils/assert_enterprise_license';
+} from '../../../lib/sig_events/validate_esql_query';
+import { createServerRoute } from '../../create_server_route';
+import { assertEnterpriseLicense } from '../../utils/assert_enterprise_license';
 
 export interface ListQueriesResponse {
   queries: StreamQuery[];
