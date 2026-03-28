@@ -8,7 +8,7 @@
 import { useMemo } from 'react';
 import { useAbortController } from '@kbn/react-hooks';
 import type { Streams } from '@kbn/streams-schema';
-import type { FeaturesIdentificationTaskResult } from '@kbn/streams-plugin/server/routes/internal/streams/features/route';
+import type { FeaturesIdentificationTaskResult } from '@kbn/streams-plugin/server/routes/internal/sig_events/features/route';
 import { useKibana } from '../use_kibana';
 import { getLast24HoursTimeRange } from '../../util/time_range';
 

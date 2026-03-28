@@ -12,7 +12,7 @@ import React from 'react';
 import type { StepsProcessingSummaryMap } from '../hooks/use_steps_processing_summary';
 import type { InteractiveModeContext } from '../state_management/interactive_mode_machine';
 import type { RootLevelMap } from '../state_management/stream_enrichment_state_machine/utils';
-import { ActionBlock } from '../../../../data_management/stream_detail_enrichment/steps/blocks/action';
+import { ActionBlock } from './blocks/action';
 import { WhereBlock } from './blocks/where';
 import { DraggableStepWrapper } from './draggable_step_wrapper';
 import { useInteractiveModeSelector } from '../state_management/stream_enrichment_state_machine';

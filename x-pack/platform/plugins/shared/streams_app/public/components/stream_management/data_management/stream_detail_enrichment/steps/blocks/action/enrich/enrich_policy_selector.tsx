@@ -12,7 +12,7 @@ import { useQuery } from '@kbn/react-query';
 import React, { type ReactNode, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { SerializedEnrichPolicy } from '@kbn/index-management-shared-types';
-import { useKibana } from '../../../../../../../hooks/use_kibana';
+import { useKibana } from '../../../../../../../../hooks/use_kibana';
 
 interface UseEnrichPoliciesResponse {
   policies: SerializedEnrichPolicy[];
