@@ -10,11 +10,7 @@ import Path from 'path';
 import { REPO_ROOT } from '@kbn/repo-info';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { TsProject } from '@kbn/ts-projects';
-import {
-  CACHE_INVALIDATION_FILES,
-  LOCAL_CACHE_ROOT,
-  MAX_COMMITS_TO_CHECK,
-} from './constants';
+import { CACHE_INVALIDATION_FILES, LOCAL_CACHE_ROOT, MAX_COMMITS_TO_CHECK } from './constants';
 import { GcsFileSystem } from './file_system/gcs_file_system';
 import { LocalFileSystem } from './file_system/local_file_system';
 import {
@@ -38,6 +34,9 @@ import {
 } from './artifacts_state';
 import {
   resolveBestGcsSha,
+  PR_OVERHEAD,
+  type GcsArchiveCandidates,
+  type BestGcsArchive,
   resolveNonInvalidatedArchive,
   resolveGcsMatchedShas,
   computeEffectiveRebuildCountFromSha,
@@ -45,8 +44,77 @@ import {
   logArchiveFallback,
 } from './gcs_archive_resolver';
 
-
 const STALE_RESTORE_THRESHOLD = 10;
+
+/**
+ * Selects the best archive from the two candidates returned by resolveBestGcsSha.
+ *
+ * Computes actual source staleness for each candidate (git diff of TypeScript
+ * source files), then adds PR_OVERHEAD to the PR archive's cost to account for
+ * the inherent normalisation rebuilds that PR archives cause — even when no
+ * project-graph changes occurred, the PR branch's .tsbuildinfo state differs
+ * from the squash-merge commit, triggering extra first-run rebuilds.
+ *
+ * Returns undefined when no valid archive exists.
+ */
+async function selectBestArchive(
+  candidates: GcsArchiveCandidates,
+  tsProjects: TsProject[],
+  log: SomeDevLog
+): Promise<BestGcsArchive | undefined> {
+  const { commitArchive, prArchive } = candidates;
+
+  if (!commitArchive && !prArchive) return undefined;
+  if (!commitArchive) return prArchive;
+  if (!prArchive) return commitArchive;
+
+  // Both candidates exist — compare using actual source staleness so we don't
+  // blindly prefer the PR archive just because it's 1 commit more recent.
+  const [commitStaleness, prStaleness] = await Promise.all([
+    computeEffectiveRebuildCountFromSha(commitArchive.sha, tsProjects),
+    computeEffectiveRebuildCountFromSha(prArchive.sha, tsProjects),
+  ]);
+
+  // Break the PR cost into its three components so the log is inspectable:
+  //   source stale   — git diff of TypeScript source files
+  //   graph overhead — packages added to project graph × STALENESS_WEIGHT
+  //   PR overhead    — fixed cost for using any PR archive (inherent .tsbuildinfo
+  //                    difference between PR branch and squash-merge commit)
+  //
+  // If the final "Rebuilt N project(s)" after a commit-archive run is close to
+  // the "commit cost" shown here, the model is well-calibrated.
+  // If a PR archive is chosen and the actual rebuilds far exceed "PR cost",
+  // PR_OVERHEAD should be increased.
+  const prGraphOverhead =
+    (prArchive.projectGraphDiff?.added.length ?? 0) * 15 /* STALENESS_WEIGHT, sync if changed */;
+  const prSourceStale = prStaleness ?? 0;
+  const prTotalCost = prStaleness !== undefined ? prSourceStale + prGraphOverhead + PR_OVERHEAD : Number.MAX_SAFE_INTEGER;
+  const commitTotalCost =
+    commitStaleness !== undefined
+      ? estimatedTotalRebuildCount(commitArchive, commitStaleness)
+      : Number.MAX_SAFE_INTEGER;
+
+  log.info(
+    `[Cache] Archive comparison — ` +
+      `commit ${commitArchive.sha.slice(0, 12)}: ~${commitTotalCost} rebuilds` +
+      (commitStaleness !== undefined ? ` (${commitStaleness} source-stale)` : ' (staleness unknown)') +
+      ` | PR #${prArchive.prNumber} ${prArchive.sha.slice(0, 12)}: ~${prTotalCost} rebuilds` +
+      (prStaleness !== undefined
+        ? ` (${prSourceStale} source-stale + ${prGraphOverhead} graph + ${PR_OVERHEAD} PR overhead)`
+        : ' (staleness unknown)')
+  );
+
+  if (prTotalCost < commitTotalCost) {
+    log.info(`[Cache] → PR archive selected (lower estimated cost).`);
+    return prArchive;
+  }
+
+  log.info(
+    `[Cache] → Commit archive selected ` +
+      `(PR overhead of ${PR_OVERHEAD} makes PR archive more expensive despite being more recent).`
+  );
+  return commitArchive;
+}
 
 export type RestoreStrategy =
   | {
@@ -125,7 +193,11 @@ export async function resolveRestoreStrategy(
       log.info('[Cache] Cache server unavailable — will restore directly from GCS.');
     }
 
-    const bestArchive = await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable);
+    const bestArchive = await selectBestArchive(
+      await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable),
+      tsProjects,
+      log
+    );
 
     if (!bestArchive) {
       log.info('[Cache check] No GCS archive available — tsc will build from scratch.');
@@ -141,7 +213,10 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    const adjustedRebuildCount =
+      effectiveRebuildCount !== undefined
+        ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount)
+        : undefined;
     await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     return {
       shouldRestore: true,
@@ -163,7 +238,11 @@ export async function resolveRestoreStrategy(
       log.info('[Cache] Cache server unavailable — will restore directly from GCS.');
     }
 
-    const bestArchive = await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable);
+    const bestArchive = await selectBestArchive(
+      await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable),
+      tsProjects,
+      log
+    );
 
     if (!bestArchive) {
       log.info('[Cache check] No GCS archive available — tsc will handle staleness incrementally.');
@@ -179,7 +258,10 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    const adjustedRebuildCount =
+      effectiveRebuildCount !== undefined
+        ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount)
+        : undefined;
     await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     return {
       shouldRestore: true,
@@ -222,7 +304,11 @@ export async function resolveRestoreStrategy(
     await cleanTypeCheckArtifacts(log);
     await writeArtifactsState('');
 
-    const bestArchive = await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable);
+    const bestArchive = await selectBestArchive(
+      await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable),
+      tsProjects,
+      log
+    );
 
     if (!bestArchive) {
       log.info('[Cache check] No GCS archive available — tsc will build from scratch.');
@@ -239,7 +325,10 @@ export async function resolveRestoreStrategy(
       validArchive.sha,
       tsProjects
     );
-    const adjustedRebuildCount = effectiveRebuildCount !== undefined ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount) : undefined;
+    const adjustedRebuildCount =
+      effectiveRebuildCount !== undefined
+        ? estimatedTotalRebuildCount(validArchive, effectiveRebuildCount)
+        : undefined;
     await logArchiveFallback(log, currentSha, validArchive, adjustedRebuildCount);
     log.info(
       `[Cache check] Found compatible GCS archive at ${validArchive.sha.slice(
@@ -306,7 +395,11 @@ export async function resolveRestoreStrategy(
   }
 
   // Phase 3: check whether a GCS restore would actually reduce the rebuild count.
-  const bestGcsArchive = await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable);
+  const bestGcsArchive = await selectBestArchive(
+    await resolveBestGcsSha(log, gcsFs, currentSha, cacheServerAvailable),
+    tsProjects,
+    log
+  );
 
   if (!bestGcsArchive) {
     log.info(
@@ -586,4 +679,3 @@ export async function restoreTSBuildArtifacts(
     log.warning(`[Cache] Failed to restore artifacts: ${restoreErrorDetails}`);
   }
 }
-

@@ -32,6 +32,18 @@ import { calculateFileHashes } from './utils';
 const STALENESS_WEIGHT = 15;
 
 /**
+ * Fixed rebuild overhead to add when comparing a PR archive against a commit
+ * archive. PR archives are built from the PR branch before the squash-merge to
+ * main, so their .tsbuildinfo hashes differ from what the squash-merge commit
+ * produces — causing normalisation rebuilds across unrelated packages even when
+ * no project graph changes occurred. Commit archives don't have this overhead.
+ *
+ * Calibrated from observations: ~80 extra rebuilds when using a PR archive vs
+ * a commit archive at the same source-staleness level.
+ */
+export const PR_OVERHEAD = 50;
+
+/**
  * Packages added/removed from the project graph (kibana.jsonc files) between
  * the archive commit and HEAD. Only populated for PR archives — commit archives
  * are always built from the final squash-merge state and are complete.
@@ -306,9 +318,24 @@ export async function resolveGcsMatchedShas(
 }
 
 /**
- * Finds the best available GCS archive for the current checkout.
- * Prefers the most recent commit archive; falls back to PR archives for main
- * commits whose on_merge CI job hasn't completed yet.
+ * The two archive candidates that can be compared to find the cheapest restore.
+ * The caller computes source staleness for each and uses `estimatedTotalRebuildCount`
+ * (+ PR_OVERHEAD for the PR candidate) to pick the winner.
+ */
+export interface GcsArchiveCandidates {
+  /** Best commit archive available (from on_merge CI). Preferred when it exists
+   *  because it has zero inherent normalisation overhead vs a PR archive. */
+  commitArchive?: BestGcsArchive;
+  /** Best PR archive for a main commit whose on_merge CI hasn't finished yet.
+   *  Only present when it represents a more recent state than the commit archive. */
+  prArchive?: BestGcsArchive;
+}
+
+/**
+ * Finds the best available GCS archive candidates for the current checkout.
+ * Returns both the best commit archive and the best PR archive (when one is
+ * more recent than the commit archive) so the caller can compare their actual
+ * estimated rebuild costs and pick the winner.
  *
  * @param knownCurrentSha When provided, skips the `git rev-parse HEAD` call to
  *   avoid resolving the current SHA twice when the caller already has it.
@@ -320,7 +347,7 @@ export async function resolveBestGcsSha(
   gcsFs: GcsFileSystem,
   knownCurrentSha?: string,
   knownCacheServerAvailable?: boolean
-): Promise<BestGcsArchive | undefined> {
+): Promise<GcsArchiveCandidates> {
   const upstreamRemote = await resolveUpstreamRemote();
   const [currentSha, history] = await Promise.all([
     knownCurrentSha !== undefined ? Promise.resolve(knownCurrentSha) : resolveCurrentCommitSha(),
@@ -363,6 +390,8 @@ export async function resolveBestGcsSha(
 
   const unmatchedMainBefore = candidateMainShas.filter((sha) => !commitMatched.includes(sha));
 
+  let prArchive: BestGcsArchive | undefined;
+
   if (unmatchedMainBefore.length > 0) {
     const prFallbacks = await resolvePrFallbackMatches(
       log,
@@ -371,11 +400,10 @@ export async function resolveBestGcsSha(
     );
 
     if (prFallbacks.length > 0) {
-      // Pick the PR archive with the lowest estimated total rebuild cost.
-      // Cost combines recency (position in mainShas) with project-graph staleness
-      // (packages added after the archive was built × STALENESS_WEIGHT).
-      // A slightly older archive with 0 added packages can be cheaper than
-      // the most recent archive with many added packages.
+      // Among PR candidates, pick the one with the lowest estimated rebuild cost
+      // (recency + project-graph staleness). The PR_OVERHEAD comparison against
+      // the commit archive happens in the caller, which has access to tsProjects
+      // for accurate source-staleness computation.
       const bestPr = prFallbacks.reduce((best, curr) => {
         const bestIdx = mainShas.indexOf(best.sha);
         const currIdx = mainShas.indexOf(curr.sha);
@@ -383,13 +411,16 @@ export async function resolveBestGcsSha(
         const currCost = currIdx + (curr.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
         return currCost < bestCost ? curr : best;
       });
-      // Carry the best commit archive as a fallback in case the PR archive is
-      // invalidated by a node_modules change (different yarn.lock than HEAD).
-      return commitMatched.length > 0 ? { ...bestPr, fallbackCommitSha: commitMatched[0] } : bestPr;
+      // Carry the commit archive as fallback for yarn.lock invalidation checks.
+      prArchive =
+        commitMatched.length > 0 ? { ...bestPr, fallbackCommitSha: commitMatched[0] } : bestPr;
     }
   }
 
-  return commitMatched.length > 0 ? { sha: commitMatched[0] } : undefined;
+  return {
+    commitArchive: commitMatched.length > 0 ? { sha: commitMatched[0] } : undefined,
+    prArchive,
+  };
 }
 
 /**
@@ -474,23 +505,39 @@ export async function logArchiveFallback(
       `restoring from ${archiveLabel}${suffix}.`
   );
 
-  // For PR archives with stale project graphs, warn that first-run rebuilds will
-  // exceed the source-file staleness estimate. The extra rebuilds are a one-time
-  // normalisation cost that disappears on the second run.
-  const { added = [], removed = [] } = archive.projectGraphDiff ?? {};
-  if (added.length > 0 || removed.length > 0) {
-    const stalenessParts: string[] = [];
-    if (added.length > 0)
-      stalenessParts.push(`${added.length} package${added.length === 1 ? '' : 's'} added`);
-    if (removed.length > 0)
-      stalenessParts.push(`${removed.length} package${removed.length === 1 ? '' : 's'} removed`);
-    log.warning(
-      `[Cache] PR archive has a stale project graph (${stalenessParts.join(', ')} since it was built). ` +
-        `Expect ~${added.length * STALENESS_WEIGHT}+ extra normalisation rebuilds on first use ` +
-        `(one-time cost — gone on the second run).`
-    );
-    if (added.length > 0) {
-      log.verbose(`[Cache] New packages not in PR archive: ${added.join(', ')}`);
+  // PR archives are built from the PR branch before the squash-merge to main.
+  // They always carry some normalisation cost on first use — the PR branch's
+  // .tsbuildinfo hashes differ from what the squash-merge commit produces, so
+  // tsc must re-verify (and sometimes rebuild) packages whose dependency hashes
+  // changed. This is a one-time cost that goes to 0 on the second run.
+  if (archive.prNumber) {
+    const { added = [], removed = [] } = archive.projectGraphDiff ?? {};
+
+    if (added.length > 0 || removed.length > 0) {
+      // Specific staleness: packages were added/removed after the PR was built.
+      const stalenessParts: string[] = [];
+      if (added.length > 0)
+        stalenessParts.push(`${added.length} package${added.length === 1 ? '' : 's'} added`);
+      if (removed.length > 0)
+        stalenessParts.push(`${removed.length} package${removed.length === 1 ? '' : 's'} removed`);
+      log.warning(
+        `[Cache] PR archive has a stale project graph (${stalenessParts.join(', ')} since it was built). ` +
+          `Expect ~${added.length * STALENESS_WEIGHT}+ extra normalisation rebuilds on first use ` +
+          `(one-time cost — gone on the second run).`
+      );
+      if (added.length > 0) {
+        log.verbose(`[Cache] New packages not in PR archive: ${added.join(', ')}`);
+      }
+    } else {
+      // General PR archive warning: even with no project graph changes, the PR
+      // branch's .tsbuildinfo compilation state differs from the squash-merge
+      // commit, causing normalisation rebuilds on first use.
+      log.warning(
+        `[Cache] Using PR archive (on_merge CI hasn't finished yet). ` +
+          `First run may have extra normalisation rebuilds across unrelated packages — ` +
+          `this is a one-time cost that disappears on the second run. ` +
+          `Rebuilds will be fast once the commit archive is available.`
+      );
     }
   }
 }
