@@ -96,8 +96,7 @@ export function estimatedTotalRebuildCount(
   archive: BestGcsArchive,
   sourceStaleCount: number
 ): number {
-  const normalisationOverhead =
-    (archive.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
+  const normalisationOverhead = (archive.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
   return sourceStaleCount + normalisationOverhead;
 }
 
@@ -276,9 +275,9 @@ export async function resolveGcsMatchedShas(
   ]);
 
   if (availableShas.size === 0) {
-    log.warning('GCS returned 0 archives. The bucket may be temporarily unavailable.');
+    log.warning('[Cache] GCS returned 0 archives. The bucket may be temporarily unavailable.');
   } else {
-    const listMsg = `Listed ${availableShas.size} available archive(s) from GCS via API (${elapsedMs}ms)`;
+    const listMsg = `[Cache] Listed ${availableShas.size} available archive(s) from GCS via API (${elapsedMs}ms)`;
 
     if (cacheServerAvailable) {
       log.verbose(listMsg);
@@ -521,7 +520,9 @@ export async function logArchiveFallback(
       if (removed.length > 0)
         stalenessParts.push(`${removed.length} package${removed.length === 1 ? '' : 's'} removed`);
       log.warning(
-        `[Cache] PR archive has a stale project graph (${stalenessParts.join(', ')} since it was built). ` +
+        `[Cache] PR archive has a stale project graph (${stalenessParts.join(
+          ', '
+        )} since it was built). ` +
           `Expect ~${added.length * STALENESS_WEIGHT}+ extra normalisation rebuilds on first use ` +
           `(one-time cost — gone on the second run).`
       );

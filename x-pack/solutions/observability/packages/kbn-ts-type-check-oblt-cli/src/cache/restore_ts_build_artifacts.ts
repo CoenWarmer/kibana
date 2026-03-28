@@ -57,7 +57,7 @@ const STALE_RESTORE_THRESHOLD = 10;
  *
  * Returns undefined when no valid archive exists.
  */
-async function selectBestArchive(
+export async function selectBestArchive(
   candidates: GcsArchiveCandidates,
   tsProjects: TsProject[],
   log: SomeDevLog

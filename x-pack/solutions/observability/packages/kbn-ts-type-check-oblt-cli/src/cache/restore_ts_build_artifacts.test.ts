@@ -8,7 +8,12 @@
 import Fs from 'fs';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 import type { TsProject } from '@kbn/ts-projects';
-import { restoreTSBuildArtifacts, resolveRestoreStrategy } from './restore_ts_build_artifacts';
+import {
+  restoreTSBuildArtifacts,
+  resolveRestoreStrategy,
+  selectBestArchive,
+} from './restore_ts_build_artifacts';
+import { PR_OVERHEAD } from './gcs_archive_resolver';
 import { computeEffectiveRebuildSet } from './dependency_graph';
 import { LocalFileSystem } from './file_system/local_file_system';
 import { GcsFileSystem } from './file_system/gcs_file_system';
@@ -760,5 +765,171 @@ describe('computeEffectiveRebuildSet', () => {
 
     expect(result).toEqual(new Set(['a', 'b', 'c', 'd']));
     expect(result.size).toBe(4);
+  });
+});
+
+// ── selectBestArchive ──────────────────────────────────────────────────────
+
+jest.mock('./gcs_archive_resolver', () => ({
+  ...jest.requireActual('./gcs_archive_resolver'),
+  computeEffectiveRebuildCountFromSha: jest.fn(),
+}));
+
+import { computeEffectiveRebuildCountFromSha } from './gcs_archive_resolver';
+
+const mockedStaleness = computeEffectiveRebuildCountFromSha as jest.MockedFunction<
+  typeof computeEffectiveRebuildCountFromSha
+>;
+
+function makeLog(): SomeDevLog {
+  return {
+    info: jest.fn(),
+    warning: jest.fn(),
+    error: jest.fn(),
+    success: jest.fn(),
+    debug: jest.fn(),
+    verbose: jest.fn(),
+  };
+}
+
+const COMMIT = { sha: 'commit000000' };
+const PR = {
+  sha: 'prmerge00000',
+  prNumber: '12345',
+  prTipSha: 'prtip0000000',
+  prBuildFileHashes: { 'yarn.lock': 'abc123' },
+};
+
+describe('selectBestArchive', () => {
+  const noProjects: TsProject[] = [];
+
+  beforeEach(() => {
+    mockedStaleness.mockReset();
+  });
+
+  it('returns undefined when no candidates', async () => {
+    const result = await selectBestArchive({}, noProjects, makeLog());
+    expect(result).toBeUndefined();
+  });
+
+  it('returns commit archive when no PR archive', async () => {
+    mockedStaleness.mockResolvedValue(5);
+    const result = await selectBestArchive({ commitArchive: COMMIT }, noProjects, makeLog());
+    expect(result).toBe(COMMIT);
+    expect(mockedStaleness).not.toHaveBeenCalled(); // no comparison needed
+  });
+
+  it('returns PR archive when no commit archive', async () => {
+    const result = await selectBestArchive({ prArchive: PR }, noProjects, makeLog());
+    expect(result).toBe(PR);
+    expect(mockedStaleness).not.toHaveBeenCalled();
+  });
+
+  it('prefers commit archive when PR overhead makes PR more expensive', async () => {
+    // commit: 3 source-stale → cost 3
+    // PR: 1 source-stale + 0 graph + PR_OVERHEAD → cost > 3
+    mockedStaleness
+      .mockResolvedValueOnce(3) // commit
+      .mockResolvedValueOnce(1); // PR
+
+    const log = makeLog();
+    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, log);
+
+    expect(result).toBe(COMMIT);
+    expect(log.info).toHaveBeenCalledWith(
+      expect.stringContaining('Commit archive selected')
+    );
+  });
+
+  it('prefers PR archive when it is significantly cheaper than commit archive', async () => {
+    // commit: 80 source-stale → cost 80
+    // PR: 1 source-stale + 0 graph + PR_OVERHEAD (50) → cost 51
+    mockedStaleness
+      .mockResolvedValueOnce(80) // commit
+      .mockResolvedValueOnce(1); // PR
+
+    const log = makeLog();
+    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, log);
+
+    expect(result).toBe(PR);
+    expect(log.info).toHaveBeenCalledWith(
+      expect.stringContaining('PR archive selected')
+    );
+  });
+
+  it('PR archive with graph staleness is penalised correctly', async () => {
+    // commit: 10 source-stale → cost 10
+    // PR: 1 source-stale + (2 added packages × 15) + PR_OVERHEAD
+    //   = 1 + 30 + 50 = 81 → commit wins
+    const prWithGraph = {
+      ...PR,
+      projectGraphDiff: { added: ['pkg/a/kibana.jsonc', 'pkg/b/kibana.jsonc'], removed: [] },
+    };
+    mockedStaleness
+      .mockResolvedValueOnce(10) // commit
+      .mockResolvedValueOnce(1); // PR
+
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: prWithGraph },
+      noProjects,
+      makeLog()
+    );
+
+    expect(result).toBe(COMMIT);
+  });
+
+  it('PR archive with graph staleness can still win if commit is much more stale', async () => {
+    // commit: 200 source-stale → cost 200
+    // PR: 1 source-stale + (2 × 15) + 50 = 81 → PR wins
+    const prWithGraph = {
+      ...PR,
+      projectGraphDiff: { added: ['pkg/a/kibana.jsonc', 'pkg/b/kibana.jsonc'], removed: [] },
+    };
+    mockedStaleness
+      .mockResolvedValueOnce(200) // commit
+      .mockResolvedValueOnce(1); // PR
+
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: prWithGraph },
+      noProjects,
+      makeLog()
+    );
+
+    expect(result).toBe(prWithGraph);
+  });
+
+  it('commit archive wins when PR staleness is unknown', async () => {
+    mockedStaleness
+      .mockResolvedValueOnce(5) // commit — known
+      .mockResolvedValueOnce(undefined); // PR — unknown
+
+    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, makeLog());
+
+    expect(result).toBe(COMMIT);
+  });
+
+  it('PR archive is used when commit staleness is unknown', async () => {
+    mockedStaleness
+      .mockResolvedValueOnce(undefined) // commit — unknown
+      .mockResolvedValueOnce(1); // PR — known
+
+    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, makeLog());
+
+    expect(result).toBe(PR);
+  });
+
+  it(`the comparison log shows the three PR cost components`, async () => {
+    mockedStaleness
+      .mockResolvedValueOnce(9)  // commit
+      .mockResolvedValueOnce(1); // PR
+
+    const log = makeLog();
+    await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, log);
+
+    const logCall = (log.info as jest.Mock).mock.calls
+      .flat()
+      .find((msg: string) => msg.includes('PR overhead'));
+    expect(logCall).toContain(`${PR_OVERHEAD} PR overhead`);
+    expect(logCall).toContain('1 source-stale');
   });
 });
