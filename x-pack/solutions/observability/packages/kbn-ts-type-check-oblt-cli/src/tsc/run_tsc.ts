@@ -126,20 +126,51 @@ export async function runTscFastPass({
     return acc;
   }, new Set<string>()).size;
 
-  const tableRows = perProject.map(({ depCount, dependentCount }, i) => [
+  const naiveDepsSum = perProject.reduce((sum, p) => sum + p.depCount, 0);
+  const uniqueDepsCount = firstPassProjectCount - affectedRefs.size;
+  const overlap = naiveDepsSum - uniqueDepsCount;
+  const totalDependentsCount = perProject.reduce((sum, p) => sum + p.dependentCount, 0);
+
+  // Table 1 — changed projects with their dependency and dependent counts.
+  const table1Rows = perProject.map(({ depCount, dependentCount }, i) => [
     projectNames[i],
     String(depCount),
     dependentCount === 0 ? '—' : String(dependentCount),
   ]);
-
-  const tableOutput = table([['Project', 'Dependencies', 'Dependents'], ...tableRows], {
+  const table1Output = table([['Project', 'Dependencies', 'Dependents'], ...table1Rows], {
     border: getBorderCharacters('norc'),
     drawHorizontalLine: (i, rowCount) => i === 0 || i === 1 || i === rowCount,
   });
 
+  // Table 2 — first pass scope build-up, showing how the 824 is reached.
+  const table2Rows: string[][] = [];
+  for (let i = 0; i < projectNames.length; i++) {
+    table2Rows.push([projectNames[i], '1']);
+    table2Rows.push([`  dependencies`, String(perProject[i].depCount)]);
+  }
+  if (overlap > 0) {
+    table2Rows.push([`shared dependencies`, `-${overlap}`]);
+  }
+  const table2Output = table(
+    [...table2Rows, [`First pass scope`, String(firstPassProjectCount)]],
+    {
+      border: getBorderCharacters('norc'),
+      drawHorizontalLine: (i, rowCount) => i === 0 || i === rowCount - 1 || i === rowCount,
+    }
+  );
+
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
-  for (const line of tableOutput.trimEnd().split('\n')) {
+  for (const line of table1Output.trimEnd().split('\n')) {
     log.info(`[TypeCheck] ${line}`);
+  }
+  log.info(`[TypeCheck] First pass scope (quick check):`);
+  for (const line of table2Output.trimEnd().split('\n')) {
+    log.info(`[TypeCheck] ${line}`);
+  }
+  if (totalDependentsCount > 0) {
+    log.info(
+      `[TypeCheck] Full pass also checks ${totalDependentsCount} downstream dependent(s).`
+    );
   }
 
   log.info(`[TypeCheck] [First pass] Checking ${firstPassProjectCount} projects...`);
