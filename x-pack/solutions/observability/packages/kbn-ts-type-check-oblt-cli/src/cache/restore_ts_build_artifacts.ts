@@ -86,9 +86,12 @@ export async function selectBestArchive(
   // If a PR archive is chosen and the actual rebuilds far exceed "PR cost",
   // PR_OVERHEAD should be increased.
   const prGraphOverhead =
-    (prArchive.projectGraphDiff?.added.length ?? 0) * 15 /* STALENESS_WEIGHT, sync if changed */;
+    (prArchive.projectGraphDiff?.added.length ?? 0) * 15; /* STALENESS_WEIGHT, sync if changed */
   const prSourceStale = prStaleness ?? 0;
-  const prTotalCost = prStaleness !== undefined ? prSourceStale + prGraphOverhead + PR_OVERHEAD : Number.MAX_SAFE_INTEGER;
+  const prTotalCost =
+    prStaleness !== undefined
+      ? prSourceStale + prGraphOverhead + PR_OVERHEAD
+      : Number.MAX_SAFE_INTEGER;
   const commitTotalCost =
     commitStaleness !== undefined
       ? estimatedTotalRebuildCount(commitArchive, commitStaleness)
@@ -97,7 +100,9 @@ export async function selectBestArchive(
   log.info(
     `[Cache] Archive comparison — ` +
       `commit ${commitArchive.sha.slice(0, 12)}: ~${commitTotalCost} rebuilds` +
-      (commitStaleness !== undefined ? ` (${commitStaleness} source-stale)` : ' (staleness unknown)') +
+      (commitStaleness !== undefined
+        ? ` (${commitStaleness} source-stale)`
+        : ' (staleness unknown)') +
       ` | PR #${prArchive.prNumber} ${prArchive.sha.slice(0, 12)}: ~${prTotalCost} rebuilds` +
       (prStaleness !== undefined
         ? ` (${prSourceStale} source-stale + ${prGraphOverhead} graph + ${PR_OVERHEAD} PR overhead)`

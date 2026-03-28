@@ -94,7 +94,9 @@ export class TscProgressTracker {
     this.logInfo(
       `[TypeCheck] ${label}` +
         `${this.completedProjects} / ${this.totalProjects} projects (${pct}%) — ` +
-        `${this.builtProjects} rebuilt, ${this.skippedProjects} up-to-date | ${this.formatElapsed()} elapsed`
+        `${this.builtProjects} rebuilt, ${
+          this.skippedProjects
+        } up-to-date | ${this.formatElapsed()} elapsed`
     );
   }
 

@@ -9,9 +9,9 @@ import chalk from 'chalk';
 import type { SomeDevLog } from '@kbn/some-dev-log';
 
 // Bar segment widths (chars inside ▕ … ▏)
-const BAR_PROJECT_W = 2;  // ██ — fixed, always represents the changed project
-const BAR_DEP_W = 14;     // ░…  — proportional to dep count
-const BAR_DOWN_W = 14;    // █…  — proportional to downstream count (yellow/red); spaces when 0
+const BAR_PROJECT_W = 2; // ██ — fixed, always represents the changed project
+const BAR_DEP_W = 14; // ░…  — proportional to dep count
+const BAR_DOWN_W = 14; // █…  — proportional to downstream count (yellow/red); spaces when 0
 
 // Total bar width including the ▕▏ edges
 const BAR_TOTAL_W = 1 + BAR_PROJECT_W + BAR_DEP_W + BAR_DOWN_W + 1; // 32
@@ -73,9 +73,7 @@ export function printScopeSummary(
   // Prefix: 2 (indent) + BAR_TOTAL_W (32) + 2 (gap after bar) = 36 chars before name
   const headerPrefix = ' '.repeat(2 + BAR_TOTAL_W + 2 + nameColW);
   log.info(
-    headerPrefix +
-      'deps'.padStart(depsColW + COL_GAP) +
-      'downstream'.padStart(downColW + COL_GAP)
+    headerPrefix + 'deps'.padStart(depsColW + COL_GAP) + 'downstream'.padStart(downColW + COL_GAP)
   );
 
   // Data rows

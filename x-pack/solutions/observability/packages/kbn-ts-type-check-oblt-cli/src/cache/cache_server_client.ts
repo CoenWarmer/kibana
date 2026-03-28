@@ -94,8 +94,9 @@ async function restoreFromArtifactStream(
   const reader = (body as ReadableStream<Uint8Array>).getReader();
   const state = { leftover: Buffer.alloc(0) };
 
-  const { increment: incBar, stop: stopBar } = createProjectRestoreProgressBar(totalProjects, (msg) =>
-    log.info(msg)
+  const { increment: incBar, stop: stopBar } = createProjectRestoreProgressBar(
+    totalProjects,
+    (msg) => log.info(msg)
   );
   let projectsRestored = 0;
   let totalBytes = 0;

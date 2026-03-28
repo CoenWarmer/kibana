@@ -151,13 +151,10 @@ export async function runTscFastPass({
   if (overlap > 0) {
     table2Rows.push([`shared dependencies`, `-${overlap}`]);
   }
-  const table2Output = table(
-    [...table2Rows, [`First pass scope`, String(firstPassProjectCount)]],
-    {
-      border: getBorderCharacters('norc'),
-      drawHorizontalLine: (i, rowCount) => i === 0 || i === rowCount - 1 || i === rowCount,
-    }
-  );
+  const table2Output = table([...table2Rows, [`First pass scope`, String(firstPassProjectCount)]], {
+    border: getBorderCharacters('norc'),
+    drawHorizontalLine: (i, rowCount) => i === 0 || i === rowCount - 1 || i === rowCount,
+  });
 
   log.info(`[TypeCheck] ${affectedRefs.size} changed ${multi ? 'projects' : 'project'}:`);
   for (const line of table1Output.trimEnd().split('\n')) {
@@ -168,9 +165,7 @@ export async function runTscFastPass({
     log.info(`[TypeCheck] ${line}`);
   }
   if (totalDependentsCount > 0) {
-    log.info(
-      `[TypeCheck] Full pass also checks ${totalDependentsCount} downstream dependent(s).`
-    );
+    log.info(`[TypeCheck] Full pass also checks ${totalDependentsCount} downstream dependent(s).`);
   }
 
   log.info(`[TypeCheck] [First pass] Checking ${firstPassProjectCount} projects...`);
@@ -268,8 +263,14 @@ async function runTscWithProgress({
 
   tracker.printErrors();
 
-  const { totalProjects, completedProjects, builtProjects, skippedProjects, elapsed, builtProjectTimings } =
-    tracker.getSummary();
+  const {
+    totalProjects,
+    completedProjects,
+    builtProjects,
+    skippedProjects,
+    elapsed,
+    builtProjectTimings,
+  } = tracker.getSummary();
 
   if (result.killed || result.signal) {
     log.warning(

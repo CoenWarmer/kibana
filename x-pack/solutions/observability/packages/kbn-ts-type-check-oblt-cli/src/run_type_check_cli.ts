@@ -13,7 +13,10 @@ import { createFailError } from '@kbn/dev-cli-errors';
 import { REPO_ROOT } from '@kbn/repo-info';
 import execa from 'execa';
 
-import { resolveRestoreStrategy, restoreTSBuildArtifacts } from './cache/restore_ts_build_artifacts';
+import {
+  resolveRestoreStrategy,
+  restoreTSBuildArtifacts,
+} from './cache/restore_ts_build_artifacts';
 import { writeArtifactsState } from './cache/artifacts_state';
 import { isCiEnvironment, resolveCurrentCommitSha } from './cache/utils';
 import { createTypeCheckConfigs } from './tsc/create_type_check_configs';

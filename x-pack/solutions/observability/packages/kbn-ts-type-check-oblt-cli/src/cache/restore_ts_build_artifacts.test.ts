@@ -833,12 +833,14 @@ describe('selectBestArchive', () => {
       .mockResolvedValueOnce(1); // PR
 
     const log = makeLog();
-    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, log);
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: PR },
+      noProjects,
+      log
+    );
 
     expect(result).toBe(COMMIT);
-    expect(log.info).toHaveBeenCalledWith(
-      expect.stringContaining('Commit archive selected')
-    );
+    expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Commit archive selected'));
   });
 
   it('prefers PR archive when it is significantly cheaper than commit archive', async () => {
@@ -849,12 +851,14 @@ describe('selectBestArchive', () => {
       .mockResolvedValueOnce(1); // PR
 
     const log = makeLog();
-    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, log);
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: PR },
+      noProjects,
+      log
+    );
 
     expect(result).toBe(PR);
-    expect(log.info).toHaveBeenCalledWith(
-      expect.stringContaining('PR archive selected')
-    );
+    expect(log.info).toHaveBeenCalledWith(expect.stringContaining('PR archive selected'));
   });
 
   it('PR archive with graph staleness is penalised correctly', async () => {
@@ -903,7 +907,11 @@ describe('selectBestArchive', () => {
       .mockResolvedValueOnce(5) // commit — known
       .mockResolvedValueOnce(undefined); // PR — unknown
 
-    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, makeLog());
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: PR },
+      noProjects,
+      makeLog()
+    );
 
     expect(result).toBe(COMMIT);
   });
@@ -913,14 +921,18 @@ describe('selectBestArchive', () => {
       .mockResolvedValueOnce(undefined) // commit — unknown
       .mockResolvedValueOnce(1); // PR — known
 
-    const result = await selectBestArchive({ commitArchive: COMMIT, prArchive: PR }, noProjects, makeLog());
+    const result = await selectBestArchive(
+      { commitArchive: COMMIT, prArchive: PR },
+      noProjects,
+      makeLog()
+    );
 
     expect(result).toBe(PR);
   });
 
   it(`the comparison log shows the three PR cost components`, async () => {
     mockedStaleness
-      .mockResolvedValueOnce(9)  // commit
+      .mockResolvedValueOnce(9) // commit
       .mockResolvedValueOnce(1); // PR
 
     const log = makeLog();

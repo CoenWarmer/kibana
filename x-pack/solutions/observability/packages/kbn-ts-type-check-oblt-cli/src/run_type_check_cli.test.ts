@@ -101,7 +101,14 @@ const { restoreTSBuildArtifacts, resolveRestoreStrategy } = jest.requireMock(
       log: SomeDevLog,
       projects: TsProject[]
     ) => Promise<
-      | { shouldRestore: true; bestSha: string; staleProjects: string[]; cacheServerAvailable: boolean; prNumber?: string; prTipSha?: string }
+      | {
+          shouldRestore: true;
+          bestSha: string;
+          staleProjects: string[];
+          cacheServerAvailable: boolean;
+          prNumber?: string;
+          prTipSha?: string;
+        }
       | { shouldRestore: false; bestSha?: undefined }
     >
   >;
