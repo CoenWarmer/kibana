@@ -24,7 +24,9 @@ jest.mock('../../../../../hooks/use_ai_features', () => ({
 jest.mock('../../../../../hooks/use_streams_privileges');
 
 // Mock hooks used by StreamDescription
-jest.mock('../../../../sig_events/stream_detail_systems/stream_description/use_stream_description_api', () => ({
+jest.mock(
+  '../../../../sig_events/stream_detail_systems/stream_description/use_stream_description_api',
+  () => ({
     useStreamDescriptionApi: () => ({
       description: '',
       setDescription: jest.fn(),
