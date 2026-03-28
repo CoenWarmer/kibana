@@ -1023,6 +1023,13 @@ x-pack/platform/packages/shared/kbn-streamlang-tests @elastic/obs-onboarding-tea
 x-pack/platform/packages/shared/kbn-streamlang-yaml-editor @elastic/obs-onboarding-team
 x-pack/platform/packages/shared/kbn-streams-ai @elastic/obs-onboarding-team @elastic/obs-sig-events-team
 x-pack/platform/packages/shared/kbn-streams-schema @elastic/obs-onboarding-team @elastic/obs-sig-events-team
+# kbn-streams-ai — sig events overrides
+x-pack/platform/packages/shared/kbn-streams-ai/src/significant_events @elastic/obs-sig-events-team
+x-pack/platform/packages/shared/kbn-streams-ai/src/knowledge_indicators @elastic/obs-sig-events-team
+# kbn-streams-schema — sig events overrides
+x-pack/platform/packages/shared/kbn-streams-schema/src/api/significant_events @elastic/obs-sig-events-team
+x-pack/platform/packages/shared/kbn-streams-schema/src/queries @elastic/obs-sig-events-team
+x-pack/platform/packages/shared/kbn-streams-schema/src/insights @elastic/obs-sig-events-team
 x-pack/platform/packages/shared/logs-overview @elastic/obs-exploration-team
 x-pack/platform/packages/shared/ml/aiops_common @elastic/ml-ui
 x-pack/platform/packages/shared/ml/aiops_log_pattern_analysis @elastic/ml-ui
