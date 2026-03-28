@@ -17,7 +17,7 @@ const mockStreamsRepositoryClient = { fetch: mockFetch };
 const mockAddSuccess = jest.fn();
 const mockAddError = jest.fn();
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       application: {
@@ -43,7 +43,7 @@ jest.mock('../../../../hooks/use_kibana', () => ({
 
 import { useStreamsAppFetch } from '../../../../../hooks/use_streams_app_fetch';
 
-jest.mock('../../../../hooks/use_streams_app_fetch', () => ({
+jest.mock('../../../../../hooks/use_streams_app_fetch', () => ({
   useStreamsAppFetch: jest.fn(() => ({
     value: undefined,
     loading: false,

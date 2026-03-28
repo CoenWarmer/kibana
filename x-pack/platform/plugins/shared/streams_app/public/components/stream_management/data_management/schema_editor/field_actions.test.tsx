@@ -25,7 +25,7 @@ import type {
 // Mock the Kibana hook
 const mockOverlaysOpenFlyout = jest.fn();
 
-jest.mock('../../../hooks/use_kibana', () => ({
+jest.mock('../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     dependencies: {
       start: {},

@@ -23,7 +23,7 @@ const mockStreamsRepositoryClient = {
   stream: jest.fn(),
 };
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     dependencies: {
       start: {
@@ -44,7 +44,7 @@ jest.mock('@kbn/react-hooks', () => ({
 
 // Mock the error toast function
 const mockShowFetchErrorToast = jest.fn();
-jest.mock('../../../../hooks/use_fetch_error_toast', () => ({
+jest.mock('../../../../../hooks/use_fetch_error_toast', () => ({
   useFetchErrorToast: () => mockShowFetchErrorToast,
 }));
 

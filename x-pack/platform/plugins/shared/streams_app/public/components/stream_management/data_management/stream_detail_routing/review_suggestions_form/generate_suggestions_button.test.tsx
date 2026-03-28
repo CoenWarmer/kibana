@@ -17,7 +17,7 @@ import type { AIFeatures } from '../../../../../hooks/use_ai_features';
 import type { UseGenAIConnectorsResult } from '../../../../../hooks/use_genai_connectors';
 import { InferenceConnectorType } from '@kbn/inference-common';
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       http: {

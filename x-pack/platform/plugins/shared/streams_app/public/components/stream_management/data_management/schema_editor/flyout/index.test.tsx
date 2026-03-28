@@ -14,7 +14,7 @@ import { createMockClassicStreamDefinition, createMockMappedField } from '../../
 import type { SchemaField } from '../types';
 
 // Mock the useKibana hook
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       docLinks: {
@@ -44,14 +44,14 @@ jest.mock('../../../../hooks/use_kibana', () => ({
 }));
 
 // Mock the useStreamsAppRouter hook
-jest.mock('../../../../hooks/use_streams_app_router', () => ({
+jest.mock('../../../../../hooks/use_streams_app_router', () => ({
   useStreamsAppRouter: () => ({
     link: jest.fn(() => '/mock-link'),
   }),
 }));
 
 // Mock the useStreamsAppFetch hook used by SamplePreviewTable
-jest.mock('../../../../hooks/use_streams_app_fetch', () => ({
+jest.mock('../../../../../hooks/use_streams_app_fetch', () => ({
   useStreamsAppFetch: () => ({
     value: null,
     loading: false,

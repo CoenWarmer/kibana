@@ -12,10 +12,10 @@ import { Settings } from './settings';
 import { createMockWiredStreamDefinition } from '../../shared/mocks';
 import type { StreamsAppKibanaContext } from '../../../../../hooks/use_kibana';
 
-jest.mock('../../../../hooks/use_kibana');
-jest.mock('../../../../hooks/use_stream_detail');
-jest.mock('../../../../hooks/use_streams_privileges');
-jest.mock('../../../../hooks/use_streams_app_router', () => ({
+jest.mock('../../../../../hooks/use_kibana');
+jest.mock('../../../../../hooks/use_stream_detail');
+jest.mock('../../../../../hooks/use_streams_privileges');
+jest.mock('../../../../../hooks/use_streams_app_router', () => ({
   useStreamsAppRouter: () => ({
     link: jest.fn(() => '/mock-stream-link'),
   }),

@@ -64,7 +64,7 @@ import { ConcatProcessorForm } from './concat';
 import { JoinProcessorForm } from './join';
 import { JsonExtractProcessorForm } from './json_extract';
 import { NetworkDirectionProcessorForm } from './network_direction';
-import { EnrichProcessorForm } from './enrich';
+import { EnrichProcessorForm } from '../../../../../../data_management/stream_detail_enrichment/steps/blocks/action/enrich';
 
 export const ActionBlockEditor = forwardRef<HTMLDivElement, ActionBlockProps>((props, ref) => {
   const { processorMetrics, stepRef } = props;

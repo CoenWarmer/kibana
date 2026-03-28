@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import type { Streams } from '@kbn/streams-schema';
 import { RetentionCard } from './retention_card';
 
-jest.mock('../../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     dependencies: {
       start: {

@@ -12,8 +12,8 @@ import { useDataStreamStats } from './use_data_stream_stats';
 import { useKibana } from '../../../../../hooks/use_kibana';
 import { useTimefilter } from '../../../../../hooks/use_timefilter';
 
-jest.mock('../../../../hooks/use_kibana');
-jest.mock('../../../../hooks/use_timefilter');
+jest.mock('../../../../../hooks/use_kibana');
+jest.mock('../../../../../hooks/use_timefilter');
 
 const mockUseKibana = useKibana as jest.MockedFunction<typeof useKibana>;
 const mockUseTimefilter = useTimefilter as jest.MockedFunction<typeof useTimefilter>;

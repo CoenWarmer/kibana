@@ -11,7 +11,7 @@ import type { EnhancedFailureStoreStats } from '../hooks/use_data_stream_stats';
 import type { useFailureStoreConfig } from '../hooks/use_failure_store_config';
 import { FailureStoreSummary } from './failure_store_summary';
 
-jest.mock('../../../../hooks/use_kibana');
+jest.mock('../../../../../hooks/use_kibana');
 
 import { useKibana } from '../../../../../hooks/use_kibana';
 

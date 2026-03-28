@@ -12,7 +12,7 @@ import type { Streams } from '@kbn/streams-schema';
 import type { IlmPolicy } from '@kbn/streams-schema';
 import { EditLifecycleModal } from './modal';
 
-jest.mock('../../../../../hooks/use_kibana');
+jest.mock('../../../../../../hooks/use_kibana');
 
 import { useKibana } from '../../../../../../hooks/use_kibana';
 

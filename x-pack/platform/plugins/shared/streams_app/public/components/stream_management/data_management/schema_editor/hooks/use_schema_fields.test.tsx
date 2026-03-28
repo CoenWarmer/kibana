@@ -29,7 +29,7 @@ const mockDataViews = {
 
 const mockRefreshDefinition = jest.fn();
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     dependencies: {
       start: {
@@ -59,7 +59,7 @@ jest.mock('@kbn/react-hooks', () => ({
 }));
 
 // Mock useStreamsAppFetch
-jest.mock('../../../../hooks/use_streams_app_fetch', () => ({
+jest.mock('../../../../../hooks/use_streams_app_fetch', () => ({
   useStreamsAppFetch: jest.fn(() => ({
     value: null,
     loading: false,

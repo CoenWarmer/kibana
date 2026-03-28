@@ -16,7 +16,7 @@ const mockNavigateToApp = jest.fn();
 const mockAddSuccess = jest.fn();
 const mockOpenConfirm = jest.fn();
 
-jest.mock('../../../hooks/use_kibana', () => ({
+jest.mock('../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       application: { navigateToApp: mockNavigateToApp },

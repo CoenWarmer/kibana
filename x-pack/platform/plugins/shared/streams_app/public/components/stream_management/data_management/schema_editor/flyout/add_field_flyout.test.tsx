@@ -16,7 +16,7 @@ import {
 } from '../../shared/mocks';
 import { SchemaEditorContextProvider } from '../schema_editor_context';
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       docLinks: {
@@ -45,7 +45,7 @@ jest.mock('../../../../hooks/use_kibana', () => ({
   }),
 }));
 
-jest.mock('../../../../hooks/use_streams_app_router', () => ({
+jest.mock('../../../../../hooks/use_streams_app_router', () => ({
   useStreamsAppRouter: () => ({
     link: jest.fn(() => '/mock-link'),
   }),

@@ -26,7 +26,7 @@ jest.mock('@kbn/unsaved-changes-prompt', () => ({
   useUnsavedChangesPrompt: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       notifications: { toasts: { addSuccess: jest.fn(), addError: jest.fn() } },
@@ -46,7 +46,7 @@ jest.mock('../../../../hooks/use_kibana', () => ({
   }),
 }));
 
-jest.mock('../../../../hooks/use_timefilter', () => ({
+jest.mock('../../../../../hooks/use_timefilter', () => ({
   useTimefilter: () => ({ timeState: {} }),
 }));
 

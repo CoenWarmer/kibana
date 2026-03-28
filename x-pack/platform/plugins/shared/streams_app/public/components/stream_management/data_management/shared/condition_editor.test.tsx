@@ -29,7 +29,7 @@ jest.mock('@kbn/code-editor', () => ({
 }));
 
 // Mock the useKibana hook
-jest.mock('../../../hooks/use_kibana', () => ({
+jest.mock('../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: {
       docLinks: {

@@ -12,7 +12,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ProcessorFieldSelector } from './processor_field_selector';
 import { AutocompleteSelector } from '../../../../shared/autocomplete_selector';
 
-jest.mock('../../../../../../hooks/use_field_suggestions', () => ({
+jest.mock('../../../../../../../hooks/use_field_suggestions', () => ({
   useEnrichmentFieldSuggestions: jest.fn(() => [
     { name: '@timestamp', type: 'date' },
     { name: 'log.level', type: 'keyword' },
@@ -21,7 +21,7 @@ jest.mock('../../../../../../hooks/use_field_suggestions', () => ({
   ]),
 }));
 
-jest.mock('../../../../../../hooks/use_stream_data_view_field_types', () => ({
+jest.mock('../../../../../../../hooks/use_stream_data_view_field_types', () => ({
   useStreamDataViewFieldTypes: jest.fn(() => ({
     fieldTypes: [
       { name: '@timestamp', type: 'date', esType: 'date' },

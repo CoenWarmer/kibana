@@ -18,7 +18,7 @@ jest.mock('@kbn/code-editor', () => ({
   CodeEditor: () => null,
 }));
 
-jest.mock('../../../../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     core: { docLinks: { links: { ingest: { processors: '#', conditionalProcessor: '#' } } } },
     dependencies: { start: { streams: { streamsRepositoryClient: { fetch: jest.fn() } } } },

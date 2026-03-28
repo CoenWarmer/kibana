@@ -16,9 +16,9 @@ import {
 } from '../shared/mocks';
 import type { StreamsAppKibanaContext } from '../../../../hooks/use_kibana';
 
-jest.mock('../../../hooks/use_kibana');
-jest.mock('../../../hooks/use_stream_detail');
-jest.mock('../../../hooks/use_discard_confirm');
+jest.mock('../../../../hooks/use_kibana');
+jest.mock('../../../../hooks/use_stream_detail');
+jest.mock('../../../../hooks/use_discard_confirm');
 jest.mock('../schema_editor/hooks/use_schema_fields', () => {
   const actual = jest.requireActual('../schema_editor/hooks/use_schema_fields');
   return {

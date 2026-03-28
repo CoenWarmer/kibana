@@ -13,13 +13,13 @@ import type { Streams } from '@kbn/streams-schema';
 import type { SchemaField } from '../types';
 import { SchemaEditorFlyout } from '.';
 
-jest.mock('../../../../hooks/use_streams_app_router', () => ({
+jest.mock('../../../../../hooks/use_streams_app_router', () => ({
   useStreamsAppRouter: () => ({
     link: () => '#',
   }),
 }));
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     dependencies: {
       start: {

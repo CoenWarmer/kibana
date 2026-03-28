@@ -16,12 +16,12 @@ jest.mock('@kbn/ebt-tools', () => ({
   usePerformanceContext: () => ({ onPageReady: jest.fn() }),
 }));
 
-jest.mock('../../../../hooks/use_ai_features', () => ({
+jest.mock('../../../../../hooks/use_ai_features', () => ({
   useAIFeatures: () => null,
 }));
 
 // Mock the useStreamsPrivileges hook
-jest.mock('../../../../hooks/use_streams_privileges');
+jest.mock('../../../../../hooks/use_streams_privileges');
 
 // Mock hooks used by StreamDescription
 jest.mock(
@@ -49,7 +49,7 @@ jest.mock(
 );
 
 // Mock hooks used by StreamDiscoveryConfiguration
-jest.mock('../../../../hooks/sig_events/use_stream_features', () => ({
+jest.mock('../../../../../hooks/sig_events/use_stream_features', () => ({
   useStreamFeatures: () => ({
     features: [],
     excludedFeatures: [],
@@ -59,7 +59,7 @@ jest.mock('../../../../hooks/sig_events/use_stream_features', () => ({
   }),
 }));
 
-jest.mock('../../../../hooks/sig_events/use_stream_features_api', () => ({
+jest.mock('../../../../../hooks/sig_events/use_stream_features_api', () => ({
   useStreamFeaturesApi: () => ({
     getFeaturesIdentificationStatus: jest.fn().mockResolvedValue({ status: 'not_started' }),
     scheduleFeaturesIdentificationTask: jest.fn(),
@@ -69,20 +69,20 @@ jest.mock('../../../../hooks/sig_events/use_stream_features_api', () => ({
   }),
 }));
 
-jest.mock('../../../../hooks/use_ai_features', () => ({
+jest.mock('../../../../../hooks/use_ai_features', () => ({
   useAIFeatures: () => ({
     genAiConnectors: { selectedConnector: null },
   }),
 }));
 
 // Mock hooks used by IndexConfiguration/Settings
-jest.mock('../../../../hooks/use_stream_detail', () => ({
+jest.mock('../../../../../hooks/use_stream_detail', () => ({
   useStreamDetail: () => ({
     loading: false,
   }),
 }));
 
-jest.mock('../../../../hooks/use_kibana', () => ({
+jest.mock('../../../../../hooks/use_kibana', () => ({
   useKibana: () => ({
     isServerless: false,
     appParams: { history: {} },
@@ -116,7 +116,7 @@ jest.mock('../../../../hooks/use_kibana', () => ({
 }));
 
 // Mock ConnectorListButton used in StreamDescription
-jest.mock('../../../connector_list_button/connector_list_button', () => ({
+jest.mock('../../../../connector_list_button/connector_list_button', () => ({
   ConnectorListButton: ({ buttonProps }: { buttonProps: { children: React.ReactNode } }) => (
     <button type="button">{buttonProps.children}</button>
   ),
