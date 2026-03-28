@@ -825,12 +825,12 @@ describe('selectBestArchive', () => {
     expect(mockedStaleness).not.toHaveBeenCalled();
   });
 
-  it('prefers commit archive when PR overhead makes PR more expensive', async () => {
-    // commit: 3 source-stale → cost 3
-    // PR: 1 source-stale + 0 graph + PR_OVERHEAD → cost > 3
+  it('prefers commit archive when it has lower staleness than the PR archive', async () => {
+    // commit: 1 source-stale → cost 1
+    // PR: 3 source-stale + 0 graph + PR_OVERHEAD (0) → cost 3
     mockedStaleness
-      .mockResolvedValueOnce(3) // commit
-      .mockResolvedValueOnce(1); // PR
+      .mockResolvedValueOnce(1) // commit
+      .mockResolvedValueOnce(3); // PR
 
     const log = makeLog();
     const result = await selectBestArchive(
@@ -845,7 +845,7 @@ describe('selectBestArchive', () => {
 
   it('prefers PR archive when it is significantly cheaper than commit archive', async () => {
     // commit: 80 source-stale → cost 80
-    // PR: 1 source-stale + 0 graph + PR_OVERHEAD (50) → cost 51
+    // PR: 1 source-stale + 0 graph + PR_OVERHEAD (0) → cost 1
     mockedStaleness
       .mockResolvedValueOnce(80) // commit
       .mockResolvedValueOnce(1); // PR
@@ -863,8 +863,8 @@ describe('selectBestArchive', () => {
 
   it('PR archive with graph staleness is penalised correctly', async () => {
     // commit: 10 source-stale → cost 10
-    // PR: 1 source-stale + (2 added packages × 15) + PR_OVERHEAD
-    //   = 1 + 30 + 50 = 81 → commit wins
+    // PR: 1 source-stale + (2 added packages × 15) + PR_OVERHEAD (0)
+    //   = 1 + 30 + 0 = 31 → commit wins
     const prWithGraph = {
       ...PR,
       projectGraphDiff: { added: ['pkg/a/kibana.jsonc', 'pkg/b/kibana.jsonc'], removed: [] },
@@ -884,7 +884,7 @@ describe('selectBestArchive', () => {
 
   it('PR archive with graph staleness can still win if commit is much more stale', async () => {
     // commit: 200 source-stale → cost 200
-    // PR: 1 source-stale + (2 × 15) + 50 = 81 → PR wins
+    // PR: 1 source-stale + (2 × 15) + PR_OVERHEAD (0) = 31 → PR wins
     const prWithGraph = {
       ...PR,
       projectGraphDiff: { added: ['pkg/a/kibana.jsonc', 'pkg/b/kibana.jsonc'], removed: [] },
