@@ -26,22 +26,18 @@ import { calculateFileHashes } from './utils';
 
 /**
  * Estimated additional rebuilds caused per package added to the project graph
- * since a PR archive was built. Each new package tends to be referenced by
- * several existing packages, causing normalisation rebuilds on first restore.
+ * since a PR archive was built. Each new package was absent from the archive
+ * and must be compiled from scratch on first restore.
  */
 const STALENESS_WEIGHT = 15;
 
 /**
- * Fixed rebuild overhead to add when comparing a PR archive against a commit
- * archive. PR archives are built from the PR branch before the squash-merge to
- * main, so their .tsbuildinfo hashes differ from what the squash-merge commit
- * produces — causing normalisation rebuilds across unrelated packages even when
- * no project graph changes occurred. Commit archives don't have this overhead.
- *
- * Calibrated from observations: ~80 extra rebuilds when using a PR archive vs
- * a commit archive at the same source-staleness level.
+ * Fixed rebuild overhead added when comparing a PR archive against a commit
+ * archive. Experiments showed that the anticipated extra cost from .tsbuildinfo
+ * hash differences between the PR branch and squash-merge commit does not
+ * materialise in practice, so this is 0.
  */
-export const PR_OVERHEAD = 50;
+export const PR_OVERHEAD = 0;
 
 /**
  * Packages added/removed from the project graph (kibana.jsonc files) between
@@ -50,8 +46,8 @@ export const PR_OVERHEAD = 50;
  */
 interface ProjectGraphDiff {
   /** Packages whose kibana.jsonc was added after the archive was built.
-   *  Each added package causes extra normalisation rebuilds on first restore
-   *  because the archive's .tsbuildinfo doesn't reference it yet. */
+   *  Each added package must be compiled from scratch on first restore since
+   *  the archive's .tsbuildinfo doesn't reference it yet. */
   added: string[];
   /** Packages whose kibana.jsonc was removed after the archive was built. */
   removed: string[];
@@ -89,15 +85,15 @@ async function getProjectGraphDiff(archiveSha: string): Promise<ProjectGraphDiff
 /**
  * Returns the estimated total rebuild count after restoring from an archive,
  * combining source-file staleness (from git diff) with project-graph staleness
- * (normalisation rebuilds caused by packages added since the archive was built).
+ * (fresh builds required for packages added since the archive was built).
  * Use this instead of the raw git-diff count when comparing archive costs.
  */
 export function estimatedTotalRebuildCount(
   archive: BestGcsArchive,
   sourceStaleCount: number
 ): number {
-  const normalisationOverhead = (archive.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
-  return sourceStaleCount + normalisationOverhead;
+  const graphDiffOverhead = (archive.projectGraphDiff?.added.length ?? 0) * STALENESS_WEIGHT;
+  return sourceStaleCount + graphDiffOverhead;
 }
 
 /**
@@ -128,9 +124,9 @@ export interface BestGcsArchive {
   prBuildFileHashes?: Record<string, string>;
   /** Packages added/removed from the project graph since the PR archive was built.
    *  PR CI runs on the PR branch which may predate recently added packages, so the
-   *  archive's .tsbuildinfo files won't reference those new packages. This causes
-   *  normalisation rebuilds on first restore proportional to how many packages
-   *  were added. Not set for commit archives (always built from the current state). */
+   *  archive's .tsbuildinfo files won't reference those new packages — they must be
+   *  compiled from scratch on first restore. Not set for commit archives (always
+   *  built from the current state). */
   projectGraphDiff?: ProjectGraphDiff;
 }
 
@@ -323,7 +319,7 @@ export async function resolveGcsMatchedShas(
  */
 export interface GcsArchiveCandidates {
   /** Best commit archive available (from on_merge CI). Preferred when it exists
-   *  because it has zero inherent normalisation overhead vs a PR archive. */
+   *  because it is always built from the final squash-merge state. */
   commitArchive?: BestGcsArchive;
   /** Best PR archive for a main commit whose on_merge CI hasn't finished yet.
    *  Only present when it represents a more recent state than the commit archive. */
@@ -504,11 +500,6 @@ export async function logArchiveFallback(
       `restoring from ${archiveLabel}${suffix}.`
   );
 
-  // PR archives are built from the PR branch before the squash-merge to main.
-  // They always carry some normalisation cost on first use — the PR branch's
-  // .tsbuildinfo hashes differ from what the squash-merge commit produces, so
-  // tsc must re-verify (and sometimes rebuild) packages whose dependency hashes
-  // changed. This is a one-time cost that goes to 0 on the second run.
   if (archive.prNumber) {
     const { added = [], removed = [] } = archive.projectGraphDiff ?? {};
 
@@ -523,20 +514,14 @@ export async function logArchiveFallback(
         `[Cache] PR archive has a stale project graph (${stalenessParts.join(
           ', '
         )} since it was built). ` +
-          `Expect ~${added.length * STALENESS_WEIGHT}+ extra normalisation rebuilds on first use ` +
-          `(one-time cost — gone on the second run).`
+          `Expect ~${added.length * STALENESS_WEIGHT}+ extra rebuilds for packages not in the archive.`
       );
       if (added.length > 0) {
         log.verbose(`[Cache] New packages not in PR archive: ${added.join(', ')}`);
       }
     } else {
-      // General PR archive warning: even with no project graph changes, the PR
-      // branch's .tsbuildinfo compilation state differs from the squash-merge
-      // commit, causing normalisation rebuilds on first use.
-      log.warning(
+      log.info(
         `[Cache] Using PR archive (on_merge CI hasn't finished yet). ` +
-          `First run may have extra normalisation rebuilds across unrelated packages — ` +
-          `this is a one-time cost that disappears on the second run. ` +
           `Rebuilds will be fast once the commit archive is available.`
       );
     }

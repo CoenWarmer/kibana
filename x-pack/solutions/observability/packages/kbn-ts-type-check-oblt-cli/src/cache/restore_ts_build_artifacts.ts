@@ -50,10 +50,9 @@ const STALE_RESTORE_THRESHOLD = 10;
  * Selects the best archive from the two candidates returned by resolveBestGcsSha.
  *
  * Computes actual source staleness for each candidate (git diff of TypeScript
- * source files), then adds PR_OVERHEAD to the PR archive's cost to account for
- * the inherent normalisation rebuilds that PR archives cause — even when no
- * project-graph changes occurred, the PR branch's .tsbuildinfo state differs
- * from the squash-merge commit, triggering extra first-run rebuilds.
+ * source files), then adds PR_OVERHEAD to the PR archive's cost. PR_OVERHEAD
+ * is currently 0 — experiments showed no measurable inherent overhead from
+ * PR archives vs commit archives at the same source-staleness level.
  *
  * Returns undefined when no valid archive exists.
  */
@@ -78,13 +77,10 @@ export async function selectBestArchive(
   // Break the PR cost into its three components so the log is inspectable:
   //   source stale   — git diff of TypeScript source files
   //   graph overhead — packages added to project graph × STALENESS_WEIGHT
-  //   PR overhead    — fixed cost for using any PR archive (inherent .tsbuildinfo
-  //                    difference between PR branch and squash-merge commit)
+  //   PR overhead    — fixed cost for using any PR archive (currently 0; see PR_OVERHEAD)
   //
   // If the final "Rebuilt N project(s)" after a commit-archive run is close to
   // the "commit cost" shown here, the model is well-calibrated.
-  // If a PR archive is chosen and the actual rebuilds far exceed "PR cost",
-  // PR_OVERHEAD should be increased.
   const prGraphOverhead =
     (prArchive.projectGraphDiff?.added.length ?? 0) * 15; /* STALENESS_WEIGHT, sync if changed */
   const prSourceStale = prStaleness ?? 0;
@@ -116,7 +112,7 @@ export async function selectBestArchive(
 
   log.info(
     `[Cache] → Commit archive selected ` +
-      `(PR overhead of ${PR_OVERHEAD} makes PR archive more expensive despite being more recent).`
+      `(commit archive has lower estimated cost).`
   );
   return commitArchive;
 }
@@ -445,9 +441,9 @@ export async function resolveRestoreStrategy(
   }
 
   // Add project-graph staleness overhead for PR archives. Each package added
-  // to the project graph since the archive was built causes ~STALENESS_WEIGHT
-  // extra normalisation rebuilds on first use. This ensures we don't restore a
-  // PR archive whose normalisation cost exceeds the local rebuild cost.
+  // to the project graph since the archive was built requires fresh compilation
+  // on first restore. This ensures we don't restore an archive whose graph-diff
+  // rebuild cost exceeds the local rebuild cost.
   const gcsAdjustedCount = estimatedTotalRebuildCount(validGcsArchive, gcsEffectiveCount);
 
   if (gcsAdjustedCount < effectiveRebuildSet.size) {

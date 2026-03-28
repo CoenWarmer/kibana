@@ -22,8 +22,8 @@ This package wraps `tsc --build` and adds several performance features on top:
   archives (built after a PR is squash-merged into main) and PR archives (built during CI on
   each PR branch). Both are candidates for restoration. The CLI compares them using estimated
   rebuild cost: source-file staleness (`git diff archiveSha HEAD`) plus, for PR archives, a
-  fixed `PR_OVERHEAD` penalty (PR archives are slightly behind the squash-merge and therefore
-  tend to cause extra rebuilds on first use) and a per-package graph-staleness penalty for
+  fixed `PR_OVERHEAD` penalty (currently 0 — experiments showed no measurable inherent overhead
+  from using a PR archive vs a commit archive) and a per-package graph-staleness penalty for
   any `kibana.jsonc` packages added after the archive was built. The archive with the lowest
   total cost is selected.
 
@@ -128,9 +128,8 @@ On each run the CLI goes through the following steps:
    - Run `git diff <archiveSha>..HEAD` for each candidate to measure source-file staleness.
      This is a cheap local operation — no download yet.
    - Select the best archive using `selectBestArchive`: commit archives are preferred by
-     default, but a PR archive wins when it is significantly more recent. A fixed `PR_OVERHEAD`
-     penalty is added to the PR cost to model the extra rebuilds that PR archives tend to cause
-     on first use (see **Smart archive selection** above).
+     default, but a PR archive wins when it is more recent after accounting for graph-diff
+     overhead (see **Smart archive selection** above).
    - Only restore if the selected archive would actually reduce the rebuild count. If both
      archives are equally stale (e.g. the user intentionally changed a foundational package),
      skip the restore and let `tsc` handle it locally.
