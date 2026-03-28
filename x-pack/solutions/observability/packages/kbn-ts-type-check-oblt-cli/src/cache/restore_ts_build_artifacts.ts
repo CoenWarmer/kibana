@@ -110,10 +110,7 @@ export async function selectBestArchive(
     return prArchive;
   }
 
-  log.info(
-    `[Cache] → Commit archive selected ` +
-      `(commit archive has lower estimated cost).`
-  );
+  log.info(`[Cache] → Commit archive selected ` + `(commit archive has lower estimated cost).`);
   return commitArchive;
 }
 

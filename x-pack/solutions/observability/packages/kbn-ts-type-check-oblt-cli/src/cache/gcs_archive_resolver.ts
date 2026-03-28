@@ -514,7 +514,9 @@ export async function logArchiveFallback(
         `[Cache] PR archive has a stale project graph (${stalenessParts.join(
           ', '
         )} since it was built). ` +
-          `Expect ~${added.length * STALENESS_WEIGHT}+ extra rebuilds for packages not in the archive.`
+          `Expect ~${
+            added.length * STALENESS_WEIGHT
+          }+ extra rebuilds for packages not in the archive.`
       );
       if (added.length > 0) {
         log.verbose(`[Cache] New packages not in PR archive: ${added.join(', ')}`);
