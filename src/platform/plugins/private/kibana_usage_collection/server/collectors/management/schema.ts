@@ -45,6 +45,13 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
     type: 'keyword',
     _meta: { description: 'Default value of the setting was changed.' },
   },
+  'securitySolution:excludedGapReasons': {
+    type: 'array',
+    items: {
+      type: 'keyword',
+      _meta: { description: 'Array of excluded gap reasons.' },
+    },
+  },
   'securitySolution:newsFeedUrl': {
     type: 'keyword',
     _meta: { description: 'Default value of the setting was changed.' },
@@ -164,6 +171,10 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
     _meta: { description: 'Non-default value of setting.' },
   },
   'securitySolution:enableCloudConnector': {
+    type: 'boolean',
+    _meta: { description: 'Non-default value of setting.' },
+  },
+  'securitySolution:enableAlertsAndAttacksAlignment': {
     type: 'boolean',
     _meta: { description: 'Non-default value of setting.' },
   },
@@ -528,21 +539,30 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
     type: 'boolean',
     _meta: { description: 'Non-default value of setting.' },
   },
-  'agentBuilder:connectorsEnabled': {
+  'agentBuilder:bashSupport': {
     type: 'boolean',
     _meta: { description: 'Non-default value of setting.' },
   },
-  'dataSources:enabled': {
+  'agentBuilder:uiamOAuthClientManagement': {
     type: 'boolean',
-    _meta: { description: 'Non-default value of setting.' },
+    _meta: {
+      description:
+        'Whether UIAM OAuth client management endpoints and the Agent Builder MCP Clients UI are enabled.',
+    },
+  },
+  'workflows:experimentalFeatures': {
+    type: 'boolean',
+    _meta: {
+      description: 'Whether experimental features for Elastic Workflows are enabled.',
+    },
   },
   'workflows:ui:enabled': {
     type: 'boolean',
     _meta: { description: 'Whether Elastic Workflows and related experiences are enabled.' },
   },
-  'workflows:aiAgent:enabled': {
+  'workflows:ui:showManagedWorkflows': {
     type: 'boolean',
-    _meta: { description: 'Whether AI-powered workflow authoring assistance is enabled.' },
+    _meta: { description: 'Whether managed workflows are visible in workflow experiences.' },
   },
   'banners:placement': {
     type: 'keyword',
@@ -621,10 +641,6 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
     _meta: { description: 'Non-default value of setting.' },
   },
   'observability:apmEnableTransactionProfiling': {
-    type: 'boolean',
-    _meta: { description: 'Non-default value of setting.' },
-  },
-  'observability:apmUseUnifiedTraceWaterfall': {
     type: 'boolean',
     _meta: { description: 'Non-default value of setting.' },
   },
@@ -715,6 +731,12 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
       description: 'Display the incremental id of a case in the relevant pages',
     },
   },
+  'cases:maxOpenCasesPerRuleRun': {
+    type: 'integer',
+    _meta: {
+      description: 'Maximum number of cases the Cases connector can open during a single rule run.',
+    },
+  },
   'observability:streamsEnableSignificantEvents': {
     type: 'boolean',
     _meta: {
@@ -725,12 +747,6 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
     type: 'boolean',
     _meta: {
       description: 'Enable Significant events discovery in Streams.',
-    },
-  },
-  'observability:streamsEnableAttachments': {
-    type: 'boolean',
-    _meta: {
-      description: 'Enable Streams attachments tab.',
     },
   },
   'observability:streamsEnableContentPacks': {
@@ -751,10 +767,23 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
       description: 'Enable ES|QL views for wired streams',
     },
   },
-  'observability:streamsEnableOverviewPage': {
+  'observability:streamsEnableDraftStreams': {
     type: 'boolean',
     _meta: {
-      description: 'Enable the Streams management Overview tab',
+      description: 'Enable draft streams with read-time ES|QL views',
+    },
+  },
+  'observability:streamsEnableCanvas': {
+    type: 'boolean',
+    _meta: {
+      description: 'Enable Streams Canvas',
+    },
+  },
+  'observability:streamsSigEventsIndexPatterns': {
+    type: 'keyword',
+    _meta: {
+      description:
+        'Comma-separated index patterns used for Significant Events stream filtering and analysis.',
     },
   },
   'observability:enableDiagnosticMode': {
@@ -790,10 +819,22 @@ export const stackManagementSchema: MakeSchemaFrom<UsageStats> = {
       description: 'Switches the Entity Store Engine to v2',
     },
   },
-  'elasticConsole:enabled': {
+  'elasticRamen:enabled': {
     type: 'boolean',
     _meta: {
       description: 'Non-default value of setting.',
+    },
+  },
+  'query_activity:minRunningTime': {
+    type: 'long',
+    _meta: {
+      description: 'Non-default value of setting.',
+    },
+  },
+  'genAiSettings:tokenUsageTracking': {
+    type: 'boolean',
+    _meta: {
+      description: 'Enable token usage tracking in Kibana',
     },
   },
 };

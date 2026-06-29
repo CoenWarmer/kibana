@@ -8,12 +8,18 @@
 import type { Client } from '@elastic/elasticsearch';
 import type { ToolingLog } from '@kbn/tooling-log';
 import type { Feature } from '@kbn/streams-schema';
+import {
+  STREAMS_SIGNIFICANT_EVENTS_KI_EXTRACTION_INFERENCE_FEATURE_ID,
+  STREAMS_SIGNIFICANT_EVENTS_KI_QUERY_GENERATION_INFERENCE_FEATURE_ID,
+  STREAMS_SIGNIFICANT_EVENTS_DISCOVERY_INFERENCE_FEATURE_ID,
+} from '@kbn/streams-schema';
 import type { ConnectionConfig } from './get_connection_config';
 import { kibanaRequest } from './kibana';
 import {
   KI_FEATURE_EXTRACTION_POLL_INTERVAL_MS,
   KI_FEATURE_EXTRACTION_TIMEOUT_MS,
   DEFAULT_LOGS_INDEX,
+  KNOWLEDGE_INDICATORS_DATA_STREAM,
 } from './constants';
 import {
   getSigeventsSnapshotKIFeaturesIndex,
@@ -52,22 +58,35 @@ export async function configureModelSelectionSettings(
   log: ToolingLog,
   connectorId: string
 ): Promise<void> {
-  log.info(`Configuring model selection (connector: ${connectorId})...`);
+  log.info(`Configuring model override via inference settings (connector: ${connectorId})...`);
   const { status, data } = await kibanaRequest(
     config,
     'PUT',
-    '/internal/streams/_significant_events/settings',
-    { connectorIdKnowledgeIndicatorExtraction: connectorId }
+    '/internal/search_inference_endpoints/settings',
+    {
+      features: [
+        {
+          feature_id: STREAMS_SIGNIFICANT_EVENTS_KI_EXTRACTION_INFERENCE_FEATURE_ID,
+          endpoints: [{ id: connectorId }],
+        },
+        {
+          feature_id: STREAMS_SIGNIFICANT_EVENTS_KI_QUERY_GENERATION_INFERENCE_FEATURE_ID,
+          endpoints: [{ id: connectorId }],
+        },
+        {
+          feature_id: STREAMS_SIGNIFICANT_EVENTS_DISCOVERY_INFERENCE_FEATURE_ID,
+          endpoints: [{ id: connectorId }],
+        },
+      ],
+    }
   );
 
   if (status >= 200 && status < 300) {
-    log.info('Model selection settings configured');
+    log.info('Model selection settings configured via inference settings');
     return;
   }
 
-  throw new Error(
-    `Failed to configure model selection settings: ${status} ${JSON.stringify(data)}`
-  );
+  throw new Error(`Failed to configure inference settings: ${status} ${JSON.stringify(data)}`);
 }
 export async function triggerSigEventsKIFeatureExtraction(
   config: ConnectionConfig,
@@ -80,16 +99,17 @@ export async function triggerSigEventsKIFeatureExtraction(
   const { status, data } = await kibanaRequest(
     config,
     'POST',
-    `/internal/streams/${streamName}/features/_task`,
+    `/internal/streams/${streamName}/onboarding/_execute`,
     {
       action: 'schedule',
       from: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
       to: new Date(now).toISOString(),
+      steps: ['features_identification'],
     }
   );
 
   if (status >= 200 && status < 300) {
-    log.info('Scheduled the feature extraction task successfully');
+    log.info('Scheduled the onboarding workflow for feature extraction successfully');
     return;
   }
 
@@ -99,16 +119,18 @@ export async function triggerSigEventsKIFeatureExtraction(
 export async function waitForSigEventsKIFeatureExtraction(
   config: ConnectionConfig,
   log: ToolingLog,
-  streamName: string = DEFAULT_LOGS_INDEX
+  streamName: string = DEFAULT_LOGS_INDEX,
+  timeoutMs: number = KI_FEATURE_EXTRACTION_TIMEOUT_MS
 ): Promise<void> {
-  log.info('Polling feature extraction status...');
-  const deadline = Date.now() + KI_FEATURE_EXTRACTION_TIMEOUT_MS;
+  log.info(`Polling onboarding status for feature extraction (timeout ${timeoutMs / 1000}s)...`);
+  const start = Date.now();
+  const deadline = start + timeoutMs;
 
   while (Date.now() < deadline) {
     const { data } = await kibanaRequest(
       config,
       'GET',
-      `/internal/streams/${streamName}/features/_status`
+      `/internal/streams/${streamName}/onboarding/_status`
     );
 
     const taskStatus = (data as Record<string, unknown>)?.status;
@@ -124,12 +146,14 @@ export async function waitForSigEventsKIFeatureExtraction(
       );
     }
 
-    log.debug(`  status: ${taskStatus}`);
+    const elapsed = Math.round((Date.now() - start) / 1000);
+    log.info(`  feature extraction status: ${taskStatus} (${elapsed}s elapsed)`);
     await new Promise((resolve) => setTimeout(resolve, KI_FEATURE_EXTRACTION_POLL_INTERVAL_MS));
   }
 
   throw new Error(
-    `KI feature extraction did not complete within ${KI_FEATURE_EXTRACTION_TIMEOUT_MS / 1000}s`
+    `KI feature extraction did not complete within ${timeoutMs / 1000}s. ` +
+      `Increase --extraction-timeout if the model/data volume needs longer.`
   );
 }
 
@@ -174,7 +198,6 @@ export async function persistSigEventsExtractedKIsForSnapshot(
     mappings: {
       dynamic: false,
       properties: {
-        uuid: { type: 'keyword' },
         id: { type: 'keyword' },
         stream_name: { type: 'keyword' },
         type: { type: 'keyword' },
@@ -186,15 +209,13 @@ export async function persistSigEventsExtractedKIsForSnapshot(
         evidence: { type: 'keyword' },
         tags: { type: 'keyword' },
         meta: { type: 'object', enabled: false },
-        status: { type: 'keyword' },
-        last_seen: { type: 'date' },
         expires_at: { type: 'date' },
       },
     },
   });
 
   if (kis.length > 0) {
-    const operations = kis.flatMap((ki) => [{ index: { _index: index, _id: ki.uuid } }, ki]);
+    const operations = kis.flatMap((ki) => [{ index: { _index: index, _id: ki.id } }, ki]);
 
     await esClient.bulk({ refresh: true, operations });
   } else {
@@ -219,7 +240,11 @@ export async function cleanupSigEventsExtractedKIsData(
 ): Promise<void> {
   log.info('Cleaning up ES data...');
 
-  for (const target of ['logs*', '.kibana_streams_features', SIGEVENTS_FEATURES_INDEX_PATTERN]) {
+  for (const target of [
+    'logs*',
+    KNOWLEDGE_INDICATORS_DATA_STREAM,
+    SIGEVENTS_FEATURES_INDEX_PATTERN,
+  ]) {
     try {
       await esClient.indices.deleteDataStream({ name: target });
     } catch {
@@ -259,4 +284,28 @@ export async function enableLogsNativeStream(
     }
     throw err;
   }
+}
+
+export async function promoteQueries(config: ConnectionConfig): Promise<void> {
+  const { status, data } = await kibanaRequest(
+    config,
+    'POST',
+    '/internal/streams/queries/_promote'
+  );
+  if (status < 200 || status >= 300) {
+    throw new Error(`Failed to promote queries: ${status} ${JSON.stringify(data)}`);
+  }
+}
+
+export async function resetQueriesPromotion({ esClient }: { esClient: Client }): Promise<void> {
+  await esClient.updateByQuery({
+    index: KNOWLEDGE_INDICATORS_DATA_STREAM,
+    conflicts: 'proceed',
+    refresh: true,
+    query: { term: { type: 'query' } },
+    script: {
+      lang: 'painless',
+      source: `if (ctx._source.query != null) { ctx._source.query.rule_backed = false; }`,
+    },
+  });
 }

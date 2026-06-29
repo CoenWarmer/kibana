@@ -9,12 +9,9 @@
 
 export {
   getFieldsSuggestions,
-  getFunctionsSuggestions,
-  getLiteralsSuggestions,
   getControlSuggestionIfSupported,
   getControlSuggestion,
   getSafeInsertText,
-  pushItUpInTheList,
 } from './autocomplete/helpers';
 export {
   suggestForExpression,

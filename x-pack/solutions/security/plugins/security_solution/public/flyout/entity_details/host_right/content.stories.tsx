@@ -10,9 +10,9 @@ import type { Meta } from '@storybook/react';
 import { EuiFlyout } from '@elastic/eui';
 import { TestProvider } from '@kbn/expandable-flyout/src/test/provider';
 import { StorybookProviders } from '../../../common/mock/storybook_providers';
-import { mockRiskScoreState } from '../../shared/mocks';
+import { mockRiskScoreState, mockEntityRiskScores } from '../../shared/mocks';
 import { HostPanelContent } from './content';
-import { mockObservedHostData } from '../mocks';
+import { mockObservedHostData, mockEntityRecord } from '../mocks';
 
 const riskScoreData = { ...mockRiskScoreState, data: [] };
 
@@ -37,6 +37,7 @@ export const Default = {
     <HostPanelContent
       observedHost={mockObservedHostData}
       riskScoreState={riskScoreData}
+      entityRiskScores={mockEntityRiskScores}
       contextID={'test-host-details'}
       scopeId={'test-scopeId'}
       openDetailsPanel={() => {}}
@@ -48,6 +49,27 @@ export const Default = {
   ),
 
   name: 'default',
+};
+
+export const WithGraphVisualization = {
+  render: () => (
+    <HostPanelContent
+      observedHost={mockObservedHostData}
+      riskScoreState={riskScoreData}
+      entityRiskScores={mockEntityRiskScores}
+      contextID={'test-host-details'}
+      scopeId={'test-scopeId'}
+      openDetailsPanel={() => {}}
+      identityFields={{ 'host.name': 'test-host-name' }}
+      onAssetCriticalityChange={() => {}}
+      recalculatingScore={false}
+      isPreviewMode={false}
+      entityRecord={mockEntityRecord}
+      entityStoreEntityId={mockEntityRecord.entity.id}
+    />
+  ),
+
+  name: 'with graph visualization',
 };
 
 export const NoObservedData = {
@@ -66,6 +88,7 @@ export const NoObservedData = {
         },
       }}
       riskScoreState={riskScoreData}
+      entityRiskScores={mockEntityRiskScores}
       contextID={'test-host-details'}
       scopeId={'test-scopeId'}
       openDetailsPanel={() => {}}
@@ -95,6 +118,7 @@ export const Loading = {
         },
       }}
       riskScoreState={riskScoreData}
+      entityRiskScores={mockEntityRiskScores}
       contextID={'test-host-details'}
       scopeId={'test-scopeId'}
       openDetailsPanel={() => {}}

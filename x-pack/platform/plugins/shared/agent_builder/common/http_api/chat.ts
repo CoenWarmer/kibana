@@ -21,8 +21,10 @@ import type { PromptRequest, PromptResponse } from '@kbn/agent-builder-common/ag
  */
 export interface ChatRequestBodyPayload {
   agent_id?: string;
-  connector_id?: string;
+  connector_id?: string | null;
+  inference_id?: string | null;
   conversation_id?: string;
+  execution_id?: string;
   capabilities?: AgentCapabilities;
   attachments?: AttachmentInput[];
   input?: string;
@@ -36,11 +38,11 @@ export interface ChatRequestBodyPayload {
 
 export type ChatResponse = Omit<
   ConversationRound,
-  'id' | 'input' | 'pending_prompt' | 'response' | 'state'
+  'id' | 'input' | 'pending_prompts' | 'response' | 'state'
 > & {
   conversation_id: string;
   round_id: string;
   response: Partial<AssistantResponse> & {
-    prompt?: PromptRequest;
+    prompts?: PromptRequest[];
   };
 };

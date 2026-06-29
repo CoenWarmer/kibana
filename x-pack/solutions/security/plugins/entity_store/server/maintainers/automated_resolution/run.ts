@@ -21,7 +21,7 @@ import { getLatestEntitiesIndexName } from '../../../common';
 import type { ResolutionClient } from '../../domain/resolution';
 import { getFieldValue } from '../../../common/domain/euid/commons';
 import { ENTITY_ID_FIELD } from '../../../common/domain/definitions/common_fields';
-import type { AutomatedResolutionState, MatchBucket, EntityHit } from './types';
+import type { PerRuleState, MatchBucket, EntityHit } from './types';
 
 const MATCH_FIELD = 'user.email';
 const ENTITY_TYPE = 'user';
@@ -33,7 +33,7 @@ const ENTITY_NAMESPACE_FIELD = 'entity.namespace';
 const TOP_HITS_SIZE = 100;
 
 export interface RunDeps {
-  state: AutomatedResolutionState;
+  state: PerRuleState;
   namespace: string;
   esClient: ElasticsearchClient;
   logger: Logger;
@@ -41,7 +41,7 @@ export interface RunDeps {
   abortController: AbortController;
 }
 
-export async function runAutomatedResolution(deps: RunDeps): Promise<AutomatedResolutionState> {
+export async function runEmailRuleResolution(deps: RunDeps): Promise<PerRuleState> {
   const { state, namespace, esClient, logger, resolutionClient, abortController } = deps;
   const index = getLatestEntitiesIndexName(namespace);
 
@@ -97,7 +97,7 @@ export async function runAutomatedResolution(deps: RunDeps): Promise<AutomatedRe
 async function collectNewEmailValues(
   esClient: ElasticsearchClient,
   index: string,
-  state: AutomatedResolutionState
+  state: PerRuleState
 ): Promise<{ values: string[]; maxTimestamp: string }> {
   const allValues: string[] = [];
   let afterKey: AggregationsCompositeAggregateKey | undefined;
@@ -119,7 +119,7 @@ async function collectNewEmailValues(
 
   if (state.lastProcessedTimestamp) {
     filters.push({
-      range: { 'entity.lifecycle.last_seen': { gt: state.lastProcessedTimestamp } },
+      range: { 'entity.lifecycle.first_seen': { gt: state.lastProcessedTimestamp } },
     });
   }
 
@@ -139,7 +139,7 @@ async function collectNewEmailValues(
             ...(afterKey ? { after: afterKey } : {}),
           },
         },
-        max_timestamp: { max: { field: 'entity.lifecycle.last_seen' } },
+        max_timestamp: { max: { field: 'entity.lifecycle.first_seen' } },
       },
     });
 

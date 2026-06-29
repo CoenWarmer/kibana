@@ -21,14 +21,18 @@ import type {
 } from '@kbn/core-http-request-handler-context-server';
 import type { IRouter } from '@kbn/core-http-server';
 import type { Logger } from '@kbn/logging';
-import type { LicensingPluginStart } from '@kbn/licensing-plugin/server';
+import type {
+  LicensingApiRequestHandlerContext,
+  LicensingPluginStart,
+} from '@kbn/licensing-plugin/server';
 import type { SpacesPluginSetup, SpacesPluginStart } from '@kbn/spaces-plugin/server';
 import type { CoreSetup } from '@kbn/core/server';
 import type { ElasticsearchClient } from '@kbn/core/server';
 import type { AssetManagerClient } from './domain/asset_manager';
 import type { EntityMaintainersClient } from './domain/entity_maintainers';
 import type { FeatureFlags } from './infra/feature_flags';
-import type { CcsLogsExtractionClient, LogsExtractionClient } from './domain/logs_extraction';
+import type { LogsExtractionClient } from './domain/logs_extraction';
+import type { RemoteLogsExtractionClient } from './domain/logs_extraction/remote';
 import type { HistorySnapshotClient } from './domain/history_snapshot';
 import type { CRUDClient } from './domain/crud';
 import type { ResolutionClient } from './domain/resolution';
@@ -56,7 +60,7 @@ export interface EntityStoreApiRequestHandlerContext {
   entityMaintainersClient: EntityMaintainersClient;
   crudClient: CRUDClient;
   resolutionClient: ResolutionClient;
-  ccsLogsExtractionClient: CcsLogsExtractionClient;
+  remoteLogsExtractionClient: RemoteLogsExtractionClient;
   featureFlags: FeatureFlags;
   logsExtractionClient: LogsExtractionClient;
   historySnapshotClient: HistorySnapshotClient;
@@ -66,6 +70,7 @@ export interface EntityStoreApiRequestHandlerContext {
 
 export type EntityStoreRequestHandlerContext = CustomRequestHandlerContext<{
   entityStore: EntityStoreApiRequestHandlerContext;
+  licensing: LicensingApiRequestHandlerContext;
 }>;
 
 export type EntityStorePluginRouter = IRouter<EntityStoreRequestHandlerContext>;

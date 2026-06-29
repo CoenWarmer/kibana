@@ -26,6 +26,7 @@ import { isUserActionType } from '../../../../common/utils/user_actions';
 import { decodeOrThrow } from '../../../common/runtime_types';
 import { BuilderFactory } from '../builder_factory';
 import type {
+  AddSyncedAlertsCountToUserActionsParams,
   BuildUserActionsDictParams,
   BuilderParameters,
   BulkCreateAttachmentUserAction,
@@ -62,9 +63,7 @@ export class UserActionPersister {
   private readonly auditLogger: UserActionAuditLogger;
 
   constructor(private readonly context: ServiceContext) {
-    this.builderFactory = new BuilderFactory({
-      persistableStateAttachmentTypeRegistry: this.context.persistableStateAttachmentTypeRegistry,
-    });
+    this.builderFactory = new BuilderFactory();
 
     this.auditLogger = new UserActionAuditLogger(this.context.auditLogger);
   }
@@ -86,6 +85,29 @@ export class UserActionPersister {
       updatedFields
         .filter((field) => UserActionPersister.userActionFieldsAllowed.has(field))
         .forEach((field) => {
+          // Special case for status as it can possibly have an associated closeReason (syncing to alerts)
+          // Persist the closeReason to the status userAction
+          if (field === UserActionTypes.status && updatedCase.updatedAttributes.status != null) {
+            const userActionBuilder = this.builderFactory.getBuilder(UserActionTypes.status);
+            const statusUserAction = userActionBuilder?.build({
+              caseId,
+              owner,
+              user,
+              payload: {
+                status: updatedCase.updatedAttributes.status,
+                closeReason: updatedCase.closeReason,
+                syncAlerts:
+                  updatedCase.updatedAttributes.settings?.syncAlerts ??
+                  originalCase.attributes.settings.syncAlerts,
+              },
+            });
+
+            if (statusUserAction != null) {
+              userActions.push(statusUserAction);
+            }
+            return;
+          }
+
           const originalValue = get(originalCase, ['attributes', field]);
           const newValue = get(updatedCase, ['updatedAttributes', field]);
           userActions.push(
@@ -101,6 +123,43 @@ export class UserActionPersister {
         });
 
       acc[caseId] = userActions;
+      return acc;
+    }, {});
+  }
+  // Returns a new UserActionsDict with syncedAlertCountCount added to status actions
+  public addSyncedAlertsCountToUserActions({
+    userActionsDict,
+    syncedAlertCountCountByCaseId,
+  }: AddSyncedAlertsCountToUserActionsParams): UserActionsDict {
+    return Object.keys(userActionsDict).reduce<UserActionsDict>((acc, caseId) => {
+      const syncedAlertCountCount = syncedAlertCountCountByCaseId.get(caseId);
+      const userActions = userActionsDict[caseId];
+
+      if (syncedAlertCountCount == null) {
+        acc[caseId] = userActions;
+        return acc;
+      }
+
+      acc[caseId] = userActions.map((userAction) => {
+        if (userAction.parameters.attributes.type !== UserActionTypes.status) {
+          return userAction;
+        }
+
+        return {
+          ...userAction,
+          parameters: {
+            ...userAction.parameters,
+            attributes: {
+              ...userAction.parameters.attributes,
+              payload: {
+                ...userAction.parameters.attributes.payload,
+                syncedAlertCount: syncedAlertCountCount,
+              },
+            },
+          },
+        };
+      });
+
       return acc;
     }, {});
   }
@@ -383,6 +442,7 @@ export class UserActionPersister {
         user,
         owner: attachment.owner,
         savedObjectId: attachment.id,
+        savedObjectType: attachment.savedObjectType,
         payload: { attachment: attachment.attachment },
       });
 
@@ -451,7 +511,17 @@ export class UserActionPersister {
     userAction,
     refresh,
   }: CreateUserActionArgs<T>): Promise<void> {
-    const { action, type, caseId, user, owner, payload, connectorId, savedObjectId } = userAction;
+    const {
+      action,
+      type,
+      caseId,
+      user,
+      owner,
+      payload,
+      connectorId,
+      savedObjectId,
+      savedObjectType,
+    } = userAction;
 
     try {
       this.context.log.debug(`Attempting to create a user action of type: ${type}`);
@@ -464,6 +534,7 @@ export class UserActionPersister {
         owner,
         connectorId,
         savedObjectId,
+        savedObjectType,
         payload,
       });
 
@@ -488,24 +559,37 @@ export class UserActionPersister {
       }
 
       const userActionsPayload = userActions
-        .map(({ action, type, caseId, user, owner, payload, connectorId, savedObjectId }) => {
-          const userActionBuilder = this.builderFactory.getBuilder<T>(type);
-          const userAction = userActionBuilder?.build({
+        .map(
+          ({
             action,
+            type,
             caseId,
             user,
             owner,
+            payload,
             connectorId,
             savedObjectId,
-            payload,
-          });
+            savedObjectType,
+          }) => {
+            const userActionBuilder = this.builderFactory.getBuilder<T>(type);
+            const userAction = userActionBuilder?.build({
+              action,
+              caseId,
+              user,
+              owner,
+              connectorId,
+              savedObjectId,
+              savedObjectType,
+              payload,
+            });
 
-          if (userAction == null) {
-            return null;
+            if (userAction == null) {
+              return null;
+            }
+
+            return userAction;
           }
-
-          return userAction;
-        })
+        )
         .filter(Boolean) as UserActionEvent[];
 
       await this.bulkCreateAndLog({ userActions: userActionsPayload, refresh });
