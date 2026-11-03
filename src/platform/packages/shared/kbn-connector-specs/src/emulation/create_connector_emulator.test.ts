@@ -236,13 +236,49 @@ describe('createConnectorEmulator', () => {
       expect(check).toEqual({
         status: 'invalid',
         violations: [
-          {
+          expect.objectContaining({
             path: ['body', '0', 'id'],
             message:
               'Response body at /0/id: Instance type "string" is invalid. Expected "integer".',
+          }),
+        ],
+      });
+    });
+
+    it('flags a property the vendor schema does not declare', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const check = await emulator.checkAction('listMonitors', {
+        body: [{ ...monitor, namess222: 'Checkout errors' }],
+      });
+
+      expect(check).toEqual({
+        status: 'invalid',
+        violations: [
+          {
+            path: ['body', '0', 'namess222'],
+            code: 'undeclared',
+            message: expect.stringContaining('"namess222" isn\'t in the vendor\'s schema'),
           },
         ],
       });
+    });
+
+    it('runs with a warning about a property the vendor schema does not declare', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction(
+        'listMonitors',
+        {},
+        { body: [{ ...monitor, namess222: 'Checkout errors' }] }
+      );
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          status: 'ok',
+          warnings: [expect.stringContaining('"namess222"')],
+        })
+      );
     });
 
     it('allows an error status the spec does not list', async () => {

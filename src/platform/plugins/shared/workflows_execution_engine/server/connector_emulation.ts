@@ -63,6 +63,11 @@ export class ConnectorEmulation {
         }
       }
       if (result.status === 'ok') {
+        for (const warning of result.warnings ?? []) {
+          this.workflowLogger.logWarn(`Emulated ${typeId}.${subAction}: ${warning}`, {
+            tags: LOG_TAGS,
+          });
+        }
         return { status: 'ok', actionId, data: result.data };
       }
       return fail(result.notEmulatable ? `${result.message}\n${SET_OUTPUT_HINT}` : result.message);

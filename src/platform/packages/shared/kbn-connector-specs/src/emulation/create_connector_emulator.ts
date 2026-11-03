@@ -32,7 +32,13 @@ export interface EmulatedVendorResponse {
 }
 
 export type EmulatedActionResult =
-  | { readonly status: 'ok'; readonly data: unknown; readonly calls: readonly ContractCall[] }
+  | {
+      readonly status: 'ok';
+      readonly data: unknown;
+      readonly calls: readonly ContractCall[];
+      /** What a set response has that the vendor's schema doesn't list; schemas allow extras. */
+      readonly warnings?: readonly string[];
+    }
   | {
       readonly status: 'error';
       readonly message: string;
@@ -50,6 +56,8 @@ export type EmulationCheck =
       readonly violations: ReadonlyArray<{
         /** From the response: `['body', '0', 'id']`. Empty when it concerns the whole response. */
         readonly path: readonly string[];
+        /** `undeclared` is a property the schema doesn't list, rather than one it rejects. */
+        readonly code?: string;
         readonly message: string;
       }>;
     };
@@ -201,6 +209,30 @@ export const createConnectorEmulator = async (
     return loaded;
   };
 
+  const findContract = async (
+    operation: ManifestOperation
+  ): Promise<ContractOperation | undefined> => {
+    const { loadContractOperations } = await import('@kbn/connector-emulate');
+    return getContractOperations(operation.source, loadContractOperations).find(
+      ({ method, path: operationPath }) =>
+        method === operation.method.toLowerCase() && operationPath === operation.path
+    );
+  };
+
+  const findUndeclaredWarnings = async (
+    operation: ManifestOperation,
+    response: EmulatedVendorResponse
+  ): Promise<string[]> => {
+    const { findUndeclaredProperties } = await import('@kbn/connector-emulate');
+    const contract = await findContract(operation);
+    return contract
+      ? findUndeclaredProperties(contract, {
+          statusCode: toAuthoredFixture(operation, response).response.status,
+          body: response.body,
+        }).map(({ message }) => message)
+      : [];
+  };
+
   return {
     checkAction: async (action, response) => {
       if (!connector.actions[action]) {
@@ -226,25 +258,26 @@ export const createConnectorEmulator = async (
           ? { status: 'not-emulatable', message: operation.problem }
           : { status: 'invalid', violations: [{ path: [], message: operation.problem }] };
       }
-      const { loadContractOperations, validateResponse } = await import('@kbn/connector-emulate');
-      const contract = getContractOperations(operation.source, loadContractOperations).find(
-        ({ method, path: operationPath }) =>
-          method === operation.method.toLowerCase() && operationPath === operation.path
-      );
+      const { validateResponse, findUndeclaredProperties } = await import('@kbn/connector-emulate');
+      const contract = await findContract(operation);
       if (!contract) {
         return { status: 'ok' };
       }
       const { status } = toAuthoredFixture(operation, response).response;
-      const violations = validateResponse(contract, {
-        statusCode: status,
-        headers: { 'content-type': 'application/json', ...response.headers },
-        body: response.body,
-      }).filter(({ code }) => !(code === 'status' && status >= 400));
+      const violations = [
+        ...validateResponse(contract, {
+          statusCode: status,
+          headers: { 'content-type': 'application/json', ...response.headers },
+          body: response.body,
+        }).filter(({ code }) => !(code === 'status' && status >= 400)),
+        ...findUndeclaredProperties(contract, { statusCode: status, body: response.body }),
+      ];
       return violations.length > 0
         ? {
             status: 'invalid',
-            violations: violations.map(({ path: violationPath, message }) => ({
+            violations: violations.map(({ path: violationPath, code, message }) => ({
               path: violationPath.map(String),
+              code,
               message,
             })),
           }
@@ -314,7 +347,14 @@ export const createConnectorEmulator = async (
       }
 
       if ('data' in outcome) {
-        return { status: 'ok', data: outcome.data, calls };
+        const warnings =
+          operation && response ? await findUndeclaredWarnings(operation, response) : [];
+        return {
+          status: 'ok',
+          data: outcome.data,
+          calls,
+          ...(warnings.length > 0 ? { warnings } : {}),
+        };
       }
 
       const unmatched = calls.filter(isUnmatchedCall);

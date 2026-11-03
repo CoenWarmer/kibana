@@ -9,7 +9,11 @@
 
 import { LineCounter, parseDocument } from 'yaml';
 import type { CheckEmulatedStep, EmulatedStepCheck } from './validate_emulated_steps';
-import { createCachedEmulatedStepCheck, validateEmulatedSteps } from './validate_emulated_steps';
+import {
+  createCachedEmulatedStepCheck,
+  toCheckableResponse,
+  validateEmulatedSteps,
+} from './validate_emulated_steps';
 
 const parse = (yaml: string) => {
   const lineCounter = new LineCounter();
@@ -67,6 +71,29 @@ describe('validateEmulatedSteps', () => {
         message: 'Expected "integer".',
         startLineNumber: 10,
       }),
+    ]);
+  });
+
+  it('puts an undeclared property on its name', async () => {
+    const { results } = await validate(
+      `steps:
+  - name: list
+    type: datadog.listMonitors
+    emulate:
+      response:
+        body:
+          - namess222: "\${{ steps.a.output }}"
+`,
+      {
+        status: 'invalid',
+        violations: [
+          { path: ['body', '0', 'namess222'], code: 'undeclared', message: 'Not in the schema.' },
+        ],
+      }
+    );
+
+    expect(results).toEqual([
+      expect.objectContaining({ startLineNumber: 7, startColumn: 13, endColumn: 22 }),
     ]);
   });
 
@@ -187,6 +214,36 @@ steps:
     });
 
     expect(results).toEqual([]);
+  });
+});
+
+describe('toCheckableResponse', () => {
+  const body = [{ id: 1 }];
+
+  it('keeps every well-formed part', () => {
+    const response = {
+      status: 503,
+      headers: { 'retry-after': '1' },
+      body,
+      operation: 'GET /a',
+    };
+
+    expect(toCheckableResponse(response)).toEqual(response);
+  });
+
+  it.each([
+    ['a misspelled key', { statuss: 200, body }],
+    ['a status being typed', { status: 2, body }],
+    ['a template in the status', { status: '${{ inputs.code }}', body }],
+    ['headers being typed', { headers: null, body }],
+    ['headers that are not strings', { headers: { a: 1 }, body }],
+    ['an operation that is not a string', { operation: 1, body }],
+  ])('still checks the body with %s', (_label, response) => {
+    expect(toCheckableResponse(response)).toEqual({ body });
+  });
+
+  it('leaves out a body that is not typed yet', () => {
+    expect(toCheckableResponse({ body: null })).toEqual({});
   });
 });
 

@@ -24,6 +24,7 @@ export type EmulatedStepCheck =
       readonly status: 'invalid';
       readonly violations: ReadonlyArray<{
         readonly path: readonly string[];
+        readonly code?: string;
         readonly message: string;
       }>;
     };
@@ -31,6 +32,32 @@ export type EmulatedStepCheck =
 export type CheckEmulatedStep = (request: EmulatedStepCheckRequest) => Promise<EmulatedStepCheck>;
 
 const MAX_CACHED_CHECKS = 500;
+const MIN_HTTP_STATUS = 100;
+const MAX_HTTP_STATUS = 599;
+
+const isStringRecord = (value: unknown): value is Record<string, string> =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object.values(value).every((entry) => typeof entry === 'string');
+
+/**
+ * Keeps the well-formed parts of a block that may be half typed. The workflow schema flags the rest,
+ * and sending it would get the whole request rejected, which would stop the body being checked.
+ */
+export const toCheckableResponse = ({
+  status,
+  headers,
+  body,
+  operation,
+}: Record<string, unknown>): Record<string, unknown> => ({
+  ...(typeof status === 'number' && status >= MIN_HTTP_STATUS && status <= MAX_HTTP_STATUS
+    ? { status }
+    : {}),
+  ...(isStringRecord(headers) ? { headers } : {}),
+  ...(body === undefined || body === null ? {} : { body }),
+  ...(typeof operation === 'string' ? { operation } : {}),
+});
 
 /** Remembers answers, as validation runs on every edit but a step's block rarely changes. */
 export const createCachedEmulatedStepCheck = (check: CheckEmulatedStep): CheckEmulatedStep => {
@@ -61,28 +88,30 @@ const findPair = (map: YAMLMap, key: string): Pair<Node, Node | null> | undefine
 interface LocatedNode {
   /** The value at the path, or the deepest part of it that exists. */
   readonly node: Node;
+  /** The key of the last property on the path, when the path ends at one. */
+  readonly key?: Node;
   /** A template only has its final type at run time, so it can't be judged now. */
   readonly isTemplate: boolean;
 }
 
 const locate = (start: Node, path: readonly string[]): LocatedNode => {
   let node = start;
+  let key: Node | undefined;
   for (const segment of path) {
     if (isScalar(node) && typeof node.value === 'string' && node.value.includes('{{')) {
       return { node, isTemplate: true };
     }
-    const next = isMap(node)
-      ? findPair(node, segment)?.value
-      : isSeq(node)
-      ? (node.items[Number(segment)] as Node | undefined)
-      : undefined;
+    const pair = isMap(node) ? findPair(node, segment) : undefined;
+    const next = isSeq(node) ? (node.items[Number(segment)] as Node | undefined) : pair?.value;
     if (!next) {
       return { node, isTemplate: false };
     }
+    key = pair?.key;
     node = next;
   }
   return {
     node,
+    key,
     isTemplate: isScalar(node) && typeof node.value === 'string' && node.value.includes('{{'),
   };
 };
@@ -174,7 +203,7 @@ export const validateEmulatedSteps = async (
       async ({ stepType, typeNode, connectorIdNode, responsePair }) => {
         const responseNode = responsePair?.value ?? undefined;
         const response = isMap(responseNode)
-          ? (responseNode.toJS(document) as Record<string, unknown>)
+          ? toCheckableResponse(responseNode.toJS(document) as Record<string, unknown>)
           : undefined;
         let answer: EmulatedStepCheck;
         try {
@@ -201,9 +230,12 @@ export const validateEmulatedSteps = async (
           return;
         }
         if (answer.status === 'invalid' && responsePair && responseNode) {
-          for (const { path, message } of answer.violations) {
-            const { node, isTemplate } = locate(responseNode, path);
-            if (!isTemplate) {
+          for (const { path, code, message } of answer.violations) {
+            const { node, key, isTemplate } = locate(responseNode, path);
+            // The name is what's wrong with an undeclared property, whatever its value is.
+            if (code === 'undeclared' && key) {
+              push(toResult(key, lineCounter, 'invalidEmulatedResponse', message));
+            } else if (!isTemplate) {
               const target = path.length > 0 ? node : responsePair.key;
               push(toResult(target, lineCounter, 'invalidEmulatedResponse', message));
             }

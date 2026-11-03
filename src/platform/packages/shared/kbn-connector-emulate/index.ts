@@ -21,6 +21,7 @@ export type {
   EmulatorOptions,
   EmulatorSpec,
 } from './src/fetch/create_emulator_fetch';
+export { findUndeclaredProperties } from './src/openapi/find_undeclared_properties';
 export { validateResponse } from './src/openapi/validate_response';
 export { isGraphQLSpec } from './src/graphql/graphql_protocol';
 export type { GraphQLSpec } from './src/graphql/graphql_protocol';
