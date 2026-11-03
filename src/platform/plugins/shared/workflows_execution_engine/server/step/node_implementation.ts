@@ -178,7 +178,7 @@ export abstract class BaseAtomicNodeImplementation<TStep extends BaseStep>
     try {
       input = await this.getInput();
       this.stepExecutionRuntime.setInput(input);
-      const result = await this._run(input);
+      const result = (await this.getEmulatedResult(input)) ?? (await this._run(input));
 
       // Layer 2: Enforce output size limit before storing in execution state.
       // This is the generic catch-all that protects every step type against
@@ -264,6 +264,47 @@ export abstract class BaseAtomicNodeImplementation<TStep extends BaseStep>
 
   // Subclasses implement this to execute the step logic
   protected abstract _run(input: Record<string, unknown>): Promise<RunStepResult>;
+
+  /** Checks a step's input when its response is set by the workflow; returns what's wrong with it. */
+  protected async validateEmulatedInput(
+    _input: Record<string, unknown>
+  ): Promise<string | undefined> {
+    return undefined;
+  }
+
+  /**
+   * The response the workflow sets in the step's `emulate` block, which replaces running the step.
+   * Only emulated test runs use it: every other run ignores the block.
+   */
+  private async getEmulatedResult(
+    input: Record<string, unknown>
+  ): Promise<RunStepResult | undefined> {
+    const { workflowExecution, node, contextManager, stepLogger } = this.stepExecutionRuntime;
+    if (!workflowExecution?.isTestRun || !workflowExecution.emulateConnectors) {
+      return undefined;
+    }
+    const emulate: Record<string, unknown> | undefined =
+      'configuration' in node ? node.configuration?.emulate : undefined;
+    if (!emulate || !('output' in emulate || 'error' in emulate)) {
+      return undefined;
+    }
+
+    const toError = (message: string): RunStepResult => ({
+      input,
+      output: undefined,
+      error: new ExecutionError({ type: 'EmulatedStepError', message }),
+    });
+    const invalidInput = await this.validateEmulatedInput(input);
+    if (invalidInput) {
+      return toError(invalidInput);
+    }
+
+    const { output, error } = await contextManager.renderObjectAccordingToContextAsync(emulate);
+    stepLogger?.logInfo(`Emulated ${this.step.type}: response set by the workflow`, {
+      tags: ['connector-emulation'],
+    });
+    return error ? toError(String(error)) : { input, output, error: undefined };
+  }
 
   /**
    * Resolves the maximum step size in bytes.

@@ -283,19 +283,46 @@ export const StepWithOnFailureSchema = z.object({
   'on-failure': WorkflowOnFailureSchema.optional(),
 });
 
-export const BaseConnectorStepSchema = BaseStepSchema.extend({
-  type: z.string().min(1),
-  with: z.record(z.string(), z.any()).optional(),
-})
-  .merge(StepWithForEachSchema)
-  .merge(DynamicTimeoutPropSchema)
-  .merge(StepWithOnFailureSchema);
+const MAX_EMULATED_ERROR_LENGTH = 2048;
+
+export const StepEmulateSchema = lazySchema(() =>
+  z
+    .object({
+      output: z
+        .unknown()
+        .optional()
+        .describe('The output this step returns in emulated test runs, instead of running.'),
+      error: z
+        .string()
+        .max(MAX_EMULATED_ERROR_LENGTH)
+        .optional()
+        .describe(
+          'The error this step fails with in emulated test runs. Takes priority over output.'
+        ),
+    })
+    .strict()
+    .describe(
+      'The response of this step in test runs that emulate connectors. Every other run ignores it.'
+    )
+);
+
+export const BaseConnectorStepSchema = lazySchema(() =>
+  BaseStepSchema.extend({
+    type: z.string().min(1),
+    with: z.record(z.string(), z.any()).optional(),
+    emulate: StepEmulateSchema.optional(),
+  })
+    .merge(StepWithForEachSchema)
+    .merge(DynamicTimeoutPropSchema)
+    .merge(StepWithOnFailureSchema)
+);
 export type ConnectorStep = z.infer<typeof BaseConnectorStepSchema>;
 
 export const BuiltInStepProperties = [
   'name',
   'type',
   'with',
+  'emulate',
   'if',
   'foreach',
   'timeout',

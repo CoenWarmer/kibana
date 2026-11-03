@@ -97,6 +97,24 @@ export class ConnectorStepImpl extends BaseAtomicNodeImplementation<ConnectorSte
     );
   }
 
+  protected async validateEmulatedInput(
+    withInputs: Record<string, unknown>
+  ): Promise<string | undefined> {
+    const [stepType, subActionName] = this.step.type.split('.', 2);
+    const connector = getConnectorSpec(`.${stepType}`);
+    if (!connector || !subActionName) {
+      return undefined;
+    }
+    const action = connector.actions[subActionName];
+    if (!action) {
+      return `${connector.metadata.id} has no action ${subActionName}`;
+    }
+    const parsed = await action.input.safeParseAsync(withInputs);
+    return parsed.success
+      ? undefined
+      : `Invalid input for ${this.step.type}: ${parsed.error.message}`;
+  }
+
   public async _run(withInputs: Record<string, unknown>): Promise<RunStepResult> {
     try {
       const step = this.step;
