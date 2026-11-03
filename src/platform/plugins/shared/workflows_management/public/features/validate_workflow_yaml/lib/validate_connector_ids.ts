@@ -28,6 +28,9 @@ import {
 } from '../../../widgets/workflow_yaml_editor/lib/use_register_hover_commands';
 
 const TRANSLATIONS = {
+  emulated: i18n.translate('workflows.validateConnectorIds.emulatedMessage', {
+    defaultMessage: 'Emulated',
+  }),
   manageConnector: i18n.translate('workflows.validateConnectorIds.manageConnectorMessage', {
     defaultMessage: 'Manage connectors',
   }),
@@ -56,7 +59,8 @@ export function validateConnectorIds(
   connectorIdItems: ConnectorIdItem[],
   dynamicConnectorTypes: Record<string, ConnectorTypeInfo>,
   connectorsManagementUrl: string,
-  modelSettingsUrl?: string
+  modelSettingsUrl?: string,
+  emulateConnectors = false
 ): YamlValidationResult[] {
   const results: YamlValidationResult[] = [];
 
@@ -105,7 +109,33 @@ export function validateConnectorIds(
         ? `[${TRANSLATIONS.featureSettings}](${modelSettingsUrl})`
         : undefined;
 
-      if (!instance) {
+      // Emulated runs never look the connector up. Inference steps and triggers aren't emulated.
+      if (
+        !instance &&
+        emulateConnectors &&
+        !isInferenceFeature &&
+        connectorIdItem.yamlPath[0] === 'steps'
+      ) {
+        results.push({
+          id: connectorIdItem.id,
+          severity: 'info',
+          message: null,
+          owner: 'connector-id-validation',
+          startLineNumber: connectorIdItem.startLineNumber,
+          startColumn: connectorIdItem.startColumn,
+          endLineNumber: connectorIdItem.endLineNumber,
+          endColumn: connectorIdItem.endColumn,
+          beforeMessage: TRANSLATIONS.emulated,
+          hoverMessage: i18n.translate(
+            'workflows.validateConnectorIds.emulatedConnectorNotFoundMessage',
+            {
+              defaultMessage:
+                '{displayName} connector UUID "{id}" not found. Test runs emulate this step, so they don\'t need it, but it has to exist before the workflow runs for real.',
+              values: { displayName, id: connectorIdItem.key },
+            }
+          ),
+        });
+      } else if (!instance) {
         const actions: string[] = [];
         if (isInferenceFeature) {
           if (featureSettingsLink) {

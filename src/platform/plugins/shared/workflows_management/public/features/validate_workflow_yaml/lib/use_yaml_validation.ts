@@ -21,7 +21,11 @@ import {
   getWorkflowYamlValidationContextError,
   useWorkflowYamlValidationContext,
 } from './use_workflow_yaml_validation_context';
-import { selectIsWorkflowTab, selectYamlComputed } from '../../../entities/workflows/store';
+import {
+  selectEmulateConnectors,
+  selectIsWorkflowTab,
+  selectYamlComputed,
+} from '../../../entities/workflows/store';
 
 export interface UseYamlValidationResult {
   error: Error | null;
@@ -55,6 +59,7 @@ export function useYamlValidation(
     yamlLineCounter: lineCounter,
   } = useSelector(selectYamlComputed) ?? {};
   const isWorkflowTab = useSelector(selectIsWorkflowTab);
+  const emulateConnectors = useSelector(selectEmulateConnectors);
   const validationContext = useWorkflowYamlValidationContext();
 
   useEffect(() => {
@@ -118,6 +123,7 @@ export function useYamlValidation(
           graphBuildError,
           context: {
             ...validationContext,
+            emulateConnectors,
             signal: esqlAbortController.signal,
           },
         });
@@ -170,6 +176,7 @@ export function useYamlValidation(
     isWorkflowTab,
     workflowLookup,
     validationContext,
+    emulateConnectors,
     setStableValidationResults,
   ]);
 

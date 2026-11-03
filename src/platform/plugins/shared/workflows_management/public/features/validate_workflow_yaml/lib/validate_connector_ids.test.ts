@@ -21,6 +21,47 @@ jest.mock('../../../../common/schema', () => ({
 const mockGetCachedInferenceConnectorInstances = jest.mocked(getCachedInferenceConnectorInstances);
 
 describe('validateConnectorIds', () => {
+  describe('with emulated connectors', () => {
+    const item: ConnectorIdItem = {
+      id: 'step-connector',
+      key: 'missing-connector',
+      connectorType: '.slack',
+      type: 'connector-id',
+      yamlPath: ['steps', 0, 'connector-id'],
+      startLineNumber: 1,
+      startColumn: 1,
+      endLineNumber: 1,
+      endColumn: 1,
+      value: 'missing-connector',
+    } as unknown as ConnectorIdItem;
+
+    it('informs instead of failing a step whose connector is missing', () => {
+      const [result] = validateConnectorIds([item], {}, '', undefined, true);
+
+      expect(result).toEqual(
+        expect.objectContaining({ severity: 'info', message: null, beforeMessage: 'Emulated' })
+      );
+    });
+
+    it('still fails a trigger whose connector is missing', () => {
+      const [result] = validateConnectorIds(
+        [{ ...item, yamlPath: ['triggers', 0, 'connector-id'] }],
+        {},
+        '',
+        undefined,
+        true
+      );
+
+      expect(result.severity).toBe('error');
+    });
+
+    it('still fails a missing connector with the toggle off', () => {
+      const [result] = validateConnectorIds([item], {}, '');
+
+      expect(result.severity).toBe('error');
+    });
+  });
+
   const mockConnectorInstance = {
     id: 'slack-connector-1',
     name: 'My Slack Connector',

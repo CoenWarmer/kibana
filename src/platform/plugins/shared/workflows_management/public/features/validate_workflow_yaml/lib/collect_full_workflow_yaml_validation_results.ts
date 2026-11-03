@@ -43,6 +43,8 @@ export interface WorkflowYamlValidationContext {
   signal?: AbortSignal;
   warnIgnoredKibanaFetcher?: boolean;
   isManaged: boolean;
+  /** Test runs emulate connector steps, so those steps don't need an existing connector. */
+  emulateConnectors?: boolean;
 }
 
 export interface CollectFullWorkflowYamlValidationResultsParams {
@@ -81,6 +83,7 @@ export async function collectFullWorkflowYamlValidationResults({
     esqlCallbacks,
     signal,
     warnIgnoredKibanaFetcher,
+    emulateConnectors,
   } = context;
 
   const connectorIdItems = collectAllConnectorIds(yamlDocument, lineCounter);
@@ -107,7 +110,8 @@ export async function collectFullWorkflowYamlValidationResults({
         connectorIdItems,
         connectorTypes.value,
         connectorsManagementUrl,
-        modelSettingsUrl
+        modelSettingsUrl,
+        emulateConnectors
       )
     );
   }
