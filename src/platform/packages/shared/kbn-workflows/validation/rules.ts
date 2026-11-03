@@ -102,6 +102,19 @@ export interface WorkflowValidationRules {
     defaultSeverity: 'error';
     values: { displayName: string; id: string };
   };
+  // -- emulated test runs -------------------------------------------------------
+  /** A step's `emulate.response` doesn't match the vendor's API. */
+  invalidEmulatedResponse: {
+    owner: 'emulated-response-validation';
+    defaultSeverity: 'error';
+    values: { reason: string };
+  };
+  /** Nothing can answer this step in an emulated test run unless the workflow sets its output. */
+  stepNotEmulatable: {
+    owner: 'emulated-response-validation';
+    defaultSeverity: 'warning';
+    values: { reason: string };
+  };
   // -- step properties ----------------------------------------------------------
   invalidStepProperty: {
     owner: 'step-property-validation';
@@ -271,6 +284,9 @@ export const WORKFLOW_VALIDATION_RULES: {
   liquidSyntaxError: { owner: 'liquid-template-validation', defaultSeverity: 'error' },
 
   connectorNotFound: { owner: 'connector-id-validation', defaultSeverity: 'error' },
+
+  invalidEmulatedResponse: { owner: 'emulated-response-validation', defaultSeverity: 'error' },
+  stepNotEmulatable: { owner: 'emulated-response-validation', defaultSeverity: 'warning' },
 
   invalidStepProperty: { owner: 'step-property-validation', defaultSeverity: 'error' },
 

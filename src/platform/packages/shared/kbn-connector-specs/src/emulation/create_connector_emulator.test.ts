@@ -200,6 +200,71 @@ describe('createConnectorEmulator', () => {
     });
   });
 
+  describe('checkAction', () => {
+    const monitor = { id: 1, overall_state: 'Alert', query: 'q', type: 'metric alert' };
+
+    it('accepts an action the snapshot covers', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      await expect(emulator.checkAction('listMonitors')).resolves.toEqual({ status: 'ok' });
+    });
+
+    it('explains an action the snapshot does not cover', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      await expect(emulator.checkAction('muteMonitor')).resolves.toEqual({
+        status: 'not-emulatable',
+        message: expect.stringContaining("Monitor mute is not in Datadog's v1 spec"),
+      });
+    });
+
+    it('accepts a matching response', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      await expect(emulator.checkAction('listMonitors', { body: [monitor] })).resolves.toEqual({
+        status: 'ok',
+      });
+    });
+
+    it('points at what is wrong with a response, as a run would report it', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const check = await emulator.checkAction('listMonitors', {
+        body: [{ ...monitor, id: 'not-a-number' }],
+      });
+
+      expect(check).toEqual({
+        status: 'invalid',
+        violations: [
+          {
+            path: ['body', '0', 'id'],
+            message:
+              'Response body at /0/id: Instance type "string" is invalid. Expected "integer".',
+          },
+        ],
+      });
+    });
+
+    it('allows an error status the spec does not list', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      await expect(
+        emulator.checkAction('listMonitors', { status: 503, body: { errors: ['Unavailable'] } })
+      ).resolves.toEqual({ status: 'ok' });
+    });
+
+    it('does not run anything', async () => {
+      const connector = findConnector('.datadog');
+      const handler = jest.spyOn(connector.actions.listMonitors, 'handler');
+      const emulator = await createConnectorEmulator(connector);
+
+      await emulator.checkAction('listMonitors', { body: [monitor] });
+
+      expect(handler).not.toHaveBeenCalled();
+      handler.mockRestore();
+    });
+  });
+
   it('returns invalid input as an error instead of throwing', async () => {
     const emulator = await createConnectorEmulator(findConnector('.datadog'));
 

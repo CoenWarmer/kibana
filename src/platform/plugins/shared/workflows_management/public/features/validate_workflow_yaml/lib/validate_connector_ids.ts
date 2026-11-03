@@ -27,10 +27,12 @@ import {
   getEditConnectorHoverCommandLink,
 } from '../../../widgets/workflow_yaml_editor/lib/use_register_hover_commands';
 
+export const EMULATED_CONNECTOR_LABEL = i18n.translate(
+  'workflows.validateConnectorIds.emulatedMessage',
+  { defaultMessage: 'Emulated' }
+);
+
 const TRANSLATIONS = {
-  emulated: i18n.translate('workflows.validateConnectorIds.emulatedMessage', {
-    defaultMessage: 'Emulated',
-  }),
   manageConnector: i18n.translate('workflows.validateConnectorIds.manageConnectorMessage', {
     defaultMessage: 'Manage connectors',
   }),
@@ -125,7 +127,7 @@ export function validateConnectorIds(
           startColumn: connectorIdItem.startColumn,
           endLineNumber: connectorIdItem.endLineNumber,
           endColumn: connectorIdItem.endColumn,
-          beforeMessage: TRANSLATIONS.emulated,
+          beforeMessage: EMULATED_CONNECTOR_LABEL,
           hoverMessage: i18n.translate(
             'workflows.validateConnectorIds.emulatedConnectorNotFoundMessage',
             {

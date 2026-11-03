@@ -16,7 +16,9 @@ import type { WorkflowContextRegistry, YamlValidationResult } from '@kbn/workflo
 import { collectAllConnectorIds } from './collect_all_connector_ids';
 import { collectAllStepPropertyItems } from './collect_all_step_property_items';
 import { runWorkflowYamlValidations } from './run_workflow_yaml_validations';
-import { validateConnectorIds } from './validate_connector_ids';
+import { EMULATED_CONNECTOR_LABEL, validateConnectorIds } from './validate_connector_ids';
+import type { CheckEmulatedStep } from './validate_emulated_steps';
+import { validateEmulatedSteps } from './validate_emulated_steps';
 import { validateGraphBuild } from './validate_graph_build';
 import { validateStepProperties } from './validate_step_properties';
 import { validateWorkflowExecutionIdentity } from './validate_workflow_execution_identity';
@@ -45,6 +47,8 @@ export interface WorkflowYamlValidationContext {
   isManaged: boolean;
   /** Test runs emulate connector steps, so those steps don't need an existing connector. */
   emulateConnectors?: boolean;
+  /** Asks the server about a step's emulation, as the vendor schemas stay on the server. */
+  checkEmulatedStep?: CheckEmulatedStep;
 }
 
 export interface CollectFullWorkflowYamlValidationResultsParams {
@@ -84,6 +88,7 @@ export async function collectFullWorkflowYamlValidationResults({
     signal,
     warnIgnoredKibanaFetcher,
     emulateConnectors,
+    checkEmulatedStep,
   } = context;
 
   const connectorIdItems = collectAllConnectorIds(yamlDocument, lineCounter);
@@ -116,6 +121,21 @@ export async function collectFullWorkflowYamlValidationResults({
     );
   }
   results.push(...validateGraphBuild(graphBuildError, workflowLookup, lineCounter));
+
+  if (emulateConnectors && checkEmulatedStep) {
+    const emulated = await validateEmulatedSteps(yamlDocument, lineCounter, checkEmulatedStep);
+    // A step nothing can answer shouldn't also claim to be emulated.
+    const withoutEmulatedChips = results.filter(
+      ({ owner, beforeMessage, startLineNumber }) =>
+        !(
+          owner === 'connector-id-validation' &&
+          beforeMessage === EMULATED_CONNECTOR_LABEL &&
+          emulated.notEmulatableConnectorLines.has(startLineNumber)
+        )
+    );
+    results.length = 0;
+    results.push(...withoutEmulatedChips, ...emulated.results);
+  }
 
   if (stepPropertyItems.length > 0) {
     results.push(...(await validateStepProperties(stepPropertyItems)));

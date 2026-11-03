@@ -16,6 +16,9 @@ import type {
   WorkflowYamlValidationContext,
 } from './collect_full_workflow_yaml_validation_results';
 import { useGetPropertyHandler } from './property_handlers/use_get_property_handler';
+import type { EmulatedStepCheck } from './validate_emulated_steps';
+import { createCachedEmulatedStepCheck } from './validate_emulated_steps';
+import { INTERNAL_API_VERSION } from '../../../../common/lib/api_constants';
 import { createWorkflowContextRegistry } from '../../../../common/lib/create_workflow_context_registry';
 import { useAvailableConnectors } from '../../../entities/connectors/model/use_available_connectors';
 import {
@@ -64,6 +67,16 @@ export function useWorkflowYamlValidationContext(): WorkflowYamlValidationContex
   const esqlCallbacksRef = useRef(esqlCallbacks);
   esqlCallbacksRef.current = esqlCallbacks;
   const getPropertyHandler = useGetPropertyHandler();
+  const checkEmulatedStep = useMemo(
+    () =>
+      createCachedEmulatedStepCheck((request) =>
+        http.post<EmulatedStepCheck>('/internal/workflows/emulation/check', {
+          version: INTERNAL_API_VERSION,
+          body: JSON.stringify(request),
+        })
+      ),
+    [http]
+  );
 
   return useMemo(
     () => ({
@@ -82,9 +95,11 @@ export function useWorkflowYamlValidationContext(): WorkflowYamlValidationContex
       getPropertyHandler,
       esqlCallbacks: esqlCallbacksRef.current,
       warnIgnoredKibanaFetcher,
+      checkEmulatedStep,
     }),
     [
       application,
+      checkEmulatedStep,
       connectorsData,
       connectorsLoadState,
       getPropertyHandler,

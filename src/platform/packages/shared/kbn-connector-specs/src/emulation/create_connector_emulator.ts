@@ -9,7 +9,12 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import type { ContractCall, ResponseFixture } from '@kbn/connector-emulate';
+import type {
+  ContractCall,
+  ContractOperation,
+  OpenApiDocument,
+  ResponseFixture,
+} from '@kbn/connector-emulate';
 import type { ConnectorSpec } from '../connector_spec';
 import type { ManifestOperation } from '../test/vendor_api/manifest';
 
@@ -36,7 +41,24 @@ export type EmulatedActionResult =
       readonly notEmulatable?: true;
     };
 
+/** What a check of an action, and optionally a vendor response for it, found. Nothing runs. */
+export type EmulationCheck =
+  | { readonly status: 'ok' }
+  | { readonly status: 'not-emulatable'; readonly message: string }
+  | {
+      readonly status: 'invalid';
+      readonly violations: ReadonlyArray<{
+        /** From the response: `['body', '0', 'id']`. Empty when it concerns the whole response. */
+        readonly path: readonly string[];
+        readonly message: string;
+      }>;
+    };
+
 export interface ConnectorEmulator {
+  readonly checkAction: (
+    action: string,
+    response?: EmulatedVendorResponse
+  ) => Promise<EmulationCheck>;
   readonly runAction: (
     action: string,
     input: unknown,
@@ -169,7 +191,65 @@ export const createConnectorEmulator = async (
     };
   };
 
+  const contractOperations = new Map<string, ContractOperation[]>();
+  const getContractOperations = (
+    source: string,
+    load: (document: OpenApiDocument, source: string) => ContractOperation[]
+  ): ContractOperation[] => {
+    const loaded = contractOperations.get(source) ?? load(specs[source], source);
+    contractOperations.set(source, loaded);
+    return loaded;
+  };
+
   return {
+    checkAction: async (action, response) => {
+      if (!connector.actions[action]) {
+        return { status: 'not-emulatable', message: `${id} has no action ${action}.` };
+      }
+      if (!response) {
+        if ((manifest.operations[action] ?? []).length > 0) {
+          return { status: 'ok' };
+        }
+        const reasons = (manifest.unmatched?.[action] ?? []).map(({ reason }) => reason);
+        return {
+          status: 'not-emulatable',
+          message: [
+            `${id}.${action} can't be emulated: its vendor API snapshot doesn't cover it.`,
+            ...reasons,
+          ].join('\n'),
+        };
+      }
+
+      const operation = findOperation(action, response.operation);
+      if ('problem' in operation) {
+        return operation.notEmulatable
+          ? { status: 'not-emulatable', message: operation.problem }
+          : { status: 'invalid', violations: [{ path: [], message: operation.problem }] };
+      }
+      const { loadContractOperations, validateResponse } = await import('@kbn/connector-emulate');
+      const contract = getContractOperations(operation.source, loadContractOperations).find(
+        ({ method, path: operationPath }) =>
+          method === operation.method.toLowerCase() && operationPath === operation.path
+      );
+      if (!contract) {
+        return { status: 'ok' };
+      }
+      const { status } = toAuthoredFixture(operation, response).response;
+      const violations = validateResponse(contract, {
+        statusCode: status,
+        headers: { 'content-type': 'application/json', ...response.headers },
+        body: response.body,
+      }).filter(({ code }) => !(code === 'status' && status >= 400));
+      return violations.length > 0
+        ? {
+            status: 'invalid',
+            violations: violations.map(({ path: violationPath, message }) => ({
+              path: violationPath.map(String),
+              message,
+            })),
+          }
+        : { status: 'ok' };
+    },
     runAction: async (action, input, response) => {
       const fixture = fixtures[action] ?? {};
       const operation = response ? findOperation(action, response.operation) : undefined;

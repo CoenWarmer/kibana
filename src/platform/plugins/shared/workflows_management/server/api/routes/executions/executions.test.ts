@@ -382,7 +382,34 @@ describe('Execution Routes', () => {
         { inputs: { foo: 'bar' }, event: { type: 'test' } },
         { x: 1 },
         'default',
-        request
+        request,
+        undefined
+      );
+    });
+
+    it('passes on the request to emulate connectors', async () => {
+      mockApi.testStep.mockResolvedValue('step-exec-1');
+      const h = handler('POST', path)!;
+      const request = {
+        body: {
+          stepId: 'step-1',
+          workflowYaml: 'steps: []',
+          contextOverride: {},
+          emulateConnectors: true,
+        },
+      };
+
+      await h(mockContext, request as any, mockResponse as any);
+
+      expect(mockApi.testStep).toHaveBeenCalledWith(
+        'steps: []',
+        'step-1',
+        undefined,
+        undefined,
+        {},
+        'default',
+        request,
+        true
       );
     });
   });

@@ -32,6 +32,7 @@ export {
 } from './src/emulation/create_connector_emulator';
 export type {
   ConnectorEmulator,
+  EmulationCheck,
   EmulatedActionResult,
   EmulatedVendorResponse,
 } from './src/emulation/create_connector_emulator';

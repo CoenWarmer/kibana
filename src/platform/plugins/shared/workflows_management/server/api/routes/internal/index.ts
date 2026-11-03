@@ -7,6 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
+import { registerCheckEmulatedStepRoute } from './check_emulated_step';
 import { registerDisableAllWorkflowsRoute } from './disable';
 import { registerGetConfigRoute } from './get_config';
 import { registerGetReadableWorkflowIdsRoute } from './get_readable_workflow_ids';
@@ -16,6 +17,7 @@ import { registerTriggerEventsLogRoutes } from './trigger_events_log';
 import type { RouteDependencies } from '../types';
 
 export function registerInternalRoutes(deps: RouteDependencies) {
+  registerCheckEmulatedStepRoute(deps);
   registerGetConfigRoute(deps);
   registerGetReadableWorkflowIdsRoute(deps);
   registerDisableAllWorkflowsRoute(deps);
