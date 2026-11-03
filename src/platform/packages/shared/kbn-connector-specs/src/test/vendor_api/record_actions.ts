@@ -111,7 +111,7 @@ const isQueryCall = (query: QueryOperation, call: ContractCall): boolean => {
 };
 
 // Required properties only, so optional settings such as custom base URLs keep their defaults.
-const sampleConfig = async ({ schema }: ConnectorSpec): Promise<Record<string, unknown>> => {
+export const sampleConfig = async ({ schema }: ConnectorSpec): Promise<Record<string, unknown>> => {
   if (!schema) {
     return {};
   }

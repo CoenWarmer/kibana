@@ -13,6 +13,7 @@ import { i18n } from '@kbn/i18n';
 import { useRunWorkflow, useTestWorkflow, useWorkflowsCapabilities } from '@kbn/workflows-ui';
 import {
   selectEditorYaml,
+  selectEmulateConnectors,
   selectIsTestModalOpen,
   selectReplayExecutionId,
   selectReplayIsTestRun,
@@ -46,6 +47,7 @@ export const WorkflowDetailTestModal = () => {
   const definition = useSelector(selectWorkflowDefinition);
   const workflowId = useSelector(selectWorkflowId);
   const yamlString = useSelector(selectEditorYaml);
+  const emulateConnectors = useSelector(selectEmulateConnectors);
 
   const testWorkflow = useAsyncThunk(testWorkflowThunk);
   const { mutateAsync: runWorkflow } = useRunWorkflow();
@@ -75,7 +77,11 @@ export const WorkflowDetailTestModal = () => {
 
         try {
           const result = replayIsTestRun
-            ? await testSavedWorkflow({ workflowId, inputs })
+            ? await testSavedWorkflow({
+                workflowId,
+                inputs,
+                ...(emulateConnectors ? { emulateConnectors: true } : {}),
+              })
             : await runWorkflow({ id: workflowId, inputs });
           if (result?.workflowExecutionId) {
             setSelectedExecution(result.workflowExecutionId);
@@ -99,6 +105,7 @@ export const WorkflowDetailTestModal = () => {
       }
     },
     [
+      emulateConnectors,
       isReplay,
       notifications.toasts,
       replayIsTestRun,

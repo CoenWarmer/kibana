@@ -15,7 +15,7 @@ import {
   HUMAN_READABLE_ID_PATTERN,
 } from '@kbn/human-readable-id';
 import type { DotKeysOf, DotObject, JsonValue, RecursivePartial } from '@kbn/utility-types';
-import { z } from '@kbn/zod/v4';
+import { lazySchema, z } from '@kbn/zod/v4';
 import type { WorkflowAccessSubject, WorkflowPermissions } from '../common/access_control';
 import type { StepDeprecationInfo } from '../spec/deprecated_step_metadata';
 import type {
@@ -151,6 +151,8 @@ export interface EsWorkflowExecution {
   isTestRun: boolean;
   /** Whether the test uses a submitted definition instead of the saved workflow. */
   isEphemeral?: boolean;
+  /** Whether this test run answers connector steps from vendor API snapshots. */
+  emulateConnectors?: boolean;
   status: ExecutionStatus;
   context: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   workflowDefinition: WorkflowYaml;
@@ -306,6 +308,8 @@ export interface WorkflowExecutionDto {
   managedVersion?: number | null;
   status: ExecutionStatus;
   isTestRun: boolean;
+  /** Whether this test run answered connector steps from vendor API snapshots. */
+  emulateConnectors?: boolean;
   startedAt: string;
   error: SerializedError | null;
   finishedAt: string;
@@ -440,13 +444,16 @@ export const RunWorkflowCommandSchema = z.object({
 });
 export type RunWorkflowCommand = z.infer<typeof RunWorkflowCommandSchema>;
 
-export const RunStepCommandSchema = z.object({
-  workflowYaml: z.string(),
-  workflowId: z.string().optional(), // Optional to allow for test step runs for unsaved workflows
-  stepId: z.string(),
-  executionContext: z.record(z.string(), z.unknown()).optional(),
-  contextOverride: z.record(z.string(), z.unknown()).optional(),
-});
+export const RunStepCommandSchema = lazySchema(() =>
+  z.object({
+    workflowYaml: z.string(),
+    workflowId: z.string().optional(), // Optional to allow for test step runs for unsaved workflows
+    stepId: z.string(),
+    executionContext: z.record(z.string(), z.unknown()).optional(),
+    contextOverride: z.record(z.string(), z.unknown()).optional(),
+    emulateConnectors: z.boolean().optional(),
+  })
+);
 export type RunStepCommand = z.infer<typeof RunStepCommandSchema>;
 
 export const TestWorkflowCommandSchema = z.object({
@@ -553,6 +560,7 @@ export interface WorkflowExecutionEngineModel
   > {
   isTestRun?: boolean;
   isEphemeral?: boolean;
+  emulateConnectors?: boolean;
   spaceId?: string;
 }
 

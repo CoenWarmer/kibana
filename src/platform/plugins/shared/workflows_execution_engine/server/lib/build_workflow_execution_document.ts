@@ -96,6 +96,8 @@ export const buildWorkflowExecutionDocument = (
     ...pickManagedWorkflowFields(workflow),
     isTestRun: workflow.isTestRun,
     isEphemeral: workflow.isEphemeral,
+    // Test runs only: nothing else may skip the real connectors.
+    ...(workflow.isTestRun && workflow.emulateConnectors ? { emulateConnectors: true } : {}),
     workflowDefinition: workflow.definition,
     yaml: workflow.yaml,
     context: executionContext,

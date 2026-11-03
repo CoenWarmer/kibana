@@ -15,7 +15,12 @@ import { WorkflowsBaseTelemetry } from '../../../../../common/service/telemetry'
 import type { WorkflowTriggerTab } from '../../../../../features/run_workflow/ui/types';
 import type { WorkflowsServices } from '../../../../../types';
 import type { RootState } from '../../types';
-import { selectWorkflow, selectWorkflowDefinition, selectYamlString } from '../selectors';
+import {
+  selectEmulateConnectors,
+  selectWorkflow,
+  selectWorkflowDefinition,
+  selectYamlString,
+} from '../selectors';
 
 export interface TestWorkflowParams {
   inputs: Record<string, unknown>;
@@ -55,6 +60,7 @@ export const testWorkflowThunk = createAsyncThunk<
         workflowYaml: workflow?.permissions?.edit === false ? undefined : yamlString,
         workflowId: workflow?.id,
         inputs,
+        ...(selectEmulateConnectors(state) ? { emulateConnectors: true } : {}),
       });
 
       // Report telemetry for successful test run

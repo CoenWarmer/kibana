@@ -14,6 +14,7 @@ import {
 } from '@kbn/actions-plugin/server';
 import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { ConnectorWithExtraFindData } from '@kbn/actions-plugin/server/application/connector/types';
+import type { ConnectorEmulation } from './connector_emulation';
 
 function getWorkflowConnectorExecutionSource(actionTypeId: string, actionId: string) {
   if (actionTypeId.replace(/^\./, '') !== 'email') {
@@ -31,7 +32,12 @@ export class ConnectorExecutor {
   // the probability of connectors change is pretty low in this span so it should be acceptable
   private allConnectorsCache: Map<string, ConnectorWithExtraFindData> | undefined;
 
-  constructor(private actionsClient: ActionsClient) {}
+  constructor(private actionsClient: ActionsClient, private emulation?: ConnectorEmulation) {}
+
+  /** Emulated runs answer every connector call from snapshots, without needing a connector. */
+  public get isEmulating(): boolean {
+    return this.emulation !== undefined;
+  }
 
   // Execute a regular connector with a saved object. It will resolve the connector ID from saved objects.
   public async execute(params: {
@@ -43,6 +49,10 @@ export class ConnectorExecutor {
     const { connectorType, connectorNameOrId, input, abortController } = params;
     if (!connectorType) {
       throw new Error('Connector type is required');
+    }
+
+    if (this.emulation) {
+      return this.emulation.run({ connectorType, input });
     }
 
     const actionId = await this.resolveConnectorId(connectorNameOrId);
@@ -60,6 +70,10 @@ export class ConnectorExecutor {
     if (!connectorType) {
       throw new Error('Connector type is required');
     }
+    if (this.emulation) {
+      return this.emulation.run({ connectorType, input });
+    }
+
     // The InMemoryConnector with prefixed "system-connector-" is created by the actions framework
     const actionId = `system-connector-${connectorType}`;
 

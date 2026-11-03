@@ -34,6 +34,11 @@ export interface ContractContextOptions extends EmulatorOptions {
   /** Secrets for the auth type; fields left out get placeholders the auth schema accepts. */
   readonly secrets?: Readonly<Record<string, unknown>>;
   readonly config?: Readonly<Record<string, unknown>>;
+  /**
+   * Makes the global `fetch` fail during the run, so that code bypassing the mock is noticed. On by
+   * default; turn it off where other code shares the process, such as on a running Kibana.
+   */
+  readonly guardGlobalFetch?: boolean;
 }
 
 export interface ContractContext {
@@ -107,13 +112,29 @@ const DECODED_PLACEHOLDERS: Readonly<Record<string, () => string>> = {
   accountKey: () => Buffer.from('contract-mock-accountKey').toString('base64'),
 };
 
-const placeholdersFor = (key: string): readonly string[] => [
-  ...(key in DECODED_PLACEHOLDERS ? [DECODED_PLACEHOLDERS[key]()] : []),
-  `contract-mock-${key}`,
-  'https://contract-mock.invalid/',
-  'contract-mock@example.com',
-  samplePrivateKey(),
+// Functions, so the private key is only generated for the secrets that need one.
+const placeholdersFor = (key: string): ReadonlyArray<() => string> => [
+  ...(key in DECODED_PLACEHOLDERS ? [DECODED_PLACEHOLDERS[key]] : []),
+  () => `contract-mock-${key}`,
+  () => 'https://contract-mock.invalid/',
+  () => 'contract-mock@example.com',
+  samplePrivateKey,
 ];
+
+const findPlaceholder = (key: string, field: z.ZodType): unknown => {
+  const options: readonly unknown[] = field instanceof z.ZodEnum ? field.options : [];
+  const option = options.find((value) => field.safeParse(value).success);
+  if (option !== undefined) {
+    return option;
+  }
+  for (const createPlaceholder of placeholdersFor(key)) {
+    const placeholder = createPlaceholder();
+    if (field.safeParse(placeholder).success) {
+      return placeholder;
+    }
+  }
+  return undefined;
+};
 
 const toSecrets = (
   schema: z.ZodObject,
@@ -129,10 +150,7 @@ const toSecrets = (
       secrets[key] = fallback.data;
       continue;
     }
-    const options = field instanceof z.ZodEnum ? field.options : [];
-    const placeholder = [...options, ...placeholdersFor(key)].find(
-      (value) => field.safeParse(value).success
-    );
+    const placeholder = findPlaceholder(key, field);
     if (placeholder !== undefined) {
       secrets[key] = placeholder;
     }
@@ -202,9 +220,12 @@ export const createContractContext = async ({
   authType,
   secrets = {},
   config = {},
+  guardGlobalFetch = true,
   ...mockOptions
 }: ContractContextOptions): Promise<ContractContext> => {
   const mock = createEmulatorFetch(mockOptions);
+  const guarded = <T>(run: () => Promise<T>): Promise<T> =>
+    guardGlobalFetch ? withoutGlobalFetch(run) : run();
   const definitions = connector.auth?.types.length ? connector.auth.types : ['none'];
   const definition =
     authType === undefined
@@ -243,7 +264,7 @@ export const createContractContext = async ({
     client.defaults.headers.common[name] = value;
   }
   ensureWebCrypto();
-  await withoutGlobalFetch(() =>
+  await guarded(() =>
     findAuthType(id).configure(createAuthContext(mock.fetch), client, authSecrets)
   );
 
@@ -264,7 +285,7 @@ export const createContractContext = async ({
       throw new Error(`${connector.metadata.id} has no action ${name}`);
     }
     const parsed = await action.input.parseAsync(input);
-    return withoutGlobalFetch(() => action.handler(ctx, parsed));
+    return guarded(() => action.handler(ctx, parsed));
   };
 
   return { ctx, mock, runAction };

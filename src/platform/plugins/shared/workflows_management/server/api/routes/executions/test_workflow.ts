@@ -46,6 +46,14 @@ export function registerTestWorkflowRoute(deps: RouteDependencies) {
               workflowYaml: schema.maybe(
                 schema.string({ meta: { description: 'YAML definition to test.' } })
               ),
+              emulateConnectors: schema.maybe(
+                schema.boolean({
+                  meta: {
+                    description:
+                      'Answer connector steps from vendor API snapshots instead of calling the real vendors.',
+                  },
+                })
+              ),
               inputs: schema.recordOf(schema.string(), schema.any(), {
                 meta: { description: 'Key-value inputs for the test execution.' },
               }),
@@ -55,7 +63,7 @@ export function registerTestWorkflowRoute(deps: RouteDependencies) {
       },
       withAvailabilityCheck(async (context, request, response) => {
         try {
-          const { workflowId, workflowYaml, inputs: rawInputs } = request.body;
+          const { workflowId, workflowYaml, emulateConnectors, inputs: rawInputs } = request.body;
 
           if (!workflowId && !workflowYaml) {
             return response.badRequest({
@@ -74,6 +82,7 @@ export function registerTestWorkflowRoute(deps: RouteDependencies) {
           const workflowExecutionId = await api.testWorkflow({
             workflowId,
             workflowYaml,
+            emulateConnectors,
             inputs,
             spaceId,
             request,

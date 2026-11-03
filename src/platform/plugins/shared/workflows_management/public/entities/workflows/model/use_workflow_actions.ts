@@ -320,6 +320,7 @@ export function useWorkflowActions() {
         workflowId: params.workflowId,
         executionContext: params.executionContext,
         contextOverride: params.contextOverride,
+        emulateConnectors: params.emulateConnectors,
       }),
     onSuccess: ({ workflowExecutionId }, variables) => {
       // Report telemetry for successful step test run

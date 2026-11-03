@@ -121,8 +121,13 @@ export class WorkflowExecuteSyncStrategy {
     try {
       const workflowExecution = this.stepExecutionRuntime.workflowExecution;
       const isTestRun = !!this.stepExecutionRuntime.workflowExecution.isTestRun;
+      const emulateConnectors = !!workflowExecution.emulateConnectors;
       const { workflowExecutionId } = await this.workflowsExecutionEngine.executeWorkflow(
-        toWorkflowExecutionEngineModel(workflow, { isTestRun, isEphemeral: false }),
+        toWorkflowExecutionEngineModel(workflow, {
+          isTestRun,
+          isEphemeral: false,
+          emulateConnectors,
+        }),
         {
           spaceId,
           inputs,

@@ -212,6 +212,27 @@ describe('WorkflowExecuteAsyncStrategy', () => {
     expect(result.output).not.toHaveProperty('startedAt');
   });
 
+  it('keeps a child workflow emulated', async () => {
+    (mockStepRuntime.workflowExecution as any).isTestRun = true;
+    (mockStepRuntime.workflowExecution as any).emulateConnectors = true;
+
+    await strategy.execute(
+      createMockWorkflow(),
+      {},
+      'default',
+      mockRequest,
+      0,
+      false,
+      'async-step-1'
+    );
+
+    expect(mockEngine.executeWorkflow).toHaveBeenCalledWith(
+      expect.objectContaining({ isTestRun: true, emulateConnectors: true }),
+      expect.anything(),
+      expect.anything()
+    );
+  });
+
   it('should propagate isTestRun flag', async () => {
     (mockStepRuntime.workflowExecution as any).isTestRun = true;
 

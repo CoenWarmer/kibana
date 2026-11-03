@@ -40,8 +40,13 @@ export class WorkflowExecuteAsyncStrategy {
       // Execute workflow without waiting
       const workflowExecution = this.stepExecutionRuntime.workflowExecution;
       const isTestRun = !!workflowExecution.isTestRun;
+      const emulateConnectors = !!workflowExecution.emulateConnectors;
       const { workflowExecutionId } = await this.workflowsExecutionEngine.executeWorkflow(
-        toWorkflowExecutionEngineModel(workflow, { isTestRun, isEphemeral: false }),
+        toWorkflowExecutionEngineModel(workflow, {
+          isTestRun,
+          isEphemeral: false,
+          emulateConnectors,
+        }),
         {
           spaceId,
           inputs,

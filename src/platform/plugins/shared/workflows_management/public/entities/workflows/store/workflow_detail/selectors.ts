@@ -93,6 +93,11 @@ export const selectIsTestModalOpen = createSelector(
   (detail) => detail.isTestModalOpen
 );
 
+export const selectEmulateConnectors = createSelector(
+  selectDetail,
+  (detail) => detail.emulateConnectors
+);
+
 export const selectReplayExecutionId = createSelector(
   selectDetail,
   (detail) => detail.replay?.executionId ?? null

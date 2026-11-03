@@ -53,6 +53,14 @@ export function registerTestStepRoute(deps: RouteDependencies) {
               workflowYaml: schema.string({
                 meta: { description: 'YAML definition of the workflow containing the step.' },
               }),
+              emulateConnectors: schema.maybe(
+                schema.boolean({
+                  meta: {
+                    description:
+                      'Answer connector steps from vendor API snapshots instead of calling the real vendors.',
+                  },
+                })
+              ),
             }),
           },
         },
@@ -67,7 +75,8 @@ export function registerTestStepRoute(deps: RouteDependencies) {
             request.body.executionContext,
             request.body.contextOverride,
             spaceId,
-            request
+            request,
+            request.body.emulateConnectors
           );
           audit.logWorkflowStepTest(request, {
             stepId: request.body.stepId,

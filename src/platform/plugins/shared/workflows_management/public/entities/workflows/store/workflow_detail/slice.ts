@@ -56,6 +56,7 @@ const initialState: WorkflowDetailState = {
   focusedTriggerId: undefined,
   highlightedStepId: undefined,
   isTestModalOpen: false,
+  emulateConnectors: false,
   testStepModalOpenStepId: undefined,
   replay: undefined,
   loading: initialLoadingState,
@@ -111,6 +112,9 @@ const workflowDetailSlice = createSlice({
     },
     setIsTestModalOpen: (state, action: { payload: boolean }) => {
       state.isTestModalOpen = action.payload;
+    },
+    setEmulateConnectors: (state, action: { payload: boolean }) => {
+      state.emulateConnectors = action.payload;
     },
     setReplayExecutionId: (
       state,
@@ -311,6 +315,7 @@ export const {
   setCursorPosition,
   setHighlightedStepId,
   setIsTestModalOpen,
+  setEmulateConnectors,
   setReplayExecutionId,
   setReplayStepExecutionId,
   setTestStepModalOpenStepId,

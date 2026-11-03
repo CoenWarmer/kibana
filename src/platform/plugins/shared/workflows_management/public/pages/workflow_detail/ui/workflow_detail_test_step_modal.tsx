@@ -16,6 +16,7 @@ import { useContextOverrideData } from './use_context_override_data';
 import { useWorkflowActions } from '../../../entities/workflows/model/use_workflow_actions';
 import {
   selectEditorYaml,
+  selectEmulateConnectors,
   selectExecution,
   selectReplayStepExecutionId,
   selectTestStepModalOpenStepId,
@@ -46,6 +47,7 @@ export const WorkflowDetailTestStepModal = React.memo(() => {
   const execution = useSelector(selectExecution);
   const editorYaml = useSelector(selectEditorYaml) ?? '';
   const workflowGraph = useSelector(selectWorkflowGraph);
+  const emulateConnectors = useSelector(selectEmulateConnectors);
 
   const workflowGraphForStep = useMemo((): WorkflowGraph | null => {
     if (!testStepModalOpenStepId) return null;
@@ -85,6 +87,7 @@ export const WorkflowDetailTestStepModal = React.memo(() => {
           contextOverride: stepInputs,
           executionContext,
           triggerTab,
+          emulateConnectors,
         });
         selectEditorRun(response.workflowExecutionId);
         closeModal();
@@ -101,6 +104,7 @@ export const WorkflowDetailTestStepModal = React.memo(() => {
       }
     },
     [
+      emulateConnectors,
       testStepModalOpenStepId,
       runIndividualStep,
       editorYaml,

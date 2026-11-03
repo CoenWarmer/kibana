@@ -81,6 +81,7 @@ export interface TestWorkflowParams {
   workflowId?: string;
   workflowYaml?: string;
   inputs: Record<string, unknown>;
+  emulateConnectors?: boolean;
 }
 
 export interface SearchExecutionsParams {

@@ -15,6 +15,7 @@ import { setWorkflowEventChainContext } from '@kbn/workflows-extensions/server';
 import { WorkflowGraphSetupError } from './workflow_graph_setup_error';
 import type { WorkflowsExecutionEngineConfig } from '../config';
 
+import { ConnectorEmulation } from '../connector_emulation';
 import { ConnectorExecutor } from '../connector_executor';
 import { defaultWorkflowSettings } from '../default_workflow_settings';
 import {
@@ -141,7 +142,6 @@ export async function setupDependencies(
   );
 
   const scopedActionsClient = await actions.getActionsClientWithRequest(fakeRequest);
-  const connectorExecutor = new ConnectorExecutor(scopedActionsClient);
 
   const logsRepository = new LogsRepository(dependencies.coreStart.dataStreams, logger);
   const eventQueue = new WorkflowEventQueue(logsRepository, logger);
@@ -157,6 +157,13 @@ export async function setupDependencies(
     executionId: workflowExecution.id,
     spaceId: workflowExecution.spaceId,
   });
+
+  const connectorExecutor = new ConnectorExecutor(
+    scopedActionsClient,
+    workflowExecution.isTestRun && workflowExecution.emulateConnectors
+      ? new ConnectorEmulation(workflowLogger)
+      : undefined
+  );
 
   const workflowExecutionState = new WorkflowExecutionState(
     workflowExecution as EsWorkflowExecution,

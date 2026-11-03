@@ -15,6 +15,7 @@ import {
   EuiFlexGroup,
   EuiFlexItem,
   EuiLoadingSpinner,
+  EuiSwitch,
   EuiToolTip,
   useEuiShadow,
 } from '@elastic/eui';
@@ -39,6 +40,7 @@ import { WorkflowDetailConnectorFlyout } from './workflow_detail_connector_flyou
 import { WORKFLOWS_DOCUMENTATION_URL } from '../../../../common';
 import { useWorkflowActions } from '../../../entities/workflows/model/use_workflow_actions';
 import {
+  selectEmulateConnectors,
   selectFocusedStepId,
   selectFocusedTriggerId,
   selectIsExecutionsTab,
@@ -49,6 +51,7 @@ import {
   selectYamlString,
 } from '../../../entities/workflows/store/workflow_detail/selectors';
 import {
+  setEmulateConnectors,
   setHighlightedStepId,
   setIsTestModalOpen,
   setTestStepModalOpenStepId,
@@ -134,6 +137,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>((props
   const isReadOnly = useWorkflowEditorReadOnly();
   const isSyntaxValid = useSelector(selectIsYamlSyntaxValid);
   const isSaving = useSelector(selectIsSavingYaml);
+  const emulateConnectors = useSelector(selectEmulateConnectors);
   const getContextOverrideData = useContextOverrideData();
   const { runIndividualStep } = useWorkflowActions();
   const { notifications } = useKibana().services;
@@ -171,6 +175,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>((props
             stepId: params.stepId,
             workflowYaml,
             contextOverride: {},
+            emulateConnectors,
           });
           selectEditorRun(response.workflowExecutionId);
         } catch (error) {
@@ -190,6 +195,7 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>((props
       dispatch(setTestStepModalOpenStepId(params.stepId));
     },
     [
+      emulateConnectors,
       isExecutionsTab,
       workflowId,
       getContextOverrideData,
@@ -250,42 +256,100 @@ export const WorkflowDetailEditor = React.memo<WorkflowDetailEditorProps>((props
 
   const testWorkflowButton = useMemo(
     () => (
-      <EuiToolTip content={runWorkflowTooltipContent}>
-        <EuiButton
-          color="success"
-          iconType="play"
-          size="m"
-          onClick={handleRunClickWithUnsavedCheck}
-          isDisabled={runDisabled}
-          data-test-subj="workflowBottomBarRunButton"
-        >
-          {i18n.translate('workflows.workflowDetailEditor.runWorkflow', {
-            defaultMessage: 'Run workflow',
-          })}
-        </EuiButton>
-      </EuiToolTip>
+      <EuiFlexGroup alignItems="center" gutterSize="m" responsive={false}>
+        <EuiFlexItem grow={false}>
+          <EuiToolTip
+            content={i18n.translate('workflows.workflowDetailEditor.emulateConnectorsTooltip', {
+              defaultMessage:
+                'Answer connector steps with data generated from each vendor API, without calling the vendor. Other steps, such as Elasticsearch and Kibana steps, still run for real.',
+            })}
+          >
+            <EuiSwitch
+              compressed
+              label={i18n.translate('workflows.workflowDetailEditor.emulateConnectors', {
+                defaultMessage: 'Emulate connectors',
+              })}
+              checked={emulateConnectors}
+              onChange={({ target: { checked } }) => dispatch(setEmulateConnectors(checked))}
+              data-test-subj="workflowBottomBarEmulateConnectors"
+            />
+          </EuiToolTip>
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiToolTip content={runWorkflowTooltipContent}>
+            <EuiButton
+              color="success"
+              iconType="play"
+              size="m"
+              onClick={handleRunClickWithUnsavedCheck}
+              isDisabled={runDisabled}
+              data-test-subj="workflowBottomBarRunButton"
+            >
+              {i18n.translate('workflows.workflowDetailEditor.runWorkflow', {
+                defaultMessage: 'Run workflow',
+              })}
+            </EuiButton>
+          </EuiToolTip>
+        </EuiFlexItem>
+      </EuiFlexGroup>
     ),
-    [runWorkflowTooltipContent, handleRunClickWithUnsavedCheck, runDisabled]
+    [
+      dispatch,
+      emulateConnectors,
+      runWorkflowTooltipContent,
+      handleRunClickWithUnsavedCheck,
+      runDisabled,
+    ]
   );
 
   const testWorkflowButtonCompact = useMemo(
     () => (
-      <EuiToolTip content={runWorkflowTooltipContent} disableScreenReaderOutput>
-        <EuiButtonIcon
-          color="success"
-          display="base"
-          iconType="play"
-          size="s"
-          onClick={handleRunClickWithUnsavedCheck}
-          disabled={runDisabled}
-          aria-label={i18n.translate('workflows.workflowDetailEditor.runWorkflow', {
-            defaultMessage: 'Run workflow',
-          })}
-          data-test-subj="workflowBottomBarRunButtonCompact"
-        />
-      </EuiToolTip>
+      <EuiFlexGroup alignItems="center" gutterSize="xs" responsive={false}>
+        <EuiFlexItem grow={false}>
+          <EuiToolTip
+            content={i18n.translate('workflows.workflowDetailEditor.emulateConnectors', {
+              defaultMessage: 'Emulate connectors',
+            })}
+            disableScreenReaderOutput
+          >
+            <EuiButtonIcon
+              iconType="wifiSlash"
+              size="s"
+              display={emulateConnectors ? 'fill' : 'empty'}
+              aria-pressed={emulateConnectors}
+              onClick={() => dispatch(setEmulateConnectors(!emulateConnectors))}
+              aria-label={i18n.translate('workflows.workflowDetailEditor.emulateConnectors', {
+                defaultMessage: 'Emulate connectors',
+              })}
+              data-test-subj="workflowBottomBarEmulateConnectorsCompact"
+            />
+          </EuiToolTip>
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiToolTip content={runWorkflowTooltipContent} disableScreenReaderOutput>
+            <EuiButtonIcon
+              color="success"
+              display="base"
+              iconType="play"
+              size="s"
+              onClick={handleRunClickWithUnsavedCheck}
+              disabled={runDisabled}
+              aria-label={i18n.translate('workflows.workflowDetailEditor.runWorkflow', {
+                defaultMessage: 'Run workflow',
+              })}
+              data-test-subj="workflowBottomBarRunButtonCompact"
+            />
+          </EuiToolTip>
+        </EuiFlexItem>
+      </EuiFlexGroup>
     ),
-    [runWorkflowTooltipContent, handleRunClickWithUnsavedCheck, runDisabled]
+    [
+      dispatch,
+      emulateConnectors,
+      runWorkflowTooltipContent,
+      handleRunClickWithUnsavedCheck,
+      runDisabled,
+    ]
   );
 
   // Always built; the bar cross-fades visibility based on editorView so the

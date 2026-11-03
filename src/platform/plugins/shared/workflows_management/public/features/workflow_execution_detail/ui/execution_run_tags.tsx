@@ -60,6 +60,27 @@ export const ExecutionRunTags = ({ workflowExecution, workflowTags }: ExecutionR
           </EuiToolTip>
         </EuiFlexItem>
       )}
+      {workflowExecution?.emulateConnectors && (
+        <EuiFlexItem grow={false}>
+          <EuiToolTip
+            content={i18n.translate('workflows.executionFlyout.emulatedConnectorsTooltip', {
+              defaultMessage:
+                'Connector steps were answered with data generated from each vendor API, without calling the vendor. Other steps ran for real.',
+            })}
+          >
+            <EuiBadge
+              tabIndex={0}
+              color="hollow"
+              iconType="wifiSlash"
+              data-test-subj="workflowExecutionEmulatedConnectors"
+            >
+              {i18n.translate('workflows.executionFlyout.emulatedConnectors', {
+                defaultMessage: 'Emulated connectors',
+              })}
+            </EuiBadge>
+          </EuiToolTip>
+        </EuiFlexItem>
+      )}
       {workflowTags.map((tag) => (
         <EuiFlexItem grow={false} key={tag}>
           <EuiBadge color="hollow">{tag}</EuiBadge>

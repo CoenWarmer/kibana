@@ -232,6 +232,7 @@ export interface GetAvailableConnectorsParams {
 export interface TestWorkflowParams {
   workflowId?: string;
   workflowYaml?: string;
+  emulateConnectors?: boolean;
   inputs: Record<string, any>;
   spaceId: string;
   request: KibanaRequest;
@@ -1078,6 +1079,7 @@ export class WorkflowsManagementApi {
   public async testWorkflow({
     workflowId,
     workflowYaml,
+    emulateConnectors,
     inputs,
     spaceId,
     request,
@@ -1164,7 +1166,7 @@ export class WorkflowsManagementApi {
           originManagedWorkflowId: existingWorkflow?.originManagedWorkflowId,
           managedVersion: existingWorkflow?.managedVersion,
         },
-        { isTestRun: true, isEphemeral: Boolean(workflowYaml) }
+        { isTestRun: true, isEphemeral: Boolean(workflowYaml), emulateConnectors }
       ),
       context,
       request
@@ -1179,7 +1181,8 @@ export class WorkflowsManagementApi {
     executionContext: Record<string, unknown> | undefined,
     contextOverride: Record<string, any>,
     spaceId: string,
-    request: KibanaRequest
+    request: KibanaRequest,
+    emulateConnectors?: boolean
   ): Promise<string> {
     if (workflowId) {
       await this.assertWorkflowAccess(workflowId, spaceId, 'edit', request, {
@@ -1210,6 +1213,7 @@ export class WorkflowsManagementApi {
         yaml: workflowYaml,
         isTestRun: true,
         isEphemeral: true,
+        emulateConnectors,
         spaceId,
       },
       stepId,

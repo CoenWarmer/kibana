@@ -26,3 +26,11 @@ export const authTypeSpecs = {
 };
 
 export { clientTypes } from './src/lib/clients';
+export {
+  ConnectorNotEmulatableError,
+  createConnectorEmulator,
+} from './src/emulation/create_connector_emulator';
+export type {
+  ConnectorEmulator,
+  EmulatedActionResult,
+} from './src/emulation/create_connector_emulator';

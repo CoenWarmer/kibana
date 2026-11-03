@@ -14,6 +14,7 @@ import { createMockWorkflowsCapabilities } from '@kbn/workflows-ui/mocks';
 import { WorkflowDetailTestModal } from './workflow_detail_test_modal';
 import {
   selectEditorYaml,
+  selectEmulateConnectors,
   selectIsTestModalOpen,
   selectReplayExecutionId,
   selectReplayIsTestRun,
@@ -61,6 +62,7 @@ jest.mock('../../../entities/workflows/store/workflow_detail/selectors', () => (
   selectWorkflowId: jest.fn(),
   selectWorkflow: jest.fn(),
   selectEditorYaml: jest.fn(),
+  selectEmulateConnectors: jest.fn(),
 }));
 
 // Mock WorkflowExecuteModal
@@ -275,6 +277,28 @@ describe('WorkflowDetailTestModal', () => {
     expect(mockTestWorkflow).not.toHaveBeenCalled();
     expect(mockTestSavedWorkflow).not.toHaveBeenCalled();
     expect(mockSetSelectedExecution).toHaveBeenCalledWith('new-exec');
+  });
+
+  it('keeps emulating connectors when re-running a test execution', async () => {
+    mockTestSavedWorkflow.mockResolvedValue({ workflowExecutionId: 'new-test-exec' });
+    (selectReplayExecutionId as unknown as jest.Mock).mockReturnValue('exec-1');
+    (selectReplayIsTestRun as unknown as jest.Mock).mockReturnValue(true);
+    (selectWorkflowId as unknown as jest.Mock).mockReturnValue('wf-1');
+    (selectEmulateConnectors as unknown as jest.Mock).mockReturnValueOnce(true);
+    (selectEmulateConnectors as unknown as jest.Mock).mockReturnValue(true);
+    mockUseWorkflowUrlState.mockReturnValue({ setSelectedExecution: jest.fn() });
+
+    const { getByTestId } = renderModal();
+    fireEvent.click(getByTestId('submit-modal'));
+
+    await waitFor(() => {
+      expect(mockTestSavedWorkflow).toHaveBeenCalledWith({
+        workflowId: 'wf-1',
+        inputs: { test: 'input' },
+        emulateConnectors: true,
+      });
+    });
+    (selectEmulateConnectors as unknown as jest.Mock).mockReturnValue(undefined);
   });
 
   it('re-runs a test execution through useTestWorkflow', async () => {

@@ -29,6 +29,18 @@ describe('testWorkflowThunk', () => {
     mockServices = getMockServices(store);
   });
 
+  it('asks for emulated connectors when the toggle is on', async () => {
+    store.dispatch({ type: 'detail/setYamlString', payload: 'name: Test Workflow\nsteps: []' });
+    store.dispatch({ type: 'detail/setEmulateConnectors', payload: true });
+    mockWorkflowApi.testWorkflow.mockResolvedValue({ workflowExecutionId: 'execution-123' });
+
+    await store.dispatch(testWorkflowThunk({ inputs: {} }));
+
+    expect(mockWorkflowApi.testWorkflow).toHaveBeenCalledWith(
+      expect.objectContaining({ emulateConnectors: true })
+    );
+  });
+
   it('should test workflow successfully without workflow id', async () => {
     const mockResponse = {
       workflowExecutionId: 'execution-123',

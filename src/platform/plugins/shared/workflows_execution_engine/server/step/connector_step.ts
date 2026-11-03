@@ -169,11 +169,11 @@ export class ConnectorStepImpl extends BaseAtomicNodeImplementation<ConnectorSte
       }
 
       let output: ActionTypeExecutorResult<unknown>;
-      if (connectorIdRendered) {
+      if (connectorIdRendered || this.connectorExecutor.isEmulating) {
         // Use regular connector with saved object
         output = await this.connectorExecutor.execute({
           connectorType: stepType,
-          connectorNameOrId: connectorIdRendered,
+          connectorNameOrId: connectorIdRendered ?? '',
           input: renderedInputs || {},
           abortController: this.stepExecutionRuntime.abortController,
         });

@@ -25,7 +25,7 @@ export type WorkflowExecutionEngineModelSource = {
 
 export type ToWorkflowExecutionEngineModelOptions = Pick<
   WorkflowExecutionEngineModel,
-  'isTestRun' | 'isEphemeral' | 'spaceId'
+  'isTestRun' | 'isEphemeral' | 'emulateConnectors' | 'spaceId'
 >;
 
 export const toWorkflowExecutionEngineModel = (

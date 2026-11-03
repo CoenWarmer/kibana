@@ -69,6 +69,8 @@ export interface WorkflowDetailState {
   highlightedStepId?: string;
   /** The modal to test the workflow is open */
   isTestModalOpen: boolean;
+  /** Test runs answer connector steps from vendor API snapshots instead of real vendors */
+  emulateConnectors: boolean;
   /** When set, Test Step modal is open for this step id (undefined = closed) */
   testStepModalOpenStepId?: string;
   /** Replay context: workflow-level (executionId) or step-level (stepExecutionId) for pre-selection in modals */
