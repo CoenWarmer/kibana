@@ -95,6 +95,18 @@ describe('createConnectorEmulator', () => {
     expect(result.status === 'error' && result.message).toContain('page_size');
   });
 
+  it('explains that an action outside the snapshot cannot be emulated', async () => {
+    const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+    const result = await emulator.runAction('muteMonitor', { monitorId: 1 });
+
+    expect(result.status).toBe('error');
+    const message = result.status === 'error' ? result.message : '';
+    expect(message).toContain(".datadog.muteMonitor can't be emulated");
+    expect(message).toContain("Monitor mute is not in Datadog's v1 spec");
+    expect(message).not.toContain('status 404');
+  });
+
   it('returns invalid input as an error instead of throwing', async () => {
     const emulator = await createConnectorEmulator(findConnector('.datadog'));
 

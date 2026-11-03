@@ -38,6 +38,9 @@ const exists = async (file: string): Promise<boolean> => {
   }
 };
 
+const isUnmatchedCall = ({ matched, operation, status }: ContractCall): boolean =>
+  matched === undefined && operation === undefined && (status === 404 || status === 405);
+
 const describeViolations = (calls: readonly ContractCall[]): string[] =>
   calls.flatMap(({ request, status, requestViolations }) =>
     requestViolations.length > 0
@@ -70,7 +73,7 @@ export const createConnectorEmulator = async (
   const { FIXTURES, loadVendorSpecs, readOptional } = specsModule;
   const { toResponseFixtures, vendorApiFixturesSchema } = fixturesModule;
 
-  const { specs, pagination } = await loadVendorSpecs({
+  const { manifest, specs, pagination } = await loadVendorSpecs({
     directory,
     // Only committed snapshots are used: an emulated run never fetches anything.
     fetchText: async (url) => {
@@ -100,6 +103,22 @@ export const createConnectorEmulator = async (
         return { status: 'ok', data: await runAction(action, input), calls: getCalls() };
       } catch (error) {
         const calls = getCalls();
+        const unmatched = calls.filter(isUnmatchedCall);
+        if (unmatched.length > 0) {
+          // The emulator has no contract for this request, so the failure says nothing about the
+          // connector or the vendor. Say that, instead of passing on the emulator's 404.
+          const reasons = (manifest.unmatched?.[action] ?? []).map(({ reason }) => reason);
+          return {
+            status: 'error',
+            message: [
+              `${id}.${action} can't be emulated: its vendor API snapshot has no ${unmatched
+                .map(({ request }) => request)
+                .join(', ')}.`,
+              ...reasons,
+            ].join('\n'),
+            calls,
+          };
+        }
         const message = error instanceof Error ? error.message : String(error);
         return {
           status: 'error',
