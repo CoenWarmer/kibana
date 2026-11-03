@@ -284,14 +284,43 @@ export const StepWithOnFailureSchema = z.object({
 });
 
 const MAX_EMULATED_ERROR_LENGTH = 2048;
+const MAX_EMULATED_OPERATION_LENGTH = 2048;
+const MIN_HTTP_STATUS = 100;
+const MAX_HTTP_STATUS = 599;
 
 export const StepEmulateSchema = lazySchema(() =>
   z
     .object({
+      response: z
+        .object({
+          status: z
+            .number()
+            .int()
+            .min(MIN_HTTP_STATUS)
+            .max(MAX_HTTP_STATUS)
+            .optional()
+            .describe("The vendor's status. Defaults to the operation's success status."),
+          headers: z.record(z.string(), z.string()).optional(),
+          body: z.unknown().optional().describe("The vendor's response body."),
+          operation: z
+            .string()
+            .max(MAX_EMULATED_OPERATION_LENGTH)
+            .optional()
+            .describe(
+              'The vendor operation this answers, as METHOD /path, for actions that call several.'
+            ),
+        })
+        .strict()
+        .optional()
+        .describe(
+          "The vendor's response in emulated test runs. It has to match the vendor's API, and the connector runs on it."
+        ),
       output: z
         .unknown()
         .optional()
-        .describe('The output this step returns in emulated test runs, instead of running.'),
+        .describe(
+          'The output of this step in emulated test runs, instead of running it and without checking it. Takes priority over response.'
+        ),
       error: z
         .string()
         .max(MAX_EMULATED_ERROR_LENGTH)

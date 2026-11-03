@@ -102,6 +102,42 @@ describe('step responses set by the workflow', () => {
     expect(runtime.failStep.mock.calls[0][0].message).toContain('has no action noSuchAction');
   });
 
+  it('runs the connector on a set vendor response', async () => {
+    const response = { status: 200, body: { id: 1 } };
+    const { step, connectorExecutor, runtime } = setup({ emulate: { response } });
+
+    await step.run();
+
+    expect(connectorExecutor.execute).toHaveBeenCalledWith(
+      expect.objectContaining({ emulatedResponse: response })
+    );
+    expect(runtime.finishStep).toHaveBeenCalledWith('from the connector', expect.any(Number));
+  });
+
+  it('prefers a set output over a set vendor response', async () => {
+    const { step, connectorExecutor, runtime } = setup({
+      emulate: { output: { set: true }, response: { body: {} } },
+    });
+
+    await step.run();
+
+    expect(connectorExecutor.execute).not.toHaveBeenCalled();
+    expect(runtime.finishStep).toHaveBeenCalledWith({ set: true }, expect.any(Number));
+  });
+
+  it('does not pass a vendor response outside emulated runs', async () => {
+    const { step, connectorExecutor } = setup({
+      emulate: { response: { body: {} } },
+      workflowExecution: { isTestRun: true, emulateConnectors: false },
+    });
+
+    await step.run();
+
+    expect(connectorExecutor.execute).toHaveBeenCalledWith(
+      expect.not.objectContaining({ emulatedResponse: expect.anything() })
+    );
+  });
+
   it('allows a set output of null', async () => {
     const { step, runtime } = setup({ emulate: { output: null } });
 

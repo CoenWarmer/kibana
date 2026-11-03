@@ -33,4 +33,5 @@ export {
 export type {
   ConnectorEmulator,
   EmulatedActionResult,
+  EmulatedVendorResponse,
 } from './src/emulation/create_connector_emulator';

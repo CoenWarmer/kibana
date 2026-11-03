@@ -14,6 +14,7 @@ import {
 } from '@kbn/actions-plugin/server';
 import type { ActionsClient } from '@kbn/actions-plugin/server';
 import type { ConnectorWithExtraFindData } from '@kbn/actions-plugin/server/application/connector/types';
+import type { EmulatedVendorResponse } from '@kbn/connector-specs/server';
 import type { ConnectorEmulation } from './connector_emulation';
 
 function getWorkflowConnectorExecutionSource(actionTypeId: string, actionId: string) {
@@ -45,14 +46,16 @@ export class ConnectorExecutor {
     connectorNameOrId: string;
     input: Record<string, unknown>;
     abortController: AbortController;
+    /** The vendor's answer in an emulated run. Real runs never use it. */
+    emulatedResponse?: EmulatedVendorResponse;
   }): Promise<ActionTypeExecutorResult<unknown>> {
-    const { connectorType, connectorNameOrId, input, abortController } = params;
+    const { connectorType, connectorNameOrId, input, abortController, emulatedResponse } = params;
     if (!connectorType) {
       throw new Error('Connector type is required');
     }
 
     if (this.emulation) {
-      return this.emulation.run({ connectorType, input });
+      return this.emulation.run({ connectorType, input, response: emulatedResponse });
     }
 
     const actionId = await this.resolveConnectorId(connectorNameOrId);

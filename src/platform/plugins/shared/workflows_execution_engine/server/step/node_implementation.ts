@@ -272,6 +272,21 @@ export abstract class BaseAtomicNodeImplementation<TStep extends BaseStep>
     return undefined;
   }
 
+  /** Runs the step with a vendor response from its `emulate` block, for steps that have a vendor. */
+  protected async runEmulatedResponse(
+    input: Record<string, unknown>,
+    _response: Record<string, unknown>
+  ): Promise<RunStepResult> {
+    return {
+      input,
+      output: undefined,
+      error: new ExecutionError({
+        type: 'EmulatedStepError',
+        message: `${this.step.type} steps have no vendor API, so they can't use emulate.response. Set emulate.output instead.`,
+      }),
+    };
+  }
+
   /**
    * The response the workflow sets in the step's `emulate` block, which replaces running the step.
    * Only emulated test runs use it: every other run ignores the block.
@@ -285,7 +300,7 @@ export abstract class BaseAtomicNodeImplementation<TStep extends BaseStep>
     }
     const emulate: Record<string, unknown> | undefined =
       'configuration' in node ? node.configuration?.emulate : undefined;
-    if (!emulate || !('output' in emulate || 'error' in emulate)) {
+    if (!emulate || !('output' in emulate || 'error' in emulate || 'response' in emulate)) {
       return undefined;
     }
 
@@ -299,11 +314,18 @@ export abstract class BaseAtomicNodeImplementation<TStep extends BaseStep>
       return toError(invalidInput);
     }
 
-    const { output, error } = await contextManager.renderObjectAccordingToContextAsync(emulate);
+    const { output, error, response } = await contextManager.renderObjectAccordingToContextAsync(
+      emulate
+    );
     stepLogger?.logInfo(`Emulated ${this.step.type}: response set by the workflow`, {
       tags: ['connector-emulation'],
     });
-    return error ? toError(String(error)) : { input, output, error: undefined };
+    if (error) {
+      return toError(String(error));
+    }
+    return 'output' in emulate
+      ? { input, output, error: undefined }
+      : this.runEmulatedResponse(input, response as Record<string, unknown>);
   }
 
   /**

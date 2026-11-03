@@ -107,6 +107,99 @@ describe('createConnectorEmulator', () => {
     expect(message).not.toContain('status 404');
   });
 
+  describe('with a response set by the caller', () => {
+    const monitor = {
+      id: 1,
+      name: 'Checkout',
+      overall_state: 'Alert',
+      query: 'avg(last_5m):avg:system.cpu.user{*} > 90',
+      type: 'metric alert',
+    };
+
+    it('runs the handler on a response that matches the vendor API, exactly as written', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction('listMonitors', {}, { body: [monitor] });
+
+      expect(result).toEqual(expect.objectContaining({ status: 'ok', data: [monitor] }));
+    });
+
+    it('fails a response that does not match the vendor API', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction(
+        'listMonitors',
+        {},
+        { body: [{ ...monitor, id: 'not-a-number', overall_state: 'NotAState' }] }
+      );
+
+      expect(result.status).toBe('error');
+      const message = result.status === 'error' ? result.message : '';
+      expect(message).toContain("doesn't match GET /api/v1/monitor");
+      expect(message).toContain('/0/id');
+      expect(message).toContain('/0/overall_state');
+    });
+
+    it('fails a response of the wrong shape', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction('listMonitors', {}, { body: { monitors: [] } });
+
+      expect(result.status === 'error' && result.message).toContain('Expected "array"');
+    });
+
+    it('lets the handler deal with an error status the spec does not list', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction(
+        'listMonitors',
+        {},
+        { status: 503, body: { errors: ['Unavailable'] } }
+      );
+
+      expect(result.status).toBe('error');
+      const message = result.status === 'error' ? result.message : '';
+      expect(message).toContain('503');
+      expect(message).not.toContain("doesn't match");
+    });
+
+    it('still rejects a success status the spec does not list', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction('listMonitors', {}, { status: 299, body: [monitor] });
+
+      expect(result.status === 'error' && result.message).toContain('status 299');
+    });
+
+    it('explains that an action without operations has nothing to validate against', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction('muteMonitor', { monitorId: 1 }, { body: {} });
+
+      expect(result).toEqual(expect.objectContaining({ status: 'error', notEmulatable: true }));
+    });
+
+    it('rejects an operation the action does not call', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction(
+        'listMonitors',
+        {},
+        { operation: 'GET /nope', body: [] }
+      );
+
+      expect(result.status === 'error' && result.message).toContain("doesn't call GET /nope");
+    });
+
+    it('keeps sampling and paging when no response is set', async () => {
+      const emulator = await createConnectorEmulator(findConnector('.datadog'));
+
+      const result = await emulator.runAction('listMonitors', {});
+
+      expect(result.status === 'ok' && (result.data as unknown[]).length).toBeGreaterThan(1);
+    });
+  });
+
   it('returns invalid input as an error instead of throwing', async () => {
     const emulator = await createConnectorEmulator(findConnector('.datadog'));
 

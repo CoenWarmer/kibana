@@ -9,11 +9,12 @@
 
 import type { ActionTypeExecutorResult } from '@kbn/actions-plugin/common';
 import { getConnectorSpec } from '@kbn/connector-specs';
-import type { ConnectorEmulator } from '@kbn/connector-specs/server';
-import { createConnectorEmulator } from '@kbn/connector-specs/server';
+import type { ConnectorEmulator, EmulatedVendorResponse } from '@kbn/connector-specs/server';
+import { ConnectorNotEmulatableError, createConnectorEmulator } from '@kbn/connector-specs/server';
 import type { IWorkflowEventLogger } from './workflow_event_logger';
 
 const LOG_TAGS = ['connector-emulation'];
+const SET_OUTPUT_HINT = 'Set emulate.output on the step to choose its output.';
 
 /** Answers a test run's connector steps from vendor API snapshots, never from the real vendor. */
 export class ConnectorEmulation {
@@ -25,9 +26,11 @@ export class ConnectorEmulation {
   public async run({
     connectorType,
     input,
+    response,
   }: {
     connectorType: string;
     input: Record<string, unknown>;
+    response?: EmulatedVendorResponse;
   }): Promise<ActionTypeExecutorResult<unknown>> {
     const typeId = connectorType.startsWith('.') ? connectorType : `.${connectorType}`;
     const actionId = `emulated-${typeId}`;
@@ -39,12 +42,14 @@ export class ConnectorEmulation {
 
     const { subAction, subActionParams } = input;
     if (!getConnectorSpec(typeId) || typeof subAction !== 'string') {
-      return fail(`${typeId} steps can't be emulated, and emulated runs don't call real vendors`);
+      return fail(
+        `${typeId} steps can't be emulated, and emulated runs don't call real vendors. ${SET_OUTPUT_HINT}`
+      );
     }
 
     try {
       const emulator = await this.getEmulator(typeId);
-      const result = await emulator.runAction(subAction, subActionParams ?? {});
+      const result = await emulator.runAction(subAction, subActionParams ?? {}, response);
       for (const { request, status, requestViolations, responseViolations } of result.calls) {
         const line = `Emulated ${typeId}.${subAction}: ${status} ${request}`;
         const violations = [...requestViolations, ...responseViolations];
@@ -57,10 +62,14 @@ export class ConnectorEmulation {
           this.workflowLogger.logInfo(line, { tags: LOG_TAGS });
         }
       }
-      return result.status === 'ok'
-        ? { status: 'ok', actionId, data: result.data }
-        : fail(result.message);
+      if (result.status === 'ok') {
+        return { status: 'ok', actionId, data: result.data };
+      }
+      return fail(result.notEmulatable ? `${result.message}\n${SET_OUTPUT_HINT}` : result.message);
     } catch (error) {
+      if (error instanceof ConnectorNotEmulatableError) {
+        return fail(`${error.message}. ${SET_OUTPUT_HINT}`);
+      }
       return fail(error instanceof Error ? error.message : String(error));
     }
   }

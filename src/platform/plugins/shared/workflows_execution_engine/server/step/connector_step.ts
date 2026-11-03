@@ -115,7 +115,17 @@ export class ConnectorStepImpl extends BaseAtomicNodeImplementation<ConnectorSte
       : `Invalid input for ${this.step.type}: ${parsed.error.message}`;
   }
 
-  public async _run(withInputs: Record<string, unknown>): Promise<RunStepResult> {
+  protected runEmulatedResponse(
+    withInputs: Record<string, unknown>,
+    response: Record<string, unknown>
+  ): Promise<RunStepResult> {
+    return this._run(withInputs, response);
+  }
+
+  public async _run(
+    withInputs: Record<string, unknown>,
+    emulatedResponse?: Record<string, unknown>
+  ): Promise<RunStepResult> {
     try {
       const step = this.step;
 
@@ -194,6 +204,7 @@ export class ConnectorStepImpl extends BaseAtomicNodeImplementation<ConnectorSte
           connectorNameOrId: connectorIdRendered ?? '',
           input: renderedInputs || {},
           abortController: this.stepExecutionRuntime.abortController,
+          ...(emulatedResponse ? { emulatedResponse } : {}),
         });
       } else {
         const systemConnectorActionTypeId = SystemConnectorsMap.get(`.${stepType}`);
