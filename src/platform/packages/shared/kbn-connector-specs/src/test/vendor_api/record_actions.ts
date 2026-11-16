@@ -7,7 +7,7 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
-import type { ContractCall, Emulator, OpenApiDocument, Violation } from '@kbn/connector-emulate';
+import type { ContractCall, Emulator, EmulatorSpec, Violation } from '@kbn/connector-emulate';
 import type { ActionDefinition, ConnectorSpec } from '../../connector_spec';
 import type { ContractContext, ContractContextOptions } from '../create_contract_context';
 import { createContractContext } from '../create_contract_context';
@@ -19,13 +19,14 @@ import type { GeneratedInputs, RejectedInput } from './generate_action_inputs';
 import { generateActionInputs } from './generate_action_inputs';
 import type { ManifestOperation } from './manifest';
 import { matchesPathTemplate } from './manifest';
+import { matchedOperationOf } from '../matched_operation';
 
 const SAFE_METHODS = new Set(['get', 'head', 'options']);
 
 export interface RecordActionsOptions
   extends Omit<ContractContextOptions, 'specs' | 'fixtures' | 'recordings' | 'trackFields'> {
   /** The vendor specs by source name, as in the manifest's `sources`. */
-  readonly specs: Readonly<Record<string, OpenApiDocument>>;
+  readonly specs: Readonly<Record<string, EmulatorSpec>>;
   readonly fixtures?: VendorApiFixtures;
   /** Records which response fields each action reads, copies and returns. */
   readonly trackFields?: boolean;
@@ -136,12 +137,15 @@ const uniqueSorted = <T>(items: readonly T[], keyOf: (item: T) => string): T[] =
 const isOperation = (
   { source, method, path }: QueryOperation,
   matched: ContractCall['matched']
-): boolean =>
-  matched !== undefined &&
-  'method' in matched &&
-  (source === undefined || source === matched.source) &&
-  method.toLowerCase() === matched.method &&
-  path === matched.path;
+): boolean => {
+  const operation = matchedOperationOf(matched);
+  return (
+    operation !== undefined &&
+    (source === undefined || source === operation.source) &&
+    method.toLowerCase() === operation.method &&
+    path === operation.path
+  );
+};
 
 const isUnmatched = ({ matched, operation, status }: ContractCall): boolean =>
   matched === undefined && operation === undefined && (status === 404 || status === 405);
@@ -316,10 +320,8 @@ export const recordActions = async ({
         for (const { request, matched, scopeViolations: violations = [] } of vendorCalls) {
           if (violations.length > 0) {
             // Named by operation, so the runs of one action report each shortfall once.
-            const operation =
-              matched && 'method' in matched
-                ? `${matched.method.toUpperCase()} ${matched.path}`
-                : request;
+            const named = matchedOperationOf(matched);
+            const operation = named ? `${named.method.toUpperCase()} ${named.path}` : request;
             findings.push({
               kind: 'insufficient-scope',
               action,
@@ -358,7 +360,8 @@ export const recordActions = async ({
     const usedQueries = new Set<QueryOperation>();
     for (const call of calls) {
       const { request, requestViolations, responseViolations, matched } = call;
-      if (isRead && !SAFE_METHODS.has(toRequestedPath(call).method)) {
+      // A GraphQL query is read-only, though it is sent with POST.
+      if (isRead && !SAFE_METHODS.has(toRequestedPath(call).method) && call.readOnly !== true) {
         const query = queries.find((candidate) => isQueryCall(candidate, call));
         if (query) {
           usedQueries.add(query);
@@ -374,13 +377,13 @@ export const recordActions = async ({
           violations: requestViolations,
         });
       }
+      const named = matchedOperationOf(matched);
       if (
-        matched &&
-        'method' in matched &&
+        named &&
         responseViolations.length > 0 &&
         fixture.responses?.some((response) => isOperation(response, matched))
       ) {
-        const operation = `${matched.method.toUpperCase()} ${matched.path}`;
+        const operation = `${named.method.toUpperCase()} ${named.path}`;
         findings.push({
           kind: 'rejected-response',
           action,
@@ -394,11 +397,12 @@ export const recordActions = async ({
       findings.push({ kind: 'unused-query', action, operation });
     }
     operations[action] = uniqueSorted(
-      calls.flatMap(({ matched }) =>
-        matched?.source === undefined || !('method' in matched)
+      calls.flatMap(({ matched }) => {
+        const named = matchedOperationOf(matched);
+        return named?.source === undefined
           ? []
-          : [{ source: matched.source, method: matched.method, path: matched.path }]
-      ),
+          : [{ source: named.source, method: named.method, path: named.path }];
+      }),
       ({ source, method, path }) => `${source} ${path} ${method}`
     );
     const notFound = calls.filter(isUnmatched).map(toRequestedPath);
