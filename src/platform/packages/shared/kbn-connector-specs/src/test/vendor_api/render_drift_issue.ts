@@ -992,7 +992,7 @@ export const renderDriftIssue = (
     `| **Connector** | ${link(code(drift.connector), folder)} |`,
     `| **Result** | ${resultOf(drift.verdict, failing.length > 0)} |`,
   ];
-  for (const [source, { status, error, url, servers }] of Object.entries(drift.sources)) {
+  for (const [source, { status, error, url, servers, format }] of Object.entries(drift.sources)) {
     const latest = url ? `[Latest](${url})` : 'Latest';
     const state =
       status === 'unreachable' ? `unreachable: ${code(error ?? 'unknown error')}` : status;
@@ -1000,7 +1000,7 @@ export const renderDriftIssue = (
       `| **Vendor spec ${code(source)}** | ${latest} (${cell(state)}) · ${link(
         'Committed snapshot',
         folder,
-        `vendor_api/${snapshotFile(source)}`
+        `vendor_api/${snapshotFile(source, format)}`
       )} |`
     );
     // A spec can list a server twice.

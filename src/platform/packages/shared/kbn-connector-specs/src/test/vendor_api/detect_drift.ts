@@ -15,6 +15,15 @@ import type { ConnectorSpec } from '../../connector_spec';
 import { loadVendorSpec } from './load_vendor_spec';
 import { MANIFEST, OVERLAY, readOptional, snapshotFile } from './load_vendor_specs';
 import { compareFields } from './compare_fields';
+import type { GraphQLFieldUse } from './graphql_drift';
+import {
+  compareGraphQLFields,
+  diffGraphQLSchemas,
+  locateGraphQLRootField,
+  resolveGraphQLFieldUse,
+  usesCoordinate,
+} from './graphql_drift';
+import { buildGraphQLSchema, projectGraphQLSchema, toGraphQLSdl } from './graphql_source';
 import type { OperationLocation } from './locate_operation';
 import { locateOperation, serverUrls } from './locate_operation';
 import type { RecordedFieldUse } from './record_actions';
@@ -37,8 +46,10 @@ export interface SpecChange {
   /** The `oasdiff` rule, e.g. `response-property-enum-value-added`. */
   readonly id: string;
   readonly text: string;
-  /** `METHOD /path`, for changes to an operation. */
+  /** `METHOD /path`, for changes to an operation; for GraphQL, `QUERY rootField`. */
   readonly operation?: string;
+  /** GraphQL only: the schema coordinate that changed, e.g. `Item.name`. */
+  readonly coordinate?: string;
 }
 
 export interface SourceDrift {
@@ -51,6 +62,8 @@ export interface SourceDrift {
   readonly servers?: { readonly snapshot: readonly string[]; readonly latest: readonly string[] };
   /** Where the source is fetched from, as the manifest records it. */
   readonly url?: string;
+  /** The manifest's format, when it isn't OpenAPI-like: `graphql`. */
+  readonly format?: 'graphql';
 }
 
 /** An operation an action calls, as the committed manifest records it. */
@@ -81,6 +94,8 @@ export interface ActionDrift {
   readonly tracked?: boolean;
   /** Response fields it reads whose schema differs between the snapshot and the latest spec. */
   readonly fieldChanges?: readonly ActionFieldChange[];
+  /** For GraphQL root fields, its `fieldUse` by schema coordinate, by `source QUERY field`. */
+  readonly graphqlUse?: Readonly<Record<string, GraphQLFieldUse>>;
 }
 
 /** A changed response field an action reads. */
@@ -282,12 +297,18 @@ export const within = (field: string, parent: string): boolean =>
  * sends it or something in it, reads it or something in it, or copies or returns it whole.
  */
 const usesProperty = (
-  { fieldUse = {} }: ActionDrift,
+  { fieldUse = {}, graphqlUse = {} }: ActionDrift,
   source: string,
   change: SpecChange,
   property: string
 ): boolean => {
-  const use = fieldUse[`${source} ${change.operation}`];
+  const key = `${source} ${change.operation}`;
+  // GraphQL changes name a type's field, whichever path the action reached it by.
+  if (change.coordinate !== undefined) {
+    const coordinates = graphqlUse[key];
+    return coordinates === undefined || usesCoordinate(coordinates, change);
+  }
+  const use = fieldUse[key];
   if (!use) {
     return false;
   }
@@ -416,7 +437,17 @@ const compareWithLatest = async ({
     );
     const refreshed = await readOptional(path.join(copy, MANIFEST));
     const sources: Record<string, SourceDrift> = {};
-    for (const name of Object.keys(manifest.sources)) {
+    for (const [name, { url, format }] of Object.entries(manifest.sources)) {
+      if (format === 'graphql') {
+        sources[name] = compareGraphQLSource({
+          name,
+          url,
+          manifest,
+          committed: await readOptional(path.join(directory, snapshotFile(name, format))),
+          latest: result?.graphql[name],
+        });
+        continue;
+      }
       const [committed, current] = await Promise.all(
         [directory, copy].map((root) => readOptional(path.join(root, snapshotFile(name))))
       );
@@ -429,7 +460,6 @@ const compareWithLatest = async ({
             },
           }
         : {};
-      const { url } = manifest.sources[name];
       if (committed === current) {
         sources[name] = { status: 'unchanged', ...servers, url };
       } else {
@@ -456,6 +486,43 @@ const compareWithLatest = async ({
   } finally {
     await fs.rm(copy, { recursive: true, force: true });
   }
+};
+
+const rootFieldsOf = (manifest: VendorApiManifest, source: string) =>
+  Object.values(manifest.operations)
+    .flat()
+    .filter((operation) => operation.source === source);
+
+// A GraphQL source changed when the latest schema, trimmed to the root fields the committed
+// manifest records, differs from the committed snapshot; actions starting or stopping to call
+// a root field aren't a change of the schema.
+const compareGraphQLSource = ({
+  name,
+  url,
+  manifest,
+  committed,
+  latest,
+}: {
+  readonly name: string;
+  readonly url: string;
+  readonly manifest: VendorApiManifest;
+  readonly committed: string | undefined;
+  readonly latest: string | undefined;
+}): SourceDrift => {
+  const rootFields = rootFieldsOf(manifest, name);
+  const base = { url, format: 'graphql' as const };
+  if (latest === undefined) {
+    return { status: 'unchanged', ...base };
+  }
+  const current = projectGraphQLSchema(latest, rootFields);
+  if (committed === current) {
+    return { status: 'unchanged', ...base };
+  }
+  return {
+    status: 'changed',
+    changes: committed === undefined ? [] : diffGraphQLSchemas(committed, current, rootFields),
+    ...base,
+  };
 };
 
 const offline = async (url: string): Promise<string> => {
@@ -511,12 +578,21 @@ export const detectDrift = async ({
   };
   const sources: Record<string, SourceDrift> = {};
   for (const [name, source] of Object.entries(manifest.sources)) {
-    const { url } = source;
+    const { url, format } = source;
     try {
-      await loadVendorSpec(url, fetchOnce, source);
+      if (format === 'graphql') {
+        buildGraphQLSchema(toGraphQLSdl(await fetchOnce(url)));
+      } else {
+        await loadVendorSpec(url, fetchOnce, source);
+      }
     } catch (error) {
       log.warning(`${connector.metadata.id}: ${name} at ${url} didn't load: ${message(error)}`);
-      sources[name] = { status: 'unreachable', error: message(error), url };
+      sources[name] = {
+        status: 'unreachable',
+        error: message(error),
+        url,
+        ...(format === 'graphql' ? { format } : {}),
+      };
     }
   }
 
@@ -616,14 +692,19 @@ const describeAction = ({
   readonly snapshotSpecs?: Readonly<Record<string, OpenApiDocument>>;
   readonly latestSpecs?: Readonly<Record<string, OpenApiDocument>>;
 }): ActionDrift => {
+  const isGraphQL = (source: string) => manifest.sources[source]?.format === 'graphql';
   const operations = (manifest.operations[action] ?? []).map(({ source, method, path: opPath }) => {
     const document = latestSpecs?.[source];
+    const schema = latestResult?.graphql[source];
+    const latest = isGraphQL(source)
+      ? schema && locateGraphQLRootField(schema, { method, path: opPath })
+      : document && locateOperation(document, opPath, method);
     return {
       source,
       method,
       path: opPath,
       operation: `${method.toUpperCase()} ${opPath}`,
-      ...(document ? { latest: locateOperation(document, opPath, method) } : {}),
+      ...(latest ? { latest } : {}),
     };
   });
   const recorded = [snapshotResult, latestResult].filter(
@@ -634,8 +715,16 @@ const describeAction = ({
     recorded.length > 0 && recorded.every((result) => !result.untracked?.includes(action));
   // Where the operation still is in the latest spec, the fields it reads are compared.
   const fieldChanges = operations.flatMap(({ source, method, path: opPath, operation, latest }) => {
-    const [before, after] = [snapshotSpecs?.[source], latestSpecs?.[source]];
     const fields = fieldUse[`${source} ${operation}`]?.read ?? [];
+    if (isGraphQL(source)) {
+      const [committed, current] = [snapshotResult?.graphql[source], latestResult?.graphql[source]];
+      return committed && current && fields.length > 0
+        ? compareGraphQLFields(committed, current, { method, path: opPath }, fields).map(
+            ({ field, changes }) => ({ operation, field, changes })
+          )
+        : [];
+    }
+    const [before, after] = [snapshotSpecs?.[source], latestSpecs?.[source]];
     if (!before || !after || fields.length === 0 || latest?.status === 'missing') {
       return [];
     }
@@ -648,6 +737,18 @@ const describeAction = ({
       fields,
     }).map(({ field, changes }) => ({ operation, field, changes }));
   });
+  // GraphQL changes name a type's field, so the field use is resolved to those too.
+  const graphqlUse = Object.fromEntries(
+    operations.flatMap(({ source, method, path: opPath, operation }) => {
+      const key = `${source} ${operation}`;
+      const schema = snapshotResult?.graphql[source] ?? latestResult?.graphql[source];
+      const resolved =
+        isGraphQL(source) && schema && fieldUse[key]
+          ? resolveGraphQLFieldUse(schema, { method, path: opPath }, fieldUse[key])
+          : undefined;
+      return resolved ? [[key, resolved] as const] : [];
+    })
+  );
   return {
     action,
     operations: operations.map(({ source, operation, latest }) => ({
@@ -664,6 +765,7 @@ const describeAction = ({
     snapshotProblems: snapshotResult?.problemsByAction[action] ?? [],
     ...(latestResult ? { latestProblems: latestResult.problemsByAction[action] ?? [] } : {}),
     ...(recorded.length > 0 ? { fieldUse, tracked, fieldChanges } : {}),
+    ...(Object.keys(graphqlUse).length > 0 ? { graphqlUse } : {}),
   };
 };
 

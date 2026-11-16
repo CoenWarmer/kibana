@@ -9,6 +9,7 @@
 
 import type { ActionDrift, ConnectorDrift, SpecChange } from './detect_drift';
 import { toFieldPath, within } from './detect_drift';
+import { usesCoordinate } from './graphql_drift';
 
 /**
  * - `request-option`: a new property of the request body.
@@ -82,8 +83,14 @@ const additionOf = ({
 const reaches = (
   action: ActionDrift,
   key: string,
-  { kind, field }: Pick<Addition, 'kind' | 'field'>
+  { kind, field }: Pick<Addition, 'kind' | 'field'>,
+  change: SpecChange
 ): boolean => {
+  // A GraphQL addition names a type's field, which reaches consumers through any path to it.
+  const coordinates = action.graphqlUse?.[key];
+  if (change.coordinate !== undefined && coordinates !== undefined) {
+    return usesCoordinate(coordinates, change);
+  }
   const use = action.fieldUse?.[key];
   if (!use) {
     return false;
@@ -128,7 +135,7 @@ export const newInVendorApi = (drift: ConnectorDrift): Addition[] => {
         ...addition,
         actions: callers.map(({ action }) => action),
         reachedBy: tracked
-          .filter((caller) => reaches(caller, key, addition))
+          .filter((caller) => reaches(caller, key, addition, change))
           .map(({ action }) => action),
         unknownFor: callers
           .filter(({ tracked: isTracked }) => isTracked !== true)
