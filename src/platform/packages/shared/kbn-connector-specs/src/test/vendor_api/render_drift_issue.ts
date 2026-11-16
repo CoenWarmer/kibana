@@ -15,6 +15,7 @@ import type {
   StaleCorrection,
 } from './detect_drift';
 import { reviewOfChange } from './detect_drift';
+import { usesCoordinate } from './graphql_drift';
 import type { Addition } from './new_in_vendor_api';
 import { newInVendorApi } from './new_in_vendor_api';
 import { OVERLAY, snapshotFile } from './load_vendor_specs';
@@ -56,7 +57,10 @@ const reviewKindOf = (id: string): ReviewKind => {
 
 // How the summary says that passing actions are affected by a kind of change, one or several.
 const AFFECTED: Record<ReviewKind, readonly [string, string]> = {
-  Deprecated: ['passes but calls a deprecated endpoint', 'pass but call deprecated endpoints'],
+  Deprecated: [
+    'passes but uses a deprecated endpoint or field',
+    'pass but use deprecated endpoints or fields',
+  ],
   Sunset: [
     'passes but calls an endpoint with a sunset date',
     'pass but call endpoints with a sunset date',
@@ -392,7 +396,15 @@ const additionText = ({ kind, field, value }: Addition): string => {
 };
 
 // The Reaches consumers of Connector column: whether consumers can use it, through which actions.
-const reachText = ({ kind, field, value, actions, reachedBy, unknownFor }: Addition): string => {
+const reachText = ({
+  kind,
+  field,
+  value,
+  actions,
+  reachedBy,
+  unknownFor,
+  graphql,
+}: Addition): string => {
   const named = (names: readonly string[]) => listed(names.map(code));
   if (reachedBy.length === 0) {
     if (unknownFor.length > 0) {
@@ -401,7 +413,8 @@ const reachText = ({ kind, field, value, actions, reachedBy, unknownFor }: Addit
       } with it wasn't recorded`;
     }
     if (kind === 'response-field') {
-      return 'No, no action passes it along';
+      // A GraphQL response only has what the query selects.
+      return graphql ? "No, no action's query selects it" : 'No, no action passes it along';
     }
     return kind === 'request-value'
       ? `No, no action sends ${code(field)}`
@@ -524,33 +537,55 @@ const statusOf = (
       )}`
     );
   }
-  // The action works, but what it calls needs a look, as the summary counts it: oasdiff's own
-  // description of each change says what.
-  const toReview = [
+  const changes = action.operations.flatMap(({ source, operation }) =>
+    changesOf(source, operation).map((change) => ({ source, operation, change }))
+  );
+  const notable = changes.filter(({ change }) => change.kind !== 'non-breaking');
+  const responses = notable.filter(({ change }) => RESPONSE_CHANGE.test(change.id));
+  // A GraphQL response has only the fields the query selects, so the changed ones it passes
+  // along are named.
+  const graphqlResponses = responses.filter(({ change }) => change.coordinate !== undefined);
+  const passedChangedOf = (except: ReadonlySet<string>) => [
     ...new Set(
-      action.operations.flatMap(({ source, operation }) =>
-        reviewOf(source, operation).map(({ change: { text } }) => capitalized(text))
-      )
+      graphqlResponses.flatMap(({ source, operation, change }) => {
+        const use = action.graphqlUse?.[`${source} ${operation}`];
+        return use &&
+          change.coordinate &&
+          !except.has(change.coordinate) &&
+          usesCoordinate(use, change)
+          ? [change.coordinate]
+          : [];
+      })
     ),
   ];
+  const passingAlong = (coordinates: readonly string[]) =>
+    `Vendor response has changed, and Connector is passing along changed fields: ${listed(
+      coordinates.map(code)
+    )}`;
+
+  // The action works, but what it calls needs a look, as the summary counts it: oasdiff's own
+  // description of each change says what.
+  const reviewed = action.operations.flatMap(({ source, operation }) =>
+    reviewOf(source, operation)
+  );
+  const toReview = [...new Set(reviewed.map(({ change: { text } }) => capitalized(text)))];
   if (toReview.length > 0) {
     const shown = toReview.slice(0, MAX_REVIEW_DETAILS);
+    const alsoPassed = passedChangedOf(
+      new Set(reviewed.flatMap(({ change: { coordinate } }) => (coordinate ? [coordinate] : [])))
+    );
     return passes(
       'passes',
       `${ICONS.attention} ${shown.join('; ')}${
         toReview.length > shown.length
           ? ` (and ${plural(toReview.length - shown.length, 'more change')})`
           : ''
-      }`
+      }${alsoPassed.length > 0 ? `. ${passingAlong(alsoPassed)}.` : ''}`
     );
   }
-  const changes = action.operations.flatMap(({ source, operation }) =>
-    changesOf(source, operation).map((change) => ({ source, operation, change }))
-  );
-  const notable = changes.filter(({ change }) => change.kind !== 'non-breaking');
   if (notable.length > 0 && action.tracked) {
     // Its operations changed in ways running it and its field use verify.
-    const responses = notable.filter(({ change }) => RESPONSE_CHANGE.test(change.id));
+    const passedChanged = passedChangedOf(new Set());
     const passedAlong = responses.flatMap(({ source, operation }) => {
       const { copied = [], returned = [] } = action.fieldUse?.[`${source} ${operation}`] ?? {};
       return [...copied, ...returned];
@@ -561,6 +596,12 @@ const statusOf = (
         : []),
       ...(responses.length === 0
         ? []
+        : graphqlResponses.length === responses.length
+        ? [
+            passedChanged.length > 0
+              ? passingAlong(passedChanged)
+              : 'Vendor response has changed, but Connector is not using changed fields',
+          ]
         : passedAlong.includes('')
         ? [
             'Vendor response has changed, and Connector is passing along the entire changed response',
@@ -1124,9 +1165,9 @@ export const renderDriftIssue = (
           '|---|---|---|---|',
           ...shownAdditions.map(
             (addition) =>
-              `| ${code(addition.operation)} | ${additionText(addition)} | ${addition.actions
-                .map(code)
-                .join(', ')} | ${reachText(addition)} |`
+              `| ${addition.operations.map(code).join('<br>')} | ${additionText(
+                addition
+              )} | ${addition.actions.map(code).join(', ')} | ${reachText(addition)} |`
           ),
           ...(additions.length > shownAdditions.length
             ? [

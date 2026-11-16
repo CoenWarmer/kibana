@@ -399,7 +399,7 @@ actions:
     );
     expect(body).toContain('vendor_api/snapshots/api.graphql');
     expect(body).toContain(
-      '| `QUERY items` | Response field `Item.title` | `listNames` | No, no action passes it along |'
+      "| `QUERY items` | Response field `Item.title` | `listNames` | No, no action's query selects it |"
     );
   });
 

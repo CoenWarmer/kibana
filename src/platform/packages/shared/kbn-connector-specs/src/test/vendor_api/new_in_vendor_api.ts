@@ -8,7 +8,7 @@
  */
 
 import type { ActionDrift, ConnectorDrift, SpecChange } from './detect_drift';
-import { toFieldPath, within } from './detect_drift';
+import { toFieldPath, within } from './field_path';
 import { usesCoordinate } from './graphql_drift';
 
 /**
@@ -26,9 +26,11 @@ export type AdditionKind =
 /** Something the vendor added to an operation the actions call. */
 export interface Addition {
   readonly source: string;
-  /** `METHOD /path`. */
-  readonly operation: string;
+  /** `METHOD /path`, or for GraphQL every root field reaching the type that has it. */
+  readonly operations: readonly string[];
   readonly kind: AdditionKind;
+  /** Whether it is in a GraphQL schema, where responses only have the fields queries select. */
+  readonly graphql?: true;
   /** As field use paths are, or the parameter's name. */
   readonly field: string;
   /** For `request-value`, the new enum value, if it is one. */
@@ -129,17 +131,34 @@ export const newInVendorApi = (drift: ConnectorDrift): Addition[] => {
       }
       const key = `${source} ${operation}`;
       const tracked = callers.filter(({ tracked: isTracked }) => isTracked === true);
-      additions.set(`${key} ${addition.kind} ${addition.field} ${addition.value ?? ''}`, {
+      // A GraphQL addition is a type's field, whichever root fields reach it, so it has one row.
+      const graphql = change.coordinate !== undefined;
+      const id = `${graphql ? source : key} ${addition.kind} ${addition.field} ${
+        addition.value ?? ''
+      }`;
+      const previous = additions.get(id);
+      const merged = (before: readonly string[] = [], names: readonly string[]) => [
+        ...new Set([...before, ...names]),
+      ];
+      additions.set(id, {
         source,
-        operation,
         ...addition,
-        actions: callers.map(({ action }) => action),
-        reachedBy: tracked
-          .filter((caller) => reaches(caller, key, addition, change))
-          .map(({ action }) => action),
-        unknownFor: callers
-          .filter(({ tracked: isTracked }) => isTracked !== true)
-          .map(({ action }) => action),
+        ...(graphql ? { graphql: true as const } : {}),
+        operations: merged(previous?.operations, [operation]),
+        actions: merged(
+          previous?.actions,
+          callers.map(({ action }) => action)
+        ),
+        reachedBy: merged(
+          previous?.reachedBy,
+          tracked
+            .filter((caller) => reaches(caller, key, addition, change))
+            .map(({ action }) => action)
+        ),
+        unknownFor: merged(
+          previous?.unknownFor,
+          callers.filter(({ tracked: isTracked }) => isTracked !== true).map(({ action }) => action)
+        ),
       });
     }
   }
@@ -151,14 +170,14 @@ export const newInVendorApi = (drift: ConnectorDrift): Addition[] => {
         (other) =>
           other !== addition &&
           other.source === addition.source &&
-          other.operation === addition.operation &&
+          other.operations.join() === addition.operations.join() &&
           other.kind === addition.kind &&
           addition.field.startsWith(`${other.field}/`)
       )
   );
   return outermost.sort(
     (a, b) =>
-      a.operation.localeCompare(b.operation) ||
+      a.operations[0].localeCompare(b.operations[0]) ||
       a.kind.localeCompare(b.kind) ||
       a.field.localeCompare(b.field)
   );

@@ -85,36 +85,54 @@ describe('resolveGraphQLFieldUse', () => {
           copied: [],
           returned: ['items/owner'],
           sent: ['ids', 'ids/items', 'state'],
+          selected: ['color', 'name', 'owner', 'owner/email'],
         }
       )
     ).toEqual({
       read: ['Item.name'],
-      passed: ['Item.owner', 'User'],
+      // Only what the query selects under what it returns
+      passed: ['Item.owner', 'User.email'],
+      types: ['User'],
       sent: ['Query.items(ids:)', 'Query.items(state:)'],
       sentTypes: ['State'],
     });
+  });
+
+  it('takes everything the passed types reach without a recorded selection', () => {
+    expect(
+      resolveGraphQLFieldUse(
+        before,
+        { method: 'query', path: 'items' },
+        { read: [], copied: [], returned: ['items/owner'] }
+      )
+    ).toMatchObject({ passed: ['Item.owner', 'User'] });
   });
 
   it('says whether an action uses what a change names', () => {
     const use = resolveGraphQLFieldUse(
       before,
       { method: 'mutation', path: 'archive' },
-      { read: ['name'], copied: [], returned: [], sent: ['opts', 'opts/reason'] }
+      {
+        read: ['color', 'name'],
+        copied: [],
+        returned: [],
+        sent: ['opts', 'opts/reason'],
+        selected: ['color', 'name'],
+      }
     );
 
     expect(use).toBeDefined();
     if (!use) {
       return;
     }
-    expect(
-      usesCoordinate(use, { id: 'response-property-deprecated', coordinate: 'Item.name' })
-    ).toBe(true);
-    expect(usesCoordinate(use, { id: 'response-property-removed', coordinate: 'Item.size' })).toBe(
-      false
-    );
-    expect(
-      usesCoordinate(use, { id: 'request-property-deprecated', coordinate: 'Opts.force' })
-    ).toBe(true);
+    const uses = (id: string, coordinate: string) => usesCoordinate(use, { id, coordinate });
+    expect(uses('response-property-deprecated', 'Item.name')).toBe(true);
+    expect(uses('response-property-removed', 'Item.size')).toBe(false);
+    // An enum value concerns the actions getting that enum
+    expect(uses('response-property-enum-value-added', 'Color.BLUE')).toBe(true);
+    expect(uses('request-property-deprecated', 'Opts.reason')).toBe(true);
+    // It sends `opts`, but not `force`
+    expect(uses('request-property-deprecated', 'Opts.force')).toBe(false);
   });
 });
 

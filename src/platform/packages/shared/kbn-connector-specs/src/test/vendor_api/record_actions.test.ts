@@ -551,12 +551,14 @@ describe('recordActions with a GraphQL spec', () => {
       copied: [],
       returned: [],
       sent: ['ids', 'ids/items'],
+      selected: ['items', 'items/id', 'name'],
     });
     expect(recording.fieldUse?.archiveItem['api MUTATION archiveItem']).toEqual({
       read: [],
       copied: [],
       returned: [''],
       sent: ['itemId', 'options', 'options/reason'],
+      selected: ['id', 'name'],
     });
   });
 });

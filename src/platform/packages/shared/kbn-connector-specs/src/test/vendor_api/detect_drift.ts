@@ -15,6 +15,7 @@ import type { ConnectorSpec } from '../../connector_spec';
 import { loadVendorSpec } from './load_vendor_spec';
 import { MANIFEST, OVERLAY, readOptional, snapshotFile } from './load_vendor_specs';
 import { compareFields } from './compare_fields';
+import { toFieldPath, within } from './field_path';
 import type { GraphQLFieldUse } from './graphql_drift';
 import {
   compareGraphQLFields,
@@ -275,22 +276,11 @@ const passesBoth = ({ snapshotProblems, latestProblems }: ActionDrift): boolean 
   snapshotProblems.length === 0 && latestProblems !== undefined && latestProblems.length === 0;
 
 const DEPRECATED_PROPERTY = /^(request|response)-property-deprecated$/;
-// `allOf[#/components/schemas/Options]/waitFor`: oasdiff names the subschema a property is in.
-const COMPOSITION = /(?:allOf|anyOf|oneOf)\[[^\]]*\]\/?/g;
-
-/** A property path oasdiff names, as field use paths are: without the subschemas it is in. */
-export const toFieldPath = (oasdiffPath: string): string =>
-  oasdiffPath.replace(COMPOSITION, '').replace(/\/$/, '');
-
 // The property a deprecation names.
 const deprecatedPropertyOf = ({ id, text }: SpecChange): string | undefined => {
   const named = DEPRECATED_PROPERTY.test(id) ? text.match(/property `([^`]+)`/)?.[1] : undefined;
   return named === undefined ? undefined : toFieldPath(named);
 };
-
-/** Whether a field path is a parent path or inside it. */
-export const within = (field: string, parent: string): boolean =>
-  field === parent || field.startsWith(`${parent}/`);
 
 /**
  * Whether a tracked action uses a deprecated property of an operation's request or response:
@@ -648,7 +638,13 @@ const mergeFieldUse = (
 ): Record<string, RecordedFieldUse> => {
   const merged: Record<
     string,
-    { read: Set<string>; copied: Set<string>; returned: Set<string>; sent: Set<string> }
+    {
+      read: Set<string>;
+      copied: Set<string>;
+      returned: Set<string>;
+      sent: Set<string>;
+      selected: Set<string>;
+    }
   > = {};
   for (const byOperation of uses) {
     for (const [key, use] of Object.entries(byOperation ?? {})) {
@@ -657,21 +653,24 @@ const mergeFieldUse = (
         copied: new Set(),
         returned: new Set(),
         sent: new Set(),
+        selected: new Set(),
       });
       use.read.forEach((field) => entry.read.add(field));
       use.copied.forEach((field) => entry.copied.add(field));
       use.returned.forEach((field) => entry.returned.add(field));
       use.sent?.forEach((field) => entry.sent.add(field));
+      use.selected?.forEach((field) => entry.selected.add(field));
     }
   }
   return Object.fromEntries(
-    Object.entries(merged).map(([key, { read, copied, returned, sent }]) => [
+    Object.entries(merged).map(([key, { read, copied, returned, sent, selected }]) => [
       key,
       {
         read: [...read].sort(),
         copied: [...copied].sort(),
         returned: [...returned].sort(),
         ...(sent.size > 0 ? { sent: [...sent].sort() } : {}),
+        ...(selected.size > 0 ? { selected: [...selected].sort() } : {}),
       },
     ])
   );

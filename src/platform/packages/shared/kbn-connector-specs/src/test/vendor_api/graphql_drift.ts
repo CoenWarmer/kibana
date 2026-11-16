@@ -31,6 +31,7 @@ import type { GraphQLRootField } from './graphql_source';
 import { buildGraphQLSchema } from './graphql_source';
 import type { OperationLocation } from './locate_operation';
 import type { RecordedFieldUse } from './record_actions';
+import { within } from './field_path';
 
 /**
  * What an action does with a GraphQL root field, by schema coordinate (`Item.name`,
@@ -39,8 +40,13 @@ import type { RecordedFieldUse } from './record_actions';
 export interface GraphQLFieldUse {
   /** The fields it reads. */
   readonly read: readonly string[];
-  /** The types whose fields it passes along as they are, and the fields it does. */
+  /**
+   * The fields it passes along as they are: those the query selects under what it copies or
+   * returns. Without a recorded selection, the types it reaches there too.
+   */
   readonly passed: readonly string[];
+  /** The enums and other non-scalar types of the fields it reads or passes along. */
+  readonly types: readonly string[];
   /** The arguments and input fields it sends. */
   readonly sent: readonly string[];
   /** The input types and enums of what it sends. */
@@ -346,14 +352,19 @@ interface Resolved {
 const resolvePath = (
   schema: GraphQLSchema,
   start: GraphQLType,
-  path: string
+  path: string,
+  // Selection paths name fields only, so lists are stepped into by themselves.
+  unwrapLists = false
 ): Resolved | undefined => {
   let resolved: Resolved = { type: start };
   for (const segment of path === '' ? [] : path.split('/')) {
-    const current = unwrap(resolved.type);
-    if (isListType(current) && segment === 'items') {
+    let current = unwrap(resolved.type);
+    if (isListType(current) && segment === 'items' && !unwrapLists) {
       resolved = { type: current.ofType };
       continue;
+    }
+    while (unwrapLists && isListType(current)) {
+      current = unwrap(current.ofType);
     }
     const named = getNamedType(current);
     const candidates = isUnionType(named) ? named.getTypes() : [named];
@@ -383,21 +394,50 @@ export const resolveGraphQLFieldUse = (
   if (!field || !rootType) {
     return undefined;
   }
-  const read = use.read.flatMap((path) => {
+  const resolvedRead = use.read.flatMap((path) => {
     const resolved = resolvePath(schema, field.type, path);
-    return resolved?.coordinate ? [resolved.coordinate] : [];
+    return resolved?.coordinate ? [resolved] : [];
   });
-  const passed = [...use.copied, ...use.returned].flatMap((path) => {
+  // A GraphQL response has only the fields the query selects, so those are what passes along.
+  const selected = (use.selected ?? []).flatMap((path) => {
+    const resolved = resolvePath(schema, field.type, path, true);
+    return resolved?.coordinate ? [{ path, ...resolved }] : [];
+  });
+  const passedPaths = [...use.copied, ...use.returned];
+  const resolvedPassed = passedPaths.flatMap((path) => {
     const resolved = resolvePath(schema, field.type, path);
     if (!resolved) {
       return [];
     }
-    // Scalars have no fields or values of their own to change.
-    const types = [...outputTypesFrom(schema, getNamedType(resolved.type))].filter(
-      (name) => !isScalarType(schema.getType(name))
-    );
-    return [...(resolved.coordinate ? [resolved.coordinate] : []), ...types];
+    const prefix = path
+      .split('/')
+      .filter((segment) => segment !== 'items')
+      .join('/');
+    const under = selected.filter((candidate) => prefix === '' || within(candidate.path, prefix));
+    return [...(resolved.coordinate ? [resolved] : []), ...under];
   });
+  // Without a recorded selection, everything the passed types reach could be in the response.
+  const reached =
+    use.selected === undefined
+      ? passedPaths.flatMap((path) => {
+          const resolved = resolvePath(schema, field.type, path);
+          return resolved
+            ? [...outputTypesFrom(schema, getNamedType(resolved.type))].filter(
+                (name) => !isScalarType(schema.getType(name))
+              )
+            : [];
+        })
+      : [];
+  const read = resolvedRead.flatMap(({ coordinate }) => (coordinate ? [coordinate] : []));
+  const passed = [
+    ...resolvedPassed.flatMap(({ coordinate }) => (coordinate ? [coordinate] : [])),
+    ...reached,
+  ];
+  // Scalars have no fields or values of their own to change.
+  const types = [...resolvedRead, ...resolvedPassed]
+    .map(({ type }) => getNamedType(type))
+    .filter((named) => !isScalarType(named))
+    .map(({ name }) => name);
   // Arguments, then the input fields inside them.
   const argumentsType = new Map(field.args.map((arg) => [arg.name, arg.type]));
   const sent: string[] = [];
@@ -426,6 +466,7 @@ export const resolveGraphQLFieldUse = (
   return {
     read: unique(read),
     passed: unique(passed),
+    types: unique(types),
     sent: unique(sent),
     sentTypes: unique(sentTypes),
   };
@@ -439,15 +480,17 @@ export const usesCoordinate = (
   if (coordinate === undefined) {
     return false;
   }
-  if (id.startsWith('request-') || id.startsWith('new-')) {
-    const [typeName] = coordinate.split('.');
-    return use.sent.includes(coordinate) || use.sentTypes.includes(typeName);
-  }
+  // An enum value is no field; it concerns the actions sending or getting that enum.
   const [typeName] = coordinate.split('.');
+  const isEnumValue = id.includes('enum-value');
+  if (id.startsWith('request-') || id.startsWith('new-')) {
+    return use.sent.includes(coordinate) || (isEnumValue && use.sentTypes.includes(typeName));
+  }
   return (
     use.read.includes(coordinate) ||
     use.passed.includes(coordinate) ||
-    use.passed.includes(typeName)
+    use.passed.includes(typeName) ||
+    (isEnumValue && use.types.includes(typeName))
   );
 };
 
