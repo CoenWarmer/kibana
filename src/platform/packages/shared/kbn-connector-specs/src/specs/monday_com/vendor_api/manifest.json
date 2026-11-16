@@ -1,0 +1,153 @@
+{
+  "operations": {
+    "archiveItem": [
+      {
+        "method": "mutation",
+        "path": "archive_item",
+        "source": "v2"
+      }
+    ],
+    "callTool": [],
+    "changeItemColumnValues": [],
+    "createItem": [],
+    "createNotification": [],
+    "createSubitem": [
+      {
+        "method": "mutation",
+        "path": "create_subitem",
+        "source": "v2"
+      }
+    ],
+    "createUpdate": [],
+    "deleteItem": [
+      {
+        "method": "mutation",
+        "path": "delete_item",
+        "source": "v2"
+      }
+    ],
+    "editUpdate": [
+      {
+        "method": "mutation",
+        "path": "edit_update",
+        "source": "v2"
+      }
+    ],
+    "getBoardInfo": [],
+    "getBoardItemsPage": [],
+    "getItem": [
+      {
+        "method": "query",
+        "path": "items",
+        "source": "v2"
+      }
+    ],
+    "getItemsByColumnValue": [
+      {
+        "method": "query",
+        "path": "items_page_by_column_values",
+        "source": "v2"
+      }
+    ],
+    "getUpdates": [],
+    "listTools": [],
+    "moveItemToGroup": [
+      {
+        "method": "mutation",
+        "path": "move_item_to_group",
+        "source": "v2"
+      }
+    ],
+    "search": [],
+    "whoAmI": []
+  },
+  "sources": {
+    "v2": {
+      "endpoints": [
+        "https://api.monday.com/v2"
+      ],
+      "fetchedAt": "2026-11-16T23:30:04.676Z",
+      "format": "graphql",
+      "url": "https://api.monday.com/v2/get_schema?format=sdl"
+    }
+  },
+  "unmatched": {
+    "callTool": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "changeItemColumnValues": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "createItem": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "createNotification": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "createUpdate": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "getBoardInfo": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "getBoardItemsPage": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "getUpdates": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "listTools": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "search": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ],
+    "whoAmI": [
+      {
+        "method": "post",
+        "path": "/mcp",
+        "reason": "monday.com's remote MCP server (JSON-RPC over Streamable HTTP at https://mcp.monday.com/mcp), which its GraphQL API schema doesn't cover; see https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
+      }
+    ]
+  }
+}
