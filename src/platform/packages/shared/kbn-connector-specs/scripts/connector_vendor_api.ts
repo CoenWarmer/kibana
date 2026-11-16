@@ -50,25 +50,34 @@ const parseNamed = (option: string, flag: string, value: string): [string, strin
   return [name, flag.slice(separator + 1)];
 };
 
-const parseFormat = (flag: string): [string, MarkdownSourceFormat] => {
+const parseFormat = (flag: string): [string, MarkdownSourceFormat | 'graphql'] => {
   const [name, format] = parseNamed('format', flag, 'format');
+  if (format === 'graphql') {
+    return [name, format];
+  }
   const parsed = markdownSourceFormatSchema.safeParse(format);
   if (!parsed.success) {
     throw createFlagError(
-      `--format takes ${markdownSourceFormatSchema.options.join(' or ')}, got "${format}"`
+      `--format takes ${[...markdownSourceFormatSchema.options, 'graphql'].join(
+        ', '
+      )}, got "${format}"`
     );
   }
   return [name, parsed.data];
 };
 
-// Repeated `--pages name=prefix` flags add up to one list per source.
-const groupPages = (flags: readonly string[]): Record<string, string[]> => {
-  const pages: Record<string, string[]> = {};
+// Repeated `--option name=value` flags add up to one list per source.
+const groupByName = (
+  option: string,
+  flags: readonly string[],
+  value: string
+): Record<string, string[]> => {
+  const grouped: Record<string, string[]> = {};
   for (const flag of flags) {
-    const [name, prefix] = parseNamed('pages', flag, 'prefix');
-    pages[name] = [...(pages[name] ?? []), prefix];
+    const [name, item] = parseNamed(option, flag, value);
+    grouped[name] = [...(grouped[name] ?? []), item];
   }
-  return pages;
+  return grouped;
 };
 
 const writeJson = async (file: string, value: unknown): Promise<void> => {
@@ -99,7 +108,8 @@ run(
     const formats = Object.fromEntries(
       (flagsReader.arrayOfStrings('format') ?? []).map(parseFormat)
     );
-    const pages = groupPages(flagsReader.arrayOfStrings('pages') ?? []);
+    const pages = groupByName('pages', flagsReader.arrayOfStrings('pages') ?? [], 'prefix');
+    const endpoints = groupByName('endpoint', flagsReader.arrayOfStrings('endpoint') ?? [], 'url');
     const now = () => new Date();
     const cache = createSpecCache({ directory: SPEC_CACHE, fetchText, refresh, now, log });
 
@@ -185,11 +195,19 @@ run(
       if (check) {
         throw createFlagError('--inspect checks nothing; leave out --check');
       }
+      const markdownFormats = Object.fromEntries(
+        Object.entries(formats).flatMap(([name, format]) =>
+          format === 'graphql' ? [] : [[name, format] as const]
+        )
+      );
+      if (Object.keys(markdownFormats).length < Object.keys(formats).length) {
+        throw createFlagError("--inspect doesn't read GraphQL schemas yet; leave out --format");
+      }
       const inspectedId = flagsReader.string('connector');
       const directory = inspectedId ? await findVendorApiDirectory(inspectedId) : undefined;
       const { output, manifestUpdated, problems } = await inspectVendorApi({
         sources,
-        formats,
+        formats: markdownFormats,
         pages,
         directory,
         operations: flagsReader.arrayOfStrings('operation') ?? [],
@@ -225,6 +243,7 @@ run(
       sources,
       formats,
       pages,
+      endpoints,
       refresh,
       check,
       fetchText: cache.fetchText,
@@ -270,6 +289,7 @@ run(
         'source',
         'format',
         'pages',
+        'endpoint',
         'operation',
         'grep',
         'depth',
@@ -283,7 +303,10 @@ run(
                      or --drift)
         --source     name=url of a vendor spec to add or move; repeatable. Loads every source.
         --format     name=format of a source that is a Markdown API reference, whose url is its
-                     llms.txt index: databricks-markdown or brave-markdown. Kept in manifest.json.
+                     llms.txt index: databricks-markdown or brave-markdown; or name=graphql for a
+                     GraphQL schema, as SDL or an introspection result. Kept in manifest.json.
+        --endpoint   name=url a GraphQL source answers queries at; repeatable. Kept in
+                     manifest.json.
         --pages      name=prefix of the reference pages to fetch, absolute or relative to the
                      index, such as an API group's folder; repeatable. Kept in manifest.json.
         --refresh    Fetch every source URL again, instead of using the specs fetched before

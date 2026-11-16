@@ -21,13 +21,21 @@ export const isMarkdownFormat = (
 
 const sourceSchema = z
   .object({
-    /** The format the vendor publishes; snapshots are always OpenAPI 3.x JSON. */
+    /**
+     * The format the vendor publishes. Snapshots are OpenAPI 3.x JSON, except for GraphQL, whose
+     * snapshots are SDL.
+     */
     format: z.union([
-      z.enum(['openapi', 'swagger', 'discovery', 'smithy']),
+      z.enum(['openapi', 'swagger', 'discovery', 'smithy', 'graphql']),
       markdownSourceFormatSchema,
     ]),
-    /** The spec, or for Markdown references, their `llms.txt` index. */
+    /**
+     * The spec, or for Markdown references, their `llms.txt` index, or for GraphQL, its schema as
+     * SDL or as an introspection result.
+     */
     url: z.url(),
+    /** GraphQL only: the URLs the API answers queries at, which its schema doesn't name. */
+    endpoints: z.array(z.url()).min(1).optional(),
     /**
      * Markdown references only: URL prefixes, absolute or relative to the index, of the pages
      * to fetch, such as the folders of the API groups the connector calls.
@@ -45,7 +53,11 @@ const sourceSchema = z
     ({ format, pages }) =>
       pages === undefined || markdownSourceFormatSchema.safeParse(format).success,
     { message: '"pages" only applies to Markdown references', path: ['pages'] }
-  );
+  )
+  .refine(({ format, endpoints }) => (format === 'graphql') === (endpoints !== undefined), {
+    message: 'GraphQL sources, and only they, name their "endpoints"',
+    path: ['endpoints'],
+  });
 
 const located = { in: z.enum(['query', 'body', 'header']).optional() };
 const size = { sizeParam: z.string().min(1).optional() };

@@ -211,6 +211,65 @@ describe('updateVendorApi', () => {
     expect(fetched).toEqual([]);
   });
 
+  it('records GraphQL sources, snapshotting the schema the actions use', async () => {
+    const GRAPHQL = 'https://api.example.com/graphql';
+    const SCHEMA_URL = 'https://api.example.com/schema.graphql';
+    documents[SCHEMA_URL] = `
+      type Query { boards: [Board!]!, users: [User!]! }
+      type Board { id: ID!, name: String! }
+      type User { id: ID! }
+    `;
+    const graphqlConnector: ConnectorSpec = {
+      ...connector,
+      actions: {
+        listBoards: {
+          scope: 'read',
+          input: z.object({}),
+          handler: async ({ client }) =>
+            (await client.post(GRAPHQL, { query: '{ boards { name } }' })).data,
+        },
+      },
+    };
+
+    await expect(
+      update({
+        connector: graphqlConnector,
+        sources: { api: SCHEMA_URL },
+        formats: { api: 'graphql' },
+      })
+    ).rejects.toThrow('api: a GraphQL source needs the URLs it answers at; pass --endpoint');
+
+    const result = await update({
+      connector: graphqlConnector,
+      sources: { api: SCHEMA_URL },
+      formats: { api: 'graphql' },
+      endpoints: { api: [GRAPHQL] },
+    });
+
+    expect(result).toMatchObject({ problems: [] });
+    expect(await readJson('manifest.json')).toEqual({
+      operations: { listBoards: [{ source: 'api', method: 'query', path: 'boards' }] },
+      sources: {
+        api: {
+          format: 'graphql',
+          url: SCHEMA_URL,
+          endpoints: [GRAPHQL],
+          fetchedAt: '2026-10-07T12:00:00.000Z',
+        },
+      },
+    });
+    expect(await fs.readFile(path.join(directory, 'snapshots/api.graphql'), 'utf8')).toBe(
+      'type Board {\n  id: ID!\n  name: String!\n}\n\ntype Query {\n  boards: [Board!]!\n}'
+    );
+
+    fetched = [];
+    expect(await update({ connector: graphqlConnector })).toMatchObject({
+      changed: [],
+      problems: [],
+    });
+    expect(fetched).toEqual([]);
+  });
+
   it('keeps fetchedAt while the snapshot is unchanged and updates it when it changes', async () => {
     await update({ sources: { main: SPEC_URL } });
     documents[SPEC_URL] = specYaml('1.1');

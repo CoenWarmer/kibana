@@ -9,8 +9,15 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import type { OpenApiDocument, OverlayDocument, PaginatedOperation } from '@kbn/connector-emulate';
+import type {
+  EmulatorSpec,
+  GraphQLSpec,
+  OpenApiDocument,
+  OverlayDocument,
+  PaginatedOperation,
+} from '@kbn/connector-emulate';
 import { applyOverlay } from '@kbn/connector-emulate';
+import { toGraphQLSdl } from './graphql_source';
 import { loadVendorSpec } from './load_vendor_spec';
 import type { VendorApiManifest } from './manifest';
 import { parseManifest } from './manifest';
@@ -19,7 +26,9 @@ import { parseSpecText } from './parse_spec_text';
 export const MANIFEST = 'manifest.json';
 export const FIXTURES = 'fixtures.json';
 export const OVERLAY = 'overlay.yaml';
-export const snapshotFile = (source: string) => path.join('snapshots', `${source}.openapi.json`);
+/** A source's snapshot: OpenAPI 3.x JSON, or SDL for GraphQL. */
+export const snapshotFile = (source: string, format?: string) =>
+  path.join('snapshots', `${source}.${format === 'graphql' ? 'graphql' : 'openapi.json'}`);
 
 export interface VendorApiLog {
   readonly info: (message: string) => void;
@@ -110,8 +119,8 @@ export interface LoadVendorSpecsOptions {
 
 export interface VendorSpecs {
   readonly manifest: VendorApiManifest;
-  /** Each source's spec, with the overlay applied. */
-  readonly specs: Record<string, OpenApiDocument>;
+  /** Each source's spec, with the overlay applied to the OpenAPI ones. */
+  readonly specs: Record<string, EmulatorSpec>;
   readonly pagination: PaginatedOperation[];
 }
 
@@ -134,21 +143,35 @@ export const loadVendorSpecs = async ({
   const overlay = overlayText ? (parseSpecText(overlayText) as OverlayDocument) : undefined;
 
   const raw: Record<string, OpenApiDocument> = {};
+  const graphql: Record<string, GraphQLSpec> = {};
   let fetchedEverySource = true;
   for (const [name, source] of Object.entries(manifest.sources)) {
-    const { url } = source;
-    const snapshot = latest ? undefined : await read(snapshotFile(name));
+    const { url, format, endpoints = [] } = source;
+    const snapshot = latest ? undefined : await read(snapshotFile(name, format));
     if (snapshot === undefined) {
       log.info(`Fetching ${name} from ${url}`);
-      raw[name] = (await loadVendorSpec(url, fetchText, source)).document;
     } else {
-      raw[name] = JSON.parse(snapshot);
       fetchedEverySource = false;
+    }
+    if (format === 'graphql') {
+      graphql[name] = {
+        format: 'graphql',
+        sdl: snapshot ?? toGraphQLSdl(await fetchText(url)),
+        endpoints,
+      };
+    } else {
+      raw[name] =
+        snapshot === undefined
+          ? (await loadVendorSpec(url, fetchText, source)).document
+          : JSON.parse(snapshot);
     }
   }
   return {
     manifest,
-    specs: applyOverlayToSources(raw, overlay, fetchedEverySource ? log : SILENT_LOG),
+    specs: {
+      ...applyOverlayToSources(raw, overlay, fetchedEverySource ? log : SILENT_LOG),
+      ...graphql,
+    },
     pagination: toMockPagination(manifest),
   };
 };

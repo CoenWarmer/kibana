@@ -89,7 +89,9 @@ describe('loadVendorSpecs', () => {
 
     const { specs, pagination } = await loadVendorSpecs({ directory, fetchText, log });
 
-    expect(specs.v1.info).toEqual({ title: 'Snapshot', version: '1', 'x-corrected': true });
+    expect(specs.v1).toMatchObject({
+      info: { title: 'Snapshot', version: '1', 'x-corrected': true },
+    });
     expect(pagination).toHaveLength(1);
     expect(fetchText).not.toHaveBeenCalled();
   });
@@ -100,7 +102,9 @@ describe('loadVendorSpecs', () => {
     const { specs } = await loadVendorSpecs({ directory, latest: true, fetchText, log });
 
     expect(fetchText).toHaveBeenCalledWith(SPEC_URL);
-    expect(specs.v1.info).toEqual({ title: 'Latest', version: '1', 'x-corrected': true });
+    expect(specs.v1).toMatchObject({
+      info: { title: 'Latest', version: '1', 'x-corrected': true },
+    });
   });
 
   it('fetches a Markdown reference with latest from its index and pages', async () => {
@@ -135,7 +139,9 @@ describe('loadVendorSpecs', () => {
       log,
     });
 
-    expect(Object.keys(specs.v1.paths ?? {})).toEqual(['/v1/search']);
+    expect(specs.v1).toEqual(
+      expect.objectContaining({ paths: { '/v1/search': expect.anything() } })
+    );
   });
 
   describe('with an overlay action that matches nothing', () => {

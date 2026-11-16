@@ -9,8 +9,9 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import type { OpenApiDocument, OverlayDocument } from '@kbn/connector-emulate';
+import type { GraphQLSpec, OpenApiDocument, OverlayDocument } from '@kbn/connector-emulate';
 import type { ConnectorSpec } from '../../connector_spec';
+import { projectGraphQLSchema, toGraphQLSdl } from './graphql_source';
 import { forEachRef } from './json_pointer';
 import { loadVendorSpec } from './load_vendor_spec';
 import type { VendorApiFixtures } from './fixtures';
@@ -53,8 +54,13 @@ export interface UpdateVendorApiOptions {
   readonly directory: string;
   /** Sources to add or point elsewhere, by name; the manifest's are kept otherwise. */
   readonly sources?: Readonly<Record<string, string>>;
-  /** Sources that are Markdown references, by name, with the template their pages follow. */
-  readonly formats?: Readonly<Record<string, MarkdownSourceFormat>>;
+  /**
+   * Sources that are Markdown references, by name, with the template their pages follow, or that
+   * are GraphQL schemas.
+   */
+  readonly formats?: Readonly<Record<string, MarkdownSourceFormat | 'graphql'>>;
+  /** Per GraphQL source, the URLs the API answers queries at; see `ManifestSource`. */
+  readonly endpoints?: Readonly<Record<string, readonly string[]>>;
   /** Per Markdown reference, the URL prefixes of the pages to fetch; see `ManifestSource`. */
   readonly pages?: Readonly<Record<string, readonly string[]>>;
   /**
@@ -82,8 +88,10 @@ export interface UpdateVendorApiResult {
   readonly problemsByAction: Readonly<Record<string, readonly string[]>>;
   /** The `problems` that concern no single action, e.g. a missing pagination declaration. */
   readonly otherProblems: readonly string[];
-  /** The specs the actions were recorded against, by source, without the overlay. */
+  /** The OpenAPI specs the actions were recorded against, by source, without the overlay. */
   readonly specs: Readonly<Record<string, OpenApiDocument>>;
+  /** The GraphQL schemas the actions were recorded against, by source, as SDL. */
+  readonly graphql: Readonly<Record<string, string>>;
   /**
    * The zero-based indexes of the overlay actions that match nothing in any source; only
    * assessed when every source was fetched, as a snapshot lacks what the connector doesn't call.
@@ -164,6 +172,7 @@ export const updateVendorApi = async ({
   sources: sourceFlags = {},
   formats: formatFlags = {},
   pages: pageFlags = {},
+  endpoints: endpointFlags = {},
   refresh = false,
   check = false,
   trackFields = false,
@@ -197,13 +206,24 @@ export const updateVendorApi = async ({
   }
   // Naming a source, or how to read one, means fetching it again.
   const fetchAll =
-    refresh || [sourceFlags, formatFlags, pageFlags].some((flags) => Object.keys(flags).length > 0);
+    refresh ||
+    [sourceFlags, formatFlags, pageFlags, endpointFlags].some(
+      (flags) => Object.keys(flags).length > 0
+    );
 
-  for (const name of [...Object.keys(formatFlags), ...Object.keys(pageFlags)]) {
+  for (const name of [
+    ...Object.keys(formatFlags),
+    ...Object.keys(pageFlags),
+    ...Object.keys(endpointFlags),
+  ]) {
     if (!(name in urls)) {
-      throw new Error(`--format and --pages name a source, but there is no source "${name}"`);
+      throw new Error(
+        `--format, --pages and --endpoint name a source, but there is no source "${name}"`
+      );
     }
   }
+  const isGraphQL = (name: string) =>
+    (formatFlags[name] ?? previous?.sources[name]?.format) === 'graphql';
   const markdownFormatOf = (name: string): MarkdownSourceFormat | undefined => {
     const format = formatFlags[name] ?? previous?.sources[name]?.format;
     return isMarkdownFormat(format) ? format : undefined;
@@ -212,10 +232,29 @@ export const updateVendorApi = async ({
     pageFlags[name] ?? previous?.sources[name]?.pages;
 
   const raw: Record<string, OpenApiDocument> = {};
+  // GraphQL schemas, as SDL, with the URLs they answer at.
+  const graphql: Record<string, { sdl: string; endpoints: string[] }> = {};
   const formats: Record<string, ManifestSource['format']> = {};
   // The `info.version` of each source loaded in full, rather than read from its snapshot.
   const loaded = new Map<string, string | undefined>();
   for (const [name, url] of Object.entries(urls)) {
+    if (isGraphQL(name)) {
+      const endpoints = endpointFlags[name] ?? previous?.sources[name]?.endpoints;
+      if (endpoints === undefined || endpoints.length === 0) {
+        throw new Error(`${name}: a GraphQL source needs the URLs it answers at; pass --endpoint`);
+      }
+      const snapshot = fetchAll ? undefined : await read(snapshotFile(name, 'graphql'));
+      if (snapshot === undefined) {
+        log.info(`Loading ${name} from ${url}`);
+        loaded.set(name, undefined);
+      }
+      graphql[name] = {
+        sdl: snapshot ?? toGraphQLSdl(await fetchText(url)),
+        endpoints: [...endpoints],
+      };
+      formats[name] = 'graphql';
+      continue;
+    }
     const snapshot = fetchAll ? undefined : await read(snapshotFile(name));
     if (snapshot === undefined) {
       const markdownFormat = markdownFormatOf(name);
@@ -237,7 +276,7 @@ export const updateVendorApi = async ({
     }
   }
 
-  const fetchedEverySource = loaded.size === Object.keys(raw).length;
+  const fetchedEverySource = loaded.size === Object.keys(urls).length;
   const { specs, unmatchedActions } = applyOverlayWithFindings(raw, overlay);
   // A snapshot only has the operations the connector calls, so an overlay action matching
   // nothing there may still be needed.
@@ -254,9 +293,15 @@ export const updateVendorApi = async ({
   // A path several sources describe stays on the source it was recorded from, so the latest
   // specs adding it to another source doesn't move the actions there.
   const preferredOperations = Object.values(previous?.operations ?? {}).flat();
+  const graphqlSpecs = Object.fromEntries(
+    Object.entries(graphql).map(([name, { sdl, endpoints }]): [string, GraphQLSpec] => [
+      name,
+      { format: 'graphql', sdl, endpoints },
+    ])
+  );
   const recording = await recordActions({
     connector,
-    specs,
+    specs: { ...specs, ...graphqlSpecs },
     fixtures,
     trackFields,
     preferredOperations,
@@ -298,6 +343,10 @@ export const updateVendorApi = async ({
   );
   const paginationOf = (operation: ManifestOperation): ManifestPagination | undefined => {
     const key = operationKey(operation);
+    // GraphQL lists page through arguments the schema doesn't mark; none are declared yet.
+    if (operation.source in graphql) {
+      return undefined;
+    }
     if (declared.has(key)) {
       return declared.get(key);
     }
@@ -395,6 +444,25 @@ export const updateVendorApi = async ({
       ...(note === undefined ? {} : { note }),
     };
   }
+  for (const [name, { sdl, endpoints }] of Object.entries(graphql)) {
+    const used = Object.values(recording.operations)
+      .flat()
+      .filter(({ source }) => source === name);
+    const file = snapshotFile(name, 'graphql');
+    files[file] = projectGraphQLSchema(sdl, used);
+    const unchanged = (await read(file)) === files[file];
+    const fetchedAt = unchanged
+      ? previous?.sources[name]?.fetchedAt
+      : (fetchedAtOf?.(urls[name]) ?? now()).toISOString();
+    const note = previous?.sources[name]?.note;
+    sources[name] = {
+      format: 'graphql',
+      url: urls[name],
+      endpoints,
+      fetchedAt: fetchedAt ?? now().toISOString(),
+      ...(note === undefined ? {} : { note }),
+    };
+  }
   files[MANIFEST] = serializeManifest({
     sources,
     operations,
@@ -427,6 +495,7 @@ export const updateVendorApi = async ({
     ),
     otherProblems: [...otherProblems],
     specs: raw,
+    graphql: Object.fromEntries(Object.entries(graphql).map(([name, { sdl }]) => [name, sdl])),
     staleOverlayActions,
     ...(recording.fieldUse ? { fieldUse: recording.fieldUse } : {}),
     ...(recording.untracked ? { untracked: recording.untracked } : {}),
