@@ -185,6 +185,12 @@ fi
     | "- `\(.connector)`: \(.action)"
       + (if .issue then " [#\(.issue.number)](\(.issue.url))" else "" end)
       + (if .error then ": \(.error)" else "" end)' "$SUMMARY_PATH"
+  # The wording comes from the summary, so the annotation and the run's log agree and the
+  # numbers aren't formatted a second time here.
+  if jq -e '.coverage.lines | length > 0' "$SUMMARY_PATH" > /dev/null 2>&1; then
+    echo
+    jq -r '.coverage.lines[]' "$SUMMARY_PATH"
+  fi
   if [[ -n "$refresh_pr" ]]; then
     echo
     echo "Refresh PR: $refresh_pr"

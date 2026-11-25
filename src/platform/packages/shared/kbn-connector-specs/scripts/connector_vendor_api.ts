@@ -22,7 +22,9 @@ import {
   findVendorApiDirectory,
   listConnectors,
 } from '../src/test/vendor_api/find_connector';
+import { summarizeDriftCoverage } from '../src/test/vendor_api/drift/drift_coverage';
 import { createGhIssueTracker } from '../src/test/vendor_api/drift/gh_issue_tracker';
+import { readVendorApiExemptions } from '../src/test/vendor_api/exemptions';
 import { inspectVendorApi } from '../src/test/vendor_api/inspect/inspect_vendor_api';
 import type { MarkdownSourceFormat, ProtocolFormat } from '../src/test/vendor_api/manifest';
 import {
@@ -127,6 +129,11 @@ run(
         connectors.map(({ connector, directory }) => [connector.metadata.id, directory])
       );
       const codeOwners = getCodeOwnersEntries();
+      const recorded = new Set(
+        connectors
+          .filter(({ directory }) => existsSync(path.join(directory, 'manifest.json')))
+          .map(({ connector }) => connector.metadata.id)
+      );
       const summary = await surfaceDrift({
         report,
         tracker: createGhIssueTracker(repo),
@@ -137,17 +144,22 @@ run(
           // A path inside the connector's folder: `specs/<connector>/**` doesn't match the folder.
           return directory ? getOwningTeamsForPath(directory, codeOwners) : [];
         },
-        knownConnectors: new Set(
-          connectors
-            .filter(({ directory }) => existsSync(path.join(directory, 'manifest.json')))
-            .map(({ connector }) => connector.metadata.id)
-        ),
+        knownConnectors: recorded,
         buildUrl: process.env.BUILDKITE_BUILD_URL,
         log,
       });
+      const coverage = summarizeDriftCoverage({
+        report,
+        connectors: connectors.map(({ connector }) => connector.metadata.id),
+        recorded,
+        exempt: new Set(Object.keys(await readVendorApiExemptions())),
+      });
       const summaryPath = path.resolve(flagsReader.string('summary') ?? DRIFT_SUMMARY);
-      await writeJson(summaryPath, summary);
+      await writeJson(summaryPath, { ...summary, coverage });
       log.success(`Wrote the drift summary to ${summaryPath}`);
+      for (const line of coverage.lines) {
+        log.info(line);
+      }
       const failed = summary.actions.filter(({ action }) => action === 'failed');
       if (failed.length > 0) {
         throw createFailError(

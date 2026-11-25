@@ -7,6 +7,8 @@
  * License v3.0 only", or the "Server Side Public License, v 1".
  */
 
+import fs from 'fs/promises';
+import path from 'path';
 import { z } from '@kbn/zod/v4';
 
 /**
@@ -16,6 +18,15 @@ import { z } from '@kbn/zod/v4';
 export const vendorApiExemptionsSchema = z.record(z.string().startsWith('.'), z.string().min(1));
 
 export type VendorApiExemptions = z.infer<typeof vendorApiExemptionsSchema>;
+
+/** The committed exemption list, beside this module. */
+export const VENDOR_API_EXEMPTIONS_FILE = path.resolve(__dirname, 'vendor_api_exemptions.json');
+
+/** Reads and validates the committed exemption list. */
+export const readVendorApiExemptions = async (): Promise<VendorApiExemptions> =>
+  vendorApiExemptionsSchema.parse(
+    JSON.parse(await fs.readFile(VENDOR_API_EXEMPTIONS_FILE, 'utf8'))
+  );
 
 /** Whether a connector had `vendor_api` artifacts at the merge base, or didn't exist yet. */
 export type CoverageAtBase = 'recorded' | 'unrecorded' | 'new';
